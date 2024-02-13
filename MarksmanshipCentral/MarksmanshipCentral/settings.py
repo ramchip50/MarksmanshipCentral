@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'app',
     # Add your apps here to enable them
+    'models',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -79,7 +80,15 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    },
+    'remote': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME' : 'rlmndhmb_marksmanshipcentral',
+        'USER': 'rlmndhmb_admin',
+        'PASSWORD': '5BS%qWwFu35Z',
+        "HOST": "mysql.anaxanet.com",
+        "PORT": "3306",
+        }
 }
 
 # Password validation
