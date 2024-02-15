@@ -81,15 +81,17 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     },
-    'remote': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME' : 'rlmndhmb_marksmanshipcentral',
-        'USER': 'rlmndhmb_admin',
-        'PASSWORD': '5BS%qWwFu35Z',
-        "HOST": "mysql.anaxanet.com",
-        "PORT": "3306",
-        }
+    # 'remote': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME' : 'rlmndhmb_marksmanshipcentral',
+    #     'USER': 'rlmndhmb_admin',
+    #     'PASSWORD': '5BS%qWwFu35Z',
+    #     "HOST": "mysql.anaxanet.com",
+    #     "PORT": "3306",
+    #     }
 }
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
