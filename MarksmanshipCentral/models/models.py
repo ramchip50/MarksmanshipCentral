@@ -22,6 +22,10 @@ class Branch(models.Model):
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
 
+class Weapon(models.Model):
+    weaponname=models.CharField(max_length=25)
+    
+
 class Person(models.Model):
     memberid = models.CharField(max_length=10,unique=True)
     firstname = models.CharField(max_length=50)
@@ -36,7 +40,7 @@ class Person(models.Model):
 
 class TotalCredits(models.Model):
     person = models.ForeignKey(Person,on_delete=models.CASCADE)
-    weaponsubcategory = models.CharField(max_length=25)
+    weapon = models.ForeignKey(Weapon,on_delete=models.CASCADE,default=0)
     weapontotal = models.DecimalField(decimal_places=2,max_digits=10)
     createdon = models.DateTimeField(auto_now=True)
     modifiedon = models.DateTimeField(auto_now=True)
@@ -45,14 +49,14 @@ class TotalCredits(models.Model):
 class Game(models.Model):
     gamename = models.CharField(max_length=50)
     alias = models.CharField(max_length=255)
-    weaponsubcategory = models.CharField(max_length=25)
+    weapon = models.ForeignKey(Weapon,on_delete=models.CASCADE,default=0)
     verified = models.BooleanField(default=False)
     createdon = models.DateTimeField(auto_now=True)
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
     
 class Session(models.Model):
-    gameid = models.ForeignKey(Game,on_delete=models.DO_NOTHING)
+    game = models.ForeignKey(Game,on_delete=models.DO_NOTHING)
     startdate = models.DateTimeField()
     enddate = models.DateTimeField()
     playmode = models.CharField(max_length=10)
@@ -63,8 +67,8 @@ class Session(models.Model):
     active = models.BooleanField(default=True)
     
 class SessionParticipants(models.Model):
-    sessionid = models.ForeignKey(Session,on_delete=models.CASCADE)
-    personid = models.ForeignKey(Person,on_delete=models.CASCADE)
+    session = models.ForeignKey(Session,on_delete=models.CASCADE)
+    person = models.ForeignKey(Person,on_delete=models.CASCADE)
     minutes = models.IntegerField()
     credits = models.DecimalField(decimal_places=2,max_digits=10)
     createdon = models.DateTimeField(auto_now=True)
@@ -72,7 +76,7 @@ class SessionParticipants(models.Model):
     active = models.BooleanField(default=True)
     
 class NonTRMNParticipants(models.Model):
-    sessionid = models.ForeignKey(Session,on_delete=models.CASCADE)
+    session = models.ForeignKey(Session,on_delete=models.CASCADE)
     emailaddress = models.CharField(max_length=255)
     firstname = models.CharField(max_length=50)
     lastname = models.CharField(max_length=50)
@@ -81,17 +85,17 @@ class NonTRMNParticipants(models.Model):
     active = models.BooleanField(default=True)
 
 class Award(models.Model):
-    branchid = models.ForeignKey(Branch,on_delete=models.DO_NOTHING)
+    branch = models.ForeignKey(Branch,on_delete=models.DO_NOTHING)
     awardname = models.CharField(max_length=25)
-    weaponcategory = models.CharField(max_length=25)
+    weapon = models.ForeignKey(Weapon,on_delete=models.CASCADE,default=0)
     mincredits = models.IntegerField()
     createdon = models.DateTimeField(auto_now=True)
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
   
 class AwardSubcategory(models.Model):
-    awardid = models.ForeignKey(Award,on_delete=models.CASCADE)
-    weaponsubcategory = models.CharField(max_length=25)
+    award = models.ForeignKey(Award,on_delete=models.CASCADE)
+    weapon = models.ForeignKey(Weapon,on_delete=models.CASCADE,default=0)
     createdon = models.DateTimeField(auto_now=True)
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
