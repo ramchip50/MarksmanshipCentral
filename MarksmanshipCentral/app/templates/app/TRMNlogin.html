@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>TRMN Marksmenship Central</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'app/content/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'app/content/site.css' %}" />
+    <script src="{% static 'app/scripts/modernizr-2.6.2.js' %}"></script>
+  
+    <style>
+      .main{
+		display: block;
+		padding: 0px 10px;
+		background-color:#111;
+		color: #F8F8FF;
+		font-size:22px;
+		min-height: 100vh;
+		    text-align:center;
+	  }    
+      .footer{
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+		    background-color:#111;
+		    font-size:16px;
+		    color: #FFD700;
+		    text-align:center;
+		    display: flex;
+		    flex-direction: column;
+		    justify-content: center;
+		        }
+		        
+      .cropped1 {
+        width: 80px; /* width of container */
+        height: 80px; /* height of container */
+        object-fit: cover;
+        object-position: 20% 10%;
+        border: 5px solid black;
+      }
+    </style> 
+  </head>
+<div class="main">
+  <h2>Welcome to the TRMN's Marksmanship Central</h2>
+  <a href="https://www.trmn.org"><img src="https://www.trmn.org/user/themes/trmn/images/trmn-2023.png" alt="TRMN Seal" width="150px" height="150px" data-src="https://www.trmn.org/user/themes/trmn/images/trmn-2023.png"></a>
+  <div class="row">
+    <div class="col-md-8">
+        <section id="loginForm">
+            <form action="." method="post" class="form-horizontal">
+                {% csrf_token %}
+                <h4>Use a local account to log in.</h4>
+                <hr />
+                <div class="form-group">
+                    <label for="id_username" class="col-md-2 control-label">User name</label>
+                    <div class="col-md-10">
+                        {{ form.username }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="id_password" class="col-md-2 control-label">Password</label>
+                    <div class="col-md-10">
+                        {{ form.password }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="hidden" name="next" value="/" />
+                        <input type="submit" value="Log in" class="btn btn-default" />
+                    </div>
+                </div>
+                {% if form.errors %}
+                <p class="validation-summary-errors">Please enter a correct user name and password.</p>
+                {% endif %}
+            </form>
+        </section>
+    </div>
+    <div class="col-md-4">
+        <section id="socialLoginForm"></section>
+    </div>
+  </div>
+</div>
+ <div class="footer"  >
+    <p>Copyright &copy; 2024 The Royal Manticoran Navy: The Official Honor Harrington Fan
+        Association, Inc. <br>
+        Some Rights Reserved.<br>
+        Honor Harrington and all related materials are &copy; David Weber.</p>
+    <span class="text-center">
+        <img class="cropped1" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Djehutymooncrown.jpg/800px-Djehutymooncrown.jpg" width="50px" height="75px"
+                                   data-src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Djehutymooncrown.jpg/800px-Djehutymooncrown.jpg"></span>
+    <p>Ibis Group (v0.1.0)</p>
+        <span id="siteseal"><script type="text/javascript"
+                                src="https://seal.starfieldtech.com/getSeal?sealID=v0CA19iS5KO2zCDMQWVQcf848PG2A4U0OWBVbTgzfEuk6Lrf8ASy84CTVQ5M"></script></span>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+</html>
