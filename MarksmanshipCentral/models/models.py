@@ -7,6 +7,10 @@ class Fleet(models.Model):
     createdon = models.DateTimeField(auto_now=True)
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
+    
+    def __str__(self):
+        return f"{self.name}"
+
 
 class Chapter(models.Model):
     name = models.CharField(max_length=125)
@@ -15,16 +19,25 @@ class Chapter(models.Model):
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
 
+    def __str__(self):
+        return f"{self.name}"
+
+
     
 class Branch(models.Model):
     name = models.CharField(max_length=125)
     createdon = models.DateTimeField(auto_now=True)
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
+    def __str__(self):
+        return f"{self.name}"
+
 
 class Weapon(models.Model):
-    weaponname=models.CharField(max_length=25)
-    
+    name=models.CharField(max_length=25,editable=False)
+   
+    def __str__(self):
+        return f"{self.name}"
 
 class Person(models.Model):
     memberid = models.CharField(max_length=10,unique=True)
@@ -38,6 +51,11 @@ class Person(models.Model):
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
 
+    def __str__(self):
+        return f"{self.lastname}, {self.firstname}"
+
+
+
 class TotalCredits(models.Model):
     person = models.ForeignKey(Person,on_delete=models.CASCADE)
     weapon = models.ForeignKey(Weapon,on_delete=models.CASCADE,default=0)
@@ -47,7 +65,7 @@ class TotalCredits(models.Model):
     active = models.BooleanField(default=True)
 
 class Game(models.Model):
-    gamename = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
     alias = models.CharField(max_length=255)
     weapon = models.ForeignKey(Weapon,on_delete=models.CASCADE,default=0)
     verified = models.BooleanField(default=False)

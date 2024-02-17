@@ -4,7 +4,7 @@ from django.contrib import admin
 
 from .models import *
 
-admin.site.register(Game,list_display=["gamename","alias","weapon","verified"])
+admin.site.register(Game,list_display=["name","alias","weapon","verified"])
 
 admin.site.register(Session)
 
@@ -16,7 +16,7 @@ admin.site.register(Person)
 
 admin.site.register(TotalCredits)
 
-admin.site.register(Chapter)
+admin.site.register(Chapter,list_display=["name","fleet"])
 
 admin.site.register(Branch)
 
@@ -27,3 +27,5 @@ admin.site.register(PeopleAwards)
 admin.site.register(Award)
 
 admin.site.register(AwardSubcategory)
+
+#admin.site.register(Weapon,list_display=["id","name"])
