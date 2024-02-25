@@ -45,6 +45,8 @@ class Person(models.Model):
     lastname = models.CharField(max_length=50)
     emailaddress = models.CharField(max_length=255)
     passwrd = models.CharField(max_length=50)
+    isStaff = models.BooleanField(default=False)
+    isSuperUser = models.BooleanField(default=False)
     chapter = models.ForeignKey(Chapter,on_delete=models.CASCADE)
     branch = models.ForeignKey(Branch,on_delete=models.CASCADE)
     createdon = models.DateTimeField(auto_now=True)
