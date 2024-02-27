@@ -68,6 +68,9 @@
     <Folder Include="models\templates\models\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\templates\app\landing.html" />
+    <Content Include="app\templates\app\TRMNlogin.html" />
+    <Content Include="app\templates\app\TRMNlogout.html" />
     <Content Include="models\templates\models\index.html" />
     <Content Include="requirements.txt" />
     <Content Include="db.sqlite3" />

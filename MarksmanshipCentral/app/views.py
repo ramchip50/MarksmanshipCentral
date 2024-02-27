@@ -4,19 +4,23 @@ Definition of views.
 
 from datetime import datetime
 from django.shortcuts import render
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
+from app.forms import signinform
+from models.models import Game, Person, Session
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+
 
 def home(request):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)
-    return render(
-        request,
-        'app/index.html',
-        {
-            'title':'Home Page',
-            'year':datetime.now().year,
-        }
-    )
+    personid = request.session.get('personid',default=None)
+    if personid != None:
+        return HttpResponseRedirect('landing/')
+    else:
+        return HttpResponseRedirect('login/')
+    
 
 def contact(request):
     """Renders the contact page."""
@@ -43,3 +47,34 @@ def about(request):
             'year':datetime.now().year,
         }
     )
+
+def landing(request):
+    personpk = request.session["personid"]
+    person = get_object_or_404(Person,pk=personpk)
+    context = {"person": person}
+    return render(request, "app/landing.html", context)
+
+                        
+def login(request):
+    if request.method == 'POST':
+        form = signinform(request.POST)
+        if form.is_valid():
+            person_email = form.cleaned_data
+            person = get_object_or_404(Person,emailaddress=person_email)
+            request.session["personid"] = person.pk
+            return HttpResponseRedirect('/landing/')
+    else:
+        form = signinform
+        
+    context = {
+        'form':form
+    }
+            
+    return render(request,'app/TRMNlogin.html',context)
+
+def logout(request):
+    request.session.flush()
+    return render(request,"app/TRMNlogout.html")    
+
+           
+    
