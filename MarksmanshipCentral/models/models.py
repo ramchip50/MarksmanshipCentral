@@ -1,3 +1,4 @@
+from typing import Required
 from django.db import models
 
 # Create your models here.
@@ -39,14 +40,21 @@ class Weapon(models.Model):
     def __str__(self):
         return f"{self.name}"
 
+class Role(models.Model):
+    name = models.CharField(max_length=50)
+    createdon = models.DateTimeField(auto_now=True)
+    modifiedon = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=True)
+    def __str__(self):
+        return f"{self.name}"
+
 class Person(models.Model):
     memberid = models.CharField(max_length=10,unique=True)
     firstname = models.CharField(max_length=50)
     lastname = models.CharField(max_length=50)
     emailaddress = models.CharField(max_length=255)
     passwrd = models.CharField(max_length=50)
-    isStaff = models.BooleanField(default=False)
-    isSuperUser = models.BooleanField(default=False)
+    role = models.ForeignKey(Role,on_delete=models.CASCADE,default=0)
     chapter = models.ForeignKey(Chapter,on_delete=models.CASCADE)
     branch = models.ForeignKey(Branch,on_delete=models.CASCADE)
     createdon = models.DateTimeField(auto_now=True)
@@ -128,17 +136,3 @@ class PeopleAwards(models.Model):
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
 
-class Role(models.Model):
-    role = models.CharField(max_length=50)
-    createdon = models.DateTimeField(auto_now=True)
-    modifiedon = models.DateTimeField(auto_now=True)
-    active = models.BooleanField(default=True)
-    def __str__(self):
-        return f"{self.role}"
-    
-class PersonRoles(models.Model):
-    person = models.ForeignKey(Person,on_delete=models.CASCADE)
-    role = models.ForeignKey(Role,on_delete=models.CASCADE)
-    createdon = models.DateTimeField(auto_now=True)
-    modifiedon = models.DateTimeField(auto_now=True)
-    active = models.BooleanField(default=True)

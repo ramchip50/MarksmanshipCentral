@@ -6,6 +6,7 @@ from datetime import datetime
 from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse
 from app.forms import signinform
+#from app.helpers import has_role
 from models.models import Game, Person, Session
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
