@@ -18,11 +18,6 @@
           <br/>
           <label for="GameName"> Name of the Game Played:</label>
           {{ form.game }}
-          <datalist id="citylist">
-            {% for results in showcity %}
-                <option value="{{ results.name}}"></option>
-            {% endfor %}
-            </datlist>
           <br/>                    
           <ledgend>Select the mode of game play:</ledgend><br>
           {{ form.playmode }}
