@@ -1,0 +1,164 @@
+
+{% extends 'app/BaseTemplate.html' %}
+ 
+{% block content %}
+
+    <h2 style="text-align: center;">New Game </h2>
+    <br/>
+    {% if submitted %}
+        Your game was submitted successfully!
+    {% endif %}
+    <br/>
+    <form action="" method=POST>
+        {% csrf_token%}
+        {{ form.as_p }}
+        <input type="button" class="btn btn-primary" onclick="javascript:ButtonClick()" value="Need Help Deciding"></input>
+       
+    </form>
+    <br/>
+    <button type="cancel" name="Cancel" value="Cancel" class="btn btn-warning">Cancel</button>
+    <button type="submit" name="save" value="save" class="btn btn-success">Save</button>
+    <br/><br/>
+    <div id="Hide1" style="display:none">
+        <h2>Answer the following questions by selecting the choice that best fits:</h2><br/>
+        <label for="Q1">Does the game involve computers or primarily use electronics?</label><br/>
+        <input type="radio" id="Y1" name="Elctric" value="Yes" onclick="javascript:Q1Check();">
+        <label for="Yes">Yes</label><br/>
+        <input type="radio" id="No" name="Elctric" value="No" onclick="javascript:Q1Check();">
+        <label for="No">No</label><br/><br/>
+    </div>
+    <div id="Hide2" style="display:none">
+        <label for="Q2">What type of game is it?</label><br/>
+        <input type="radio" id="Strategic" name="Q2" value="Strategic" onclick="javascript:Q2Check();">
+        <label for="Yes">Strategic</label>   
+        <p style="font-size: 20px">A game whose primary focus is on management of multiple-units, logistics, and resources.  You do not play single or small groups of characters in strategic board games.</p>
+        <input type="radio" id="Tactical" name="Q2" value="Tactical" onclick="javascript:Q2Check();">
+        <label for="No">Tactical</label>   
+        <p style="font-size: 20px">A game that focuses thematically or practically on a single actor or small group per player.</p>
+        <input type="radio" id="Traditional" name="Q2" value="Traditional" onclick="javascript:Q2Check();">
+        <label for="Traditional">Non-Wargame</label>   
+        <p style="font-size: 20px">A game whose theme does not link to combat.</p><br/>
+    </div>
+    <div id="Hide3" style="display:none">
+        <label for="Q3">What Category does it fit into?</label><br/>
+        <input type="radio" id="Ground" name="Q3" value="Ground" onclick="javascript:Q3Check();">
+        <label for="Naval">Ground Based Wargames*</label>   
+        <p style="font-size: 20px">All war games, board or miniature, which have subject matter primarily dealing with ground combat.</p>
+        <input type="radio" id="Naval" name="Q3" value="Naval" onclick="javascript:Q3Check();">
+        <label for="Naval">Aerospace/Naval Wargames* </label>
+        <p style="font-size: 20px">All war games, whether board or miniature, which have subject matter primarily dealing with terrestrial navies, space navies, and aircraft.</p>
+        <input type="radio" id="Cards" name="Q3" value="Cards" onclick="javascript:Q3Check();">
+        <label for="Cards">Tactical Board & Collecting/Deck-Building Card Games</label><br/> 
+        <p style="font-size: 20px">These games are board games in which the players control a single person or a small group of people. Combat may occur, but it is not the focus of the game. These games also do not typically have the sort of individual unit detail as a wargame, with more abstraction in the game design.</p><br>
+        <h5>* A wargame is a game whose theme is linked to combat, though it may include economy and politics as well. The field of play is likely to be a system of hexes or squares, or a large surface with 3-dimensional model terrain. Most board games are typically NOT wargames.</h5><br>
+    </div>
+    <div id="Hide4" style="display:none">
+        <label for="Q4">What category does it fit into?</label><br/>
+        <input type="radio" id="Family" name="Q4" value="Family" onclick="javascript:Q4Check();">
+        <label for="Family">Family</label>   
+        <p style="font-size: 20px">All childrens games (suggested age of 12 or less) or a mass-marketed family games.</p>
+        <input type="radio" id="RPG" name="Q4" value="RPG" onclick="javascript:Q4Check();">
+        <label for="RPG">Role Playing Games</label>   
+        <p style="font-size: 20px">Role-playing games are categorized as games in which each player takes on a single persona and attempts to portray that character verbally or actively to collaboratively tell a story. </p>
+        <input type="radio" id="Party" name="Q4" value="Party" onclick="javascript:Q4Check();">
+        <label for="Party">Party</label>   
+        <p style="font-size: 20px">Designed to be played as a casual entertainment at a party-style
+        gathering.</p><br/>
+    </div>
+    <div id="Hide5" style="display:none">
+        <input type="text" ID="PassThrough" Value=""></input>
+    </div>
+    <br/><br/>
+    
+
+    <script type="text/javascript">
+        function ButtonClick() {
+            if (document.getElementById('Hide1').style.display = 'none') {
+            document.getElementById('Hide1').style.display = 'block';
+            }
+            else document.getElementById('Hide1').style.display = 'none';
+        }    
+        function Q1Check() {
+            if (document.getElementById('Y1').checked) {
+                document.getElementById('Hide2').style.display = 'block';
+                document.getElementById('Hide3').style.display = 'none';
+                document.getElementById('Hide4').style.display = 'none';
+            }
+            else if (document.getElementById('No').checked) {
+                document.getElementById('Hide2').style.display = 'block';
+            }
+            else document.getElementById('Hide2').style.display = 'none';
+        }
+        function Q2Check() {
+            if (document.getElementById('Y1').checked && document.getElementById('Strategic').checked){
+                document.getElementById('PassThrough').value = "Plasma Rifle"
+                document.getElementById('id_weapon').value = "20"
+            }
+            else if (document.getElementById('Y1').checked && document.getElementById('Tactical').checked){
+                document.getElementById('PassThrough').value = "Plasma Carbine"
+                document.getElementById('id_weapon').value = "15"
+            }
+            else if (document.getElementById('Y1').checked && document.getElementById('Traditional').checked){
+                document.getElementById('PassThrough').value = "Plasma Carbine"
+                document.getElementById('id_weapon').value = "15"
+            }
+            else if (document.getElementById('Strategic').checked && document.getElementById('No').checked){
+                document.getElementById('PassThrough').value = "Tribarrel"
+                document.getElementById('id_weapon').value = "18"
+            }
+            else if (document.getElementById('Tactical').checked && document.getElementById('No').checked) {
+                document.getElementById('Hide4').style.display = 'none';
+                document.getElementById('Hide3').style.display = 'block';
+            }
+            else if (document.getElementById('Traditional').checked  && document.getElementById('No').checked) {
+                document.getElementById('Hide3').style.display = 'none';
+                document.getElementById('Hide4').style.display = 'block';
+            }
+            else { 
+                document.getElementById('Hide3').style.display = 'none';
+                document.getElementById('Hide4').style.display = 'none';
+            }
+        }
+        function Q3Check() {
+            if (document.getElementById('Ground').checked){
+                document.getElementById('PassThrough').value = "Rifle"
+                document.getElementById('id_weapon').value = "16"
+            }
+            else if (document.getElementById('Naval').checked){
+                document.getElementById('PassThrough').value = "Pistol"
+                document.getElementById('id_weapon').value = "12"
+            }
+            else if (document.getElementById('Cards').checked){
+                document.getElementById('PassThrough').value = "Flechette Gun"
+                document.getElementById('id_weapon').value = "14"
+            }
+            else {}
+        }
+        function Q4Check() {
+            if (document.getElementById('Family').checked){
+                document.getElementById('PassThrough').value = "Disruptor"
+                document.getElementById('id_weapon').value = "17"
+            }
+            else if (document.getElementById('RPG').checked){
+                document.getElementById('PassThrough').value = "Grenade Launcher"
+                document.getElementById('id_weapon').value = "19"
+            }
+            else if (document.getElementById('Party').checked){
+                document.getElementById('PassThrough').value = "Grenade"
+                document.getElementById('id_weapon').value = "13"
+            }
+            else{}
+        }
+        form_input_box = document.getElementById('id_weapon')
+        custom_input_box = documen.getElementById('PassThrough')
+                
+        ("PassThrough").change(function(){
+            form_input_box.value = custom_input_box.value
+        });
+    
+    </script>
+
+
+{% endblock %}
+
+

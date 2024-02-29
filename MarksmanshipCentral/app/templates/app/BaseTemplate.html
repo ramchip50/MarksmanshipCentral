@@ -1,0 +1,136 @@
+<!-- base.html -->
+<!doctype html>
+<html>
+<head>
+	<style type="text/css">
+	    html{
+	        position: relative;
+	        min-height: 100%;
+	    }
+		.sidenav {
+			height:100%;
+			width:220px;
+			position: fixed;
+			z-index:0;
+			top:0;
+			left:0;
+			background-color:#111;
+			overflow-x: hidden;
+			padding-top:20px;
+			
+		}    
+
+                .sidenav a {
+			padding:6px 8px 6px 16px;
+			text-decoration: none;
+			font-size:30px;
+			color: #FFD700;
+			display:block;
+			
+		}  
+  
+                .sidenav a:hover{
+			color:#f1f1f1;
+		}     
+
+                .main{
+			display: block;
+			margin-left:220px;
+			padding: 0px 10px;
+			background-color:#111;
+			color: #F8F8FF;
+			font-size:22px;
+			min-height: 100vh;
+			
+		}   
+		
+		
+		        .footer{
+            position: relative;
+            bottom: 0;
+            width: 100%;
+		    background-color:#111;
+		    font-size:16px;
+		    color: #FFD700;
+		    text-align:center;
+		    display: flex;
+		    flex-direction: column;
+		    justify-content: center;
+		    margin-left: 220px;
+		    
+		        }
+		        
+		    .cropped1 {
+            width: 80px; /* width of container */
+            height: 80px; /* height of container */
+            object-fit: cover;
+            object-position: 20% 10%;
+            border: 5px solid black;
+                }
+    </style>
+ 
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+ 
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	
+	<title>{% block title %}TRMN Marksmanship{% endblock %}</title>
+</head>
+ 
+<body>
+	<div class="sidenav">
+	    <a href="https://medusa.trmn.org"><img src="https://www.trmn.org/user/themes/trmn/images/trmn-2023.png" alt="TRMN Seal" width="150px" height="150px"
+                                   data-src="https://www.trmn.org/user/themes/trmn/images/trmn-2023.png"></a>
+	    
+		<a href="{% url 'Landing'%}">Home</a><br>
+		<a href="{% url 'PersonalInfo'%}">Personal Information</a><br>
+        <a href="{% url 'NewGame'%}">New Game</a><br>
+        <a href="{% url 'NewSession'%}">New Session</a><br>
+        <a href="{% url 'Reports'%}">Reports</a><br>
+        <a href="{% url 'logout' %}">Log Out</a><br>
+		<a href="{% url 'Oversight'%}">Oversight</a><br>
+		<a href="/admin">Admin</a>
+		<br><br><br><br>
+
+
+		<br><br><br><br>
+		
+	</div>
+ 
+	<div id="content" name="content" class="main">
+		<div class="row justify-content-center">
+			<div class="col-8">
+				<div class="align-self-center">
+    				<h1 class="mt-2" style="text-align: center;" >TRMN Marksmanship Central</h1>
+    				<hr class="mt-0 mb-4">
+
+
+
+				{% block content %}
+				{% endblock %}
+
+
+                </div>
+			</div>
+		</div>
+	</div>
+	
+    <div class="footer"  >
+	    <p>Copyright &copy; 2024 The Royal Manticoran Navy: The Official Honor Harrington Fan
+        Association, Inc. <br>
+        Some Rights Reserved.<br>
+        Honor Harrington and all related materials are &copy; David Weber.</p>
+    <span class="text-center">
+        <img class="cropped1" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Djehutymooncrown.jpg/800px-Djehutymooncrown.jpg" width="50px" height="75px"
+                                   data-src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Djehutymooncrown.jpg/800px-Djehutymooncrown.jpg"></span>
+    <p>Ibis Group (v0.1.0)</p>
+        <span id="siteseal"><script type="text/javascript"
+                                src="https://seal.starfieldtech.com/getSeal?sealID=v0CA19iS5KO2zCDMQWVQcf848PG2A4U0OWBVbTgzfEuk6Lrf8ASy84CTVQ5M"></script></span>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>
+
+
