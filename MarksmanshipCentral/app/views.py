@@ -53,7 +53,11 @@ def landing(request):
     personpk = request.session["personid"]
     person = get_object_or_404(Person,pk=personpk)
     context = {"person": person}
-    return render(request, "app/landing.html", context)
+    if person.branch.name == 'RMA':
+        template = 'app/HomeArmy.html'
+    else:
+        template = 'app/HomeNavy.html'
+    return render(request, template, context)
 
                         
 def login(request):
@@ -75,7 +79,24 @@ def login(request):
 
 def logout(request):
     request.session.flush()
-    return render(request,"app/TRMNlogout.html")    
+    return render(request,'app/TRMNlogout.html')    
 
-           
+def personal(request):
+    personpk = request.session["personid"]
+    person = get_object_or_404(Person,pk=personpk)
+    context = {"person": person}
+    return render(request, 'app/Personal.html',context)    
+
+def newgame(request):
+    return render(request, 'app/NewGame.html')
+
+def newsession(request):
+    return render(request, 'app/NewSession2.html')
     
+def reports(request):
+    return render(request, 'app/Reports.html')
+
+def oversight(request):
+    return render(request, 'app/Oversight.html')
+
+

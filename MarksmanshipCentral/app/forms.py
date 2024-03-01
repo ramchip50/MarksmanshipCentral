@@ -11,9 +11,9 @@ from models.models import Person
 
 
 class signinform(forms.Form):
-    email_address = forms.EmailField(max_length=255,required=True,
+    email_address = forms.EmailField(max_length=255,required=True,label='Email Address',
                                      widget=forms.EmailInput)
-    passwrd = forms.CharField(max_length=50, required=True,
+    passwrd = forms.CharField(max_length=50, required=True,label='Password',
                                widget=forms.PasswordInput)    
 
     def clean(self):

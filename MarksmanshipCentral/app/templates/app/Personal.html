@@ -1,0 +1,21 @@
+{% extends 'app/BaseTemplate.html' %}
+ 
+{% block content %}
+<center>
+    <h1>Personal Information</h1>
+    <br><br>
+    {% if submitted %}
+        Information was updated successfully!
+    {% endif %}
+    <form action="" method=POST>    
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit" class="btn btn-secondary">
+    </form>
+</center>
+
+
+
+
+
+{% endblock %}
