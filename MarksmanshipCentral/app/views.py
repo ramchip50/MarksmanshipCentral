@@ -3,11 +3,12 @@ Definition of views.
 """
 
 from datetime import datetime
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.http import HttpRequest, HttpResponse
-from app.forms import signinform
-#from app.helpers import has_role
-from models.models import Game, Person, Session
+from app.forms import *
+from django.forms.models import modelformset_factory
+from app.helpers import *
+from models.models import *
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -84,14 +85,60 @@ def logout(request):
 def personal(request):
     personpk = request.session["personid"]
     person = get_object_or_404(Person,pk=personpk)
-    context = {"person": person}
+    submitted = False
+    form = PersonForm(request.POST or None, instance=person)
+    if form.is_valid():
+         form.save()
+         return redirect('app/personal')
+    context = {"person": person, "form":form }
     return render(request, 'app/Personal.html',context)    
 
 def newgame(request):
-    return render(request, 'app/NewGame.html')
+	submitted = False
+	if request.method == "POST":
+		form = GameForm(request.POST)
+		if form.is_valid():
+			form.save()
+			return HttpResponseRedirect('/NewGame?submitted=True')
+	else: 
+		form = GameForm
+		if 'submitted' in request.GET:
+			submitted = True 
+		return render(request, "app/NewGame.html", {'form':form, 'submitted':submitted})
 
 def newsession(request):
-    return render(request, 'app/NewSession2.html')
+	submitted = False
+	if request.method == 'POST':
+		form = SessionForm(request.POST or None)
+		TRMNSessionformset = modelformset_factory(SessionParticipants, form=TRMNpartForm, extra = 10, max_num=10)
+		NonSessionformset = modelformset_factory(NonTRMNParticipants, form=NonpartForm, extra = 3, max_num=3)
+		formset1 = TRMNSessionformset(request.POST or None) 
+		formset2 = NonSessionformset(request.POST or None) 
+		if all([form.is_valid(), formset1.is_valid(), formset2.is_valid()]):
+			parent = form.save()
+			parent.save()
+			for form in formset1:
+				child1 = formset1.save()
+				child1.session = parent.pk
+				child1.save()
+			for form in formset2:
+				child2=formset2.save()
+				child2.session = parent.pk
+				child2.save()
+			return HttpResponseRedirect('app/NewSession2?submitted=True')
+	else:
+		form = SessionForm()
+		TRMNSessionformset = modelformset_factory(SessionParticipants, form=TRMNpartForm, extra = 10, max_num=10)
+		NonSessionformset = modelformset_factory(NonTRMNParticipants, form=NonpartForm, extra = 3, max_num=3)
+		formset1 = TRMNSessionformset() 
+		formset2 = NonSessionformset() 
+		if "submitted" in request.GET:
+			Submitted = True
+	
+	return render(request, 'app/NewSession2.html', {'form':form,'formset1':formset1, 'formset2':formset2, 'submitted':submitted})
+
+
+
     
 def reports(request):
     return render(request, 'app/Reports.html')
