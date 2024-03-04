@@ -28,98 +28,44 @@
     </form>
 <br/><br/>
 
-<table class="table table-bordered, text-white">
-    <tr>
-        <th>Category</th>
-        <th>Total Points</th>
-        <th>   </th>
-        <th>Marksman</th>
-        <th>Sharpshooter</th>
-        <th>Expert</th>
-        <th>High Expert</th>
-    </tr>
-    <tr>
-        <td>Pistol</td>
-        <td></td>
-        <td>   </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>Grenade</td>
-        <td></td>
-        <td>   </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>Flechette Gun</td>
-        <td></td>
-        <td>   </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>Plasma Carbine</td>
-        <td></td>
-        <td>   </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>Tri-Barrel</td>
-        <td></td>
-        <td>   </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>Rifle</td>
-        <td></td>
-        <td>   </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>Disruptor</td>
-        <td></td>
-        <td>   </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>Grenade Launcher</td>
-        <td></td>
-        <td>   </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>Plasma Rifle</td>
-        <td></td>
-        <td>   </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-</table> 
+     <table class="table table-bordered, text-white">
+         <tr>
+             <th>Category</th>
+             <th>Total Points</th>
+             <th>   </th>
+             <th>Marksman</th>
+             <th>Sharpshooter</th>
+             <th>Expert</th>
+             <th>High Expert</th>
+         </tr>
+         {% for tc in credits  %}
+         <tr>
+             <td>{{ tc.weapon_name }}</td>
+             <td>{{ tc.weapon_total }}</td>
+             <td></td>
+             {% if tc.marksman != None %}
+             <td>{{ tc.marksman }}</td>
+             {% else %}
+             <td></td>
+             {% endif %}
+             {% if tc.sharpshooter != None %}
+             <td>{{ tc.sharpshooter }}</td>
+             {% else %}
+             <td></td>
+             {% endif %}
+             {% if tc.expert != None %}
+             <td>{{ tc.expert }}</td>
+             {% else %}
+             <td></td>
+             {% endif %}
+             {% if tc.high_expert != None %}
+             <td>{{ tc.high_expert }}</td>
+             {% else %}
+             <td></td>
+             {% endif %}
+         </tr>
+         {% endfor %}
+     </table> 
 
     <br/><br/> 
 

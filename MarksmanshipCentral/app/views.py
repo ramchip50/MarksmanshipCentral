@@ -53,11 +53,12 @@ def about(request):
 def landing(request):
     personpk = request.session["personid"]
     person = get_object_or_404(Person,pk=personpk)
-    context = {"person": person}
+    credits = award_list(personpk)
     if person.branch.name == 'RMA':
         template = 'app/HomeArmy.html'
     else:
         template = 'app/HomeNavy.html'
+    context = {"person": person,"credits":credits}
     return render(request, template, context)
 
                         

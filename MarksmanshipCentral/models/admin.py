@@ -14,15 +14,13 @@ admin.site.register(NonTRMNParticipants)
 
 admin.site.register(Person)
 
-admin.site.register(TotalCredits)
+admin.site.register(TotalCredits, list_display=["person","weapon","weapontotal","marksman","sharpshooter","expert","high_expert"])
 
 admin.site.register(Chapter,list_display=["name","fleet"])
 
 admin.site.register(Branch)
 
 admin.site.register(Fleet)
-
-admin.site.register(PeopleAwards)
 
 admin.site.register(Award)
 

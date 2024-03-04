@@ -70,6 +70,10 @@ class TotalCredits(models.Model):
     person = models.ForeignKey(Person,on_delete=models.CASCADE)
     weapon = models.ForeignKey(Weapon,on_delete=models.CASCADE,default=0)
     weapontotal = models.DecimalField(decimal_places=2,max_digits=10)
+    marksman = models.DateField(null=True, blank=True)
+    sharpshooter = models.DateField(null=True, blank=True)
+    expert = models.DateField(null=True, blank=True)
+    high_expert = models.DateField(null=True, blank=True)
     createdon = models.DateTimeField(auto_now=True)
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
@@ -116,7 +120,6 @@ class Award(models.Model):
     branch = models.ForeignKey(Branch,on_delete=models.DO_NOTHING)
     awardname = models.CharField(max_length=25)
     weapon = models.ForeignKey(Weapon,on_delete=models.CASCADE,default=0)
-    mincredits = models.IntegerField()
     createdon = models.DateTimeField(auto_now=True)
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
@@ -128,11 +131,5 @@ class AwardSubcategory(models.Model):
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
     
-class PeopleAwards(models.Model):
-    personid = models.ForeignKey(Person,on_delete=models.CASCADE)
-    awardid = models.ForeignKey(Award,on_delete=models.CASCADE)
-    dateawarded = models.DateField()
-    createdon = models.DateTimeField(auto_now=True)
-    modifiedon = models.DateTimeField(auto_now=True)
-    active = models.BooleanField(default=True)
+
 
