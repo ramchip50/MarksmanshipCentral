@@ -118,6 +118,9 @@ class Game(models.Model):
     
     objects = models.Manager()
     active_objects = ActiveManager()
+        
+    def __str__(self):
+        return f"{self.name}"
 
     
 class Session(models.Model):
@@ -171,6 +174,10 @@ class Award(models.Model):
 
     objects = models.Manager()
     active_objects = ActiveManager()
+    
+    def __str__(self):
+        return f"{self.awardname}"    
+
 
   
 class AwardSubcategory(models.Model):

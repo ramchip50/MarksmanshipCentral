@@ -4,26 +4,57 @@ from django.contrib import admin
 
 from .models import *
 
-admin.site.register(Game,list_display=["name","alias","weapon","verified"])
+@admin.register(Game)
+class GameAdmin(admin.ModelAdmin):
+    list_display=("name","alias","weapon","verified")
+    search_fields=("name__startswith","alias__startswith")
+    ordering = ("name",)
+    
+    pass
+    
+@admin.register(Session)
+class SessionAdmin(admin.ModelAdmin):
+    pass
 
-admin.site.register(Session)
+@admin.register(SessionParticipants)
+class SessionParticipantsAdmin(admin.ModelAdmin):
+    pass
 
-admin.site.register(SessionParticipants)
+@admin.register(NonTRMNParticipants)
+class NonTRMNParticpantsAdmin(admin.ModelAdmin):
+    pass
 
-admin.site.register(NonTRMNParticipants)
+@admin.register(Person)
+class PersonAdmin(admin.ModelAdmin):
+    list_display=("lastname","firstname","branch","chapter")
+    list_select_related=("branch","chapter")
+    list_filter=("branch","chapter")
+    search_fields=("lastname__startswith",)
+    ordering=("lastname","firstname")
+    pass
 
-admin.site.register(Person)
+@admin.register(TotalCredits)
+class TotalCreditsAdmin(admin.ModelAdmin):
+    list_display=("person","weapon","weapontotal","marksman","sharpshooter","expert","high_expert")
+    pass
 
-admin.site.register(TotalCredits, list_display=["person","weapon","weapontotal","marksman","sharpshooter","expert","high_expert"])
+@admin.register(Chapter)
+class ChapterAdmin(admin.ModelAdmin):
+    list_display=("name","fleet")
+    pass
 
-admin.site.register(Chapter,list_display=["name","fleet"])
+@admin.register(Branch)
+class BranchAdmin(admin.ModelAdmin):
+    pass
 
-admin.site.register(Branch)
+@admin.register(Fleet)
+class FleetAdmin(admin.ModelAdmin):
+    pass
 
-admin.site.register(Fleet)
+@admin.register(Award)
+class AwardAdmin(admin.ModelAdmin):
+    list_display=("awardname","branch")
+    pass
 
-admin.site.register(Award)
+#admin.register(AwardSubcategory)
 
-admin.site.register(AwardSubcategory)
-
-#admin.site.register(Weapon,list_display=["id","name"])
