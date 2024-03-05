@@ -3,11 +3,20 @@ from django.db import models
 
 # Create your models here.
 
+class ActiveManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(active=True)
+
+
+
 class Fleet(models.Model):
     name = models.CharField(max_length=125)
     createdon = models.DateTimeField(auto_now=True)
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
+
+    objects = models.Manager()
+    active_objects = ActiveManager()
     
     def __str__(self):
         return f"{self.name}"
@@ -20,6 +29,10 @@ class Chapter(models.Model):
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
 
+    objects = models.Manager()
+    active_objects = ActiveManager()
+
+
     def __str__(self):
         return f"{self.name}"
 
@@ -30,6 +43,10 @@ class Branch(models.Model):
     createdon = models.DateTimeField(auto_now=True)
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
+
+    objects = models.Manager()
+    active_objects = ActiveManager()
+
     def __str__(self):
         return f"{self.name}"
 
@@ -45,6 +62,10 @@ class Role(models.Model):
     createdon = models.DateTimeField(auto_now=True)
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
+    
+    objects = models.Manager()
+    active_objects = ActiveManager()
+
     def __str__(self):
         return f"{self.name}"
 
@@ -60,6 +81,10 @@ class Person(models.Model):
     createdon = models.DateTimeField(auto_now=True)
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
+    
+    objects = models.Manager()
+    active_objects = ActiveManager()
+
 
     def __str__(self):
         return f"{self.lastname}, {self.firstname}"
@@ -77,6 +102,10 @@ class TotalCredits(models.Model):
     createdon = models.DateTimeField(auto_now=True)
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
+    
+    objects = models.Manager()
+    active_objects = ActiveManager()
+
 
 class Game(models.Model):
     name = models.CharField(max_length=50)
@@ -86,6 +115,10 @@ class Game(models.Model):
     createdon = models.DateTimeField(auto_now=True)
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
+    
+    objects = models.Manager()
+    active_objects = ActiveManager()
+
     
 class Session(models.Model):
     game = models.ForeignKey(Game,on_delete=models.DO_NOTHING)
@@ -98,6 +131,9 @@ class Session(models.Model):
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
     
+    objects = models.Manager()
+    active_objects = ActiveManager()
+        
 class SessionParticipants(models.Model):
     session = models.ForeignKey(Session,on_delete=models.CASCADE)
     person = models.ForeignKey(Person,on_delete=models.CASCADE)
@@ -106,6 +142,11 @@ class SessionParticipants(models.Model):
     createdon = models.DateTimeField(auto_now=True)
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
+
+    objects = models.Manager()
+    active_objects = ActiveManager()
+    
+
     
 class NonTRMNParticipants(models.Model):
     session = models.ForeignKey(Session,on_delete=models.CASCADE)
@@ -115,6 +156,10 @@ class NonTRMNParticipants(models.Model):
     createdon = models.DateTimeField(auto_now=True)
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
+    
+    objects = models.Manager()
+    active_objects = ActiveManager()
+
 
 class Award(models.Model):
     branch = models.ForeignKey(Branch,on_delete=models.DO_NOTHING)
@@ -123,6 +168,10 @@ class Award(models.Model):
     createdon = models.DateTimeField(auto_now=True)
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
+
+    objects = models.Manager()
+    active_objects = ActiveManager()
+
   
 class AwardSubcategory(models.Model):
     award = models.ForeignKey(Award,on_delete=models.CASCADE)
@@ -130,6 +179,9 @@ class AwardSubcategory(models.Model):
     createdon = models.DateTimeField(auto_now=True)
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
+
+    objects = models.Manager()
+    active_objects = ActiveManager()
     
 
 

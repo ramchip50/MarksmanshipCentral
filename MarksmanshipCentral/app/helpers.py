@@ -1,9 +1,10 @@
 #Common Functions Go here. reference = from app.helpers import * 
 
 
-
+import datetime
 from django.db.models import Q, Value, QuerySet
 from django.db.models.functions import Concat
+
 from models.models import *
     
 def player_select_list():
@@ -37,6 +38,20 @@ def award_list(personpk):
         
     return awardgrid
 
+def save_session(gamepk):
+#check for duplicates
+#get the game and date from incoming session
+#find a session with the same game and date
+#if not found, good to go
+#if found, get checksum of personids from incoming 
+    #compare to checksum of personids from save
+    startdate = datetime.date(2024,3,1)
+    saved = Session.objects.filter(game_id = gamepk,startdate__startswith = datetime.date(startdate.year,startdate.month,startdate.day))
+    if saved.count() == 0:
+        return 'no dup'
+    else:
+        return 'yes dup'
+  
 
         
     
