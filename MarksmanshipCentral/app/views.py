@@ -116,6 +116,7 @@ def newsession(request):
 		formset1 = TRMNSessionformset(request.POST or None) 
 		formset2 = NonSessionformset(request.POST or None) 
 		if all([form.is_valid(), formset1.is_valid(), formset2.is_valid()]):
+            #Calculate minutes and credits      
 			parent = form.save()
 			parent.save()
 			for form in formset1:

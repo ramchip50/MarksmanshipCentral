@@ -137,6 +137,17 @@ class Session(models.Model):
     objects = models.Manager()
     active_objects = ActiveManager()
         
+    def __init__(game_id, start_date, end_date, play_mode, turns_played):
+        game = game
+        startdate = start_date
+        enddate = end_date
+        playmode = play_mode
+        turnsplayed = turns_played
+
+        
+
+    
+        
 class SessionParticipants(models.Model):
     session = models.ForeignKey(Session,on_delete=models.CASCADE)
     person = models.ForeignKey(Person,on_delete=models.CASCADE)
