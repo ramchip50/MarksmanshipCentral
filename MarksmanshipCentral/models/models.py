@@ -85,6 +85,9 @@ class Person(models.Model):
     objects = models.Manager()
     active_objects = ActiveManager()
 
+    class Meta:
+        verbose_name = "Member"
+        verbose_name_plural = "Members"
 
     def __str__(self):
         return f"{self.lastname}, {self.firstname}"
@@ -105,6 +108,10 @@ class TotalCredits(models.Model):
     
     objects = models.Manager()
     active_objects = ActiveManager()
+    
+    class Meta:
+        verbose_name = 'Total Credit Log'
+        verbose_name_plural= 'Total Credit Logs'
 
 
 class Game(models.Model):
@@ -136,6 +143,10 @@ class Session(models.Model):
     
     objects = models.Manager()
     active_objects = ActiveManager()
+    
+    class Meta:
+        verbose_name = "Game Session"
+        verbose_name_plural = "Game Sessions"
         
     def fill(self,game, startdate, enddate, playmode, turnsplayed):
         self.game = game
@@ -160,8 +171,13 @@ class SessionParticipants(models.Model):
     objects = models.Manager()
     active_objects = ActiveManager()
     
+    class Meta:
+        verbose_name = "Game Session Player"
+        verbose_name_plural = "Game Session Players"
+        
+    def __str__(self):
+        return f"{self.person.lastname}, {self.person.firstname}"
 
-    
 class NonTRMNParticipants(models.Model):
     session = models.ForeignKey(Session,on_delete=models.CASCADE)
     emailaddress = models.CharField(max_length=255)
