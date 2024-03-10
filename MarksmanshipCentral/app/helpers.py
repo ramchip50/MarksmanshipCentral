@@ -52,7 +52,7 @@ def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:Ba
     if saved != None:
         csum = personpk
         for t in trmn_participants:
-            if t.cleaned_data : csum += t.cleaned_data["person"].pk
+            if t.cleaned_data : csum += int(t.cleaned_data["playername"])
         #compare to checksum of personids from save
         saved_trmnpart = SessionParticipants.active_objects.filter(session_id=saved.pk)
         csum1=0

@@ -2,6 +2,10 @@ from django.contrib import admin
 
 # Register your models here.
 
+
+
+#Put in delete action for soft delete
+from django.forms import modelformset_factory
 from .models import *
 
 @admin.register(Game)
@@ -11,18 +15,32 @@ class GameAdmin(admin.ModelAdmin):
     ordering = ("name",)
     
     pass
+
+class ParticipantsInLine(admin.StackedInline):
+    model = SessionParticipants
+    extra = 4
+    max_num = 4
     
 @admin.register(Session)
+@admin.display(description="member",)
 class SessionAdmin(admin.ModelAdmin):
+    list_display=("game","startdate","enddate","playmode")
+    list_select_related=True
+    list_filter=("game","playmode")
+    date_hierarchy='startdate'
+    search_fields=["game__name"]
+    ordering=("startdate","game")
+    inlines = [ParticipantsInLine]
     pass
 
-@admin.register(SessionParticipants)
-class SessionParticipantsAdmin(admin.ModelAdmin):
-    pass
+# @admin.register(SessionParticipants)
+# class SessionParticipantsAdmin(admin.ModelAdmin):
+#     list_display=("session","person")
+#     pass
 
-@admin.register(NonTRMNParticipants)
-class NonTRMNParticpantsAdmin(admin.ModelAdmin):
-    pass
+# @admin.register(NonTRMNParticipants)
+# class NonTRMNParticpantsAdmin(admin.ModelAdmin):
+#     pass
 
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
@@ -36,6 +54,10 @@ class PersonAdmin(admin.ModelAdmin):
 @admin.register(TotalCredits)
 class TotalCreditsAdmin(admin.ModelAdmin):
     list_display=("person","weapon","weapontotal","marksman","sharpshooter","expert","high_expert")
+    list_select_related=True
+    search_fields=["person__lastname"]
+    ordering=("person__lastname","person__firstname")
+    list_filter=("person__lastname",)
     pass
 
 @admin.register(Chapter)

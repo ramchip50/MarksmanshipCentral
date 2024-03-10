@@ -8,6 +8,7 @@
     <TestFramework>unittest</TestFramework>
     <UnitTestPattern>test*.py</UnitTestPattern>
     <UnitTestRootDirectory>./app</UnitTestRootDirectory>
+    <SuppressPackageInstallationPrompt>True</SuppressPackageInstallationPrompt>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -43,9 +44,6 @@
     </Compile>
     <Compile Include="app\models.py" />
     <Compile Include="app\tests.py" />
-    <Compile Include="app\test_1.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="app\views.py" />
     <Compile Include="app\__init__.py" />
     <Compile Include="app\migrations\__init__.py" />
