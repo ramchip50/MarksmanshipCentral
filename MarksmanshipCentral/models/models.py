@@ -94,7 +94,7 @@ class Person(models.Model):
 class TotalCredits(models.Model):
     person = models.ForeignKey(Person,on_delete=models.CASCADE)
     weapon = models.ForeignKey(Weapon,on_delete=models.CASCADE,default=0)
-    weapontotal = models.DecimalField(decimal_places=2,max_digits=10)
+    weapontotal = models.DecimalField(decimal_places=2,max_digits=10,default=0)
     marksman = models.DateField(null=True, blank=True)
     sharpshooter = models.DateField(null=True, blank=True)
     expert = models.DateField(null=True, blank=True)
@@ -128,7 +128,7 @@ class Session(models.Model):
     startdate = models.DateTimeField()
     enddate = models.DateTimeField()
     playmode = models.CharField(max_length=10)
-    turnsplayed = models.IntegerField()
+    turnsplayed = models.IntegerField(null=True)
     flagged = models.BooleanField(default=False)
     createdon = models.DateTimeField(auto_now=True)
     modifiedon = models.DateTimeField(auto_now=True)
@@ -137,12 +137,12 @@ class Session(models.Model):
     objects = models.Manager()
     active_objects = ActiveManager()
         
-    def __init__(game_id, start_date, end_date, play_mode, turns_played):
-        game = game
-        startdate = start_date
-        enddate = end_date
-        playmode = play_mode
-        turnsplayed = turns_played
+    def fill(self,game, startdate, enddate, playmode, turnsplayed):
+        self.game = game
+        self.startdate = startdate
+        self.enddate = enddate
+        self.playmode = playmode
+        self.turnsplayed = turnsplayed
 
         
 
@@ -167,6 +167,7 @@ class NonTRMNParticipants(models.Model):
     emailaddress = models.CharField(max_length=255)
     firstname = models.CharField(max_length=50)
     lastname = models.CharField(max_length=50)
+    fullname = models.CharField(max_length=100, null=True)
     createdon = models.DateTimeField(auto_now=True)
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
