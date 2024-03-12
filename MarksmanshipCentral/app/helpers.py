@@ -15,6 +15,9 @@ from models.models import *
 def no_coffee():
     return "I'm a teapot"
 
+#Award Functions
+#region
+
 class awardentry:
     def __init__(self,weapon_name,weapon_total,marksman,sharpshooter,expert,high_expert):
         self.weapon_name = weapon_name
@@ -38,6 +41,11 @@ def award_list(personpk):
                 awardgrid.append(thiscred)
         
     return awardgrid
+
+#endregion
+
+#Session Functions
+# region
 
 def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:BaseModelFormSet,nontrmn:BaseModelFormSet):
 #check for duplicates
@@ -126,9 +134,53 @@ def update_total_credits(personpk, earned_credits, game:Game):
         tc.high_expert = datetime.today()
     tc.save()
             
-    
+# endregion    
+
+#Member Functions
+#region
+
+def Transfer_Branch(person:Person, newbranch:Branch):
+	weapontotals = CategoryCredits.objects.filter(person_id=person.pk)
+	savedtotals = TotalCredits.active_objects.filter(person_id=person.pk)
+	#Navy to Army
+	if person.branch.name != 'RMA' and newbranch.name == 'RMA':
+		toArmy = True
+	else:
+		if newbranch.name != 'RMA' and person.branch.name == 'RMA':
+			toArmy = False
+
+	#clear TC and reload 			   
+	for cc in weapontotals:
+		if toArmy:  
+			savedweapon = savedtotals.filter("weapon.pk"==cc.weapon_id)
+			if savedweapon is not None:
+				savedweapon.Clear()
+			else:   
+				savedweapon=TotalCredits()
+				savedweapon.person = person
+				savedweapon.weapon = cc.weapon
+				savedweapon.createdon = datetime.Today()
+				
+			savedweapon.weapontotal = cc.weaponcredits 
+			savedweapon.save()   
+		else:
+		    for s in savedtotals:
+			       s.clear()
+                  
+            savedpistol = savedtotals.filter("weapon_pk"==1) #Pistol
+			
+          if savedpistol: savedpistol.clear() 
+		# if (cc.weaponcredits>=5 and cc.weaponcredits < 100) and savedweapon.marksman == None:
+		# 	savedweapon.marksman = datetime.today()
+		# if (cc.weaponcredits>=100 and cc.weaponcredits < 200) and savedweapon.sharpshooter == None:
+		# 	savedweapon.sharpshooter = datetime.today()
+		# if (cc.weaponcredits>=200 and cc.weaponcredits < 600) and savedweapon.expert == None:
+		# 	savedweapon.expert = datetime.today()
+		# if (cc.weaponcredits>=600) and savedweapon.high_expert == None:
+		# 	savedweapon.high_expert = datetime.today()
 
 
+#endregion
         
         
         

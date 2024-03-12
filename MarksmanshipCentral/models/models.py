@@ -1,4 +1,5 @@
 from typing import Required
+from django.core.exceptions import NON_FIELD_ERRORS
 from django.db import models
 import datetime
 
@@ -86,12 +87,23 @@ class Person(models.Model):
     objects = models.Manager()
     active_objects = ActiveManager()
 
+
+
     class Meta:
         verbose_name = "Member"
         verbose_name_plural = "Members"
 
     def __str__(self):
         return f"{self.lastname}, {self.firstname}"
+    
+    def delete(self, **kwargs):
+        self.active=False
+        self.modifiedon = datetime.Today()
+        super().save(**kwargs)
+    
+    def save(self,*args, **kwargs):
+        self.modifiedon = datetime.Today()
+        super().save(**kwargs)
 
 
 
@@ -112,8 +124,22 @@ class TotalCredits(models.Model):
     
     def delete(self, **kwargs):
         self.active=False
+        self.modifiedon = datetime.Today()
         super().save(**kwargs)
     
+    def save(self,*args, **kwargs):
+        self.modifiedon = datetime.Today()
+        super().save(**kwargs)
+
+    def clear(self):
+        self.modifiedon = datetime.Today()
+        self.marksman = None
+        self.sharpshooter = None
+        self.expert = None
+        self.high_expert = None
+        self.weapontotal = 0
+        self.save()
+
     class Meta:
         verbose_name = 'Total Credit Log'
         verbose_name_plural= 'Total Credit Logs'
@@ -133,6 +159,11 @@ class Game(models.Model):
   
     def delete(self, **kwargs):
         self.active=False
+        self.modifiedon = datetime.Today()
+        super().save(**kwargs)
+    
+    def save(self,*args, **kwargs):
+        self.modifiedon = datetime.Today()
         super().save(**kwargs)
 
     def __str__(self):
@@ -159,9 +190,13 @@ class Session(models.Model):
      
     def delete(self, **kwargs):
         self.active=False
+        self.modifiedon = datetime.Today()
+        super().save(**kwargs)
+    
+    def save(self,*args, **kwargs):
+        self.modifiedon = datetime.Today()
         super().save(**kwargs)
         
-
     def fill(self,game, startdate, enddate, playmode, turnsplayed):
         self.game = game
         self.startdate = startdate
@@ -188,8 +223,13 @@ class SessionParticipants(models.Model):
         
     def delete(self, **kwargs):
         self.active=False
-        super().save(**kwargs) 
-        
+        self.modifiedon = datetime.Today()
+        super().save(**kwargs)
+    
+    def save(self,*args, **kwargs):
+        self.modifiedon = datetime.Today()
+        super().save(**kwargs)        
+
     def __str__(self):
         return f"{self.person.lastname}, {self.person.firstname}"
 
