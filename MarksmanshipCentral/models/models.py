@@ -1,5 +1,6 @@
 from typing import Required
 from django.db import models
+import datetime
 
 # Create your models here.
 
@@ -109,6 +110,10 @@ class TotalCredits(models.Model):
     objects = models.Manager()
     active_objects = ActiveManager()
     
+    def delete(self, **kwargs):
+        self.active=False
+        super().save(**kwargs)
+    
     class Meta:
         verbose_name = 'Total Credit Log'
         verbose_name_plural= 'Total Credit Logs'
@@ -125,7 +130,11 @@ class Game(models.Model):
     
     objects = models.Manager()
     active_objects = ActiveManager()
-        
+  
+    def delete(self, **kwargs):
+        self.active=False
+        super().save(**kwargs)
+
     def __str__(self):
         return f"{self.name}"
 
@@ -147,7 +156,12 @@ class Session(models.Model):
     class Meta:
         verbose_name = "Game Session"
         verbose_name_plural = "Game Sessions"
+     
+    def delete(self, **kwargs):
+        self.active=False
+        super().save(**kwargs)
         
+
     def fill(self,game, startdate, enddate, playmode, turnsplayed):
         self.game = game
         self.startdate = startdate
@@ -155,9 +169,6 @@ class Session(models.Model):
         self.playmode = playmode
         self.turnsplayed = turnsplayed
 
-        
-
-    
         
 class SessionParticipants(models.Model):
     session = models.ForeignKey(Session,on_delete=models.CASCADE)
@@ -175,8 +186,25 @@ class SessionParticipants(models.Model):
         verbose_name = "Game Session Player"
         verbose_name_plural = "Game Session Players"
         
+    def delete(self, **kwargs):
+        self.active=False
+        super().save(**kwargs) 
+        
     def __str__(self):
         return f"{self.person.lastname}, {self.person.firstname}"
+
+class CategoryCredits(models.Model):
+    id = models.IntegerField(primary_key=True)
+    person_id = models.IntegerField()
+    lastname = models.CharField(max_length=50)
+    firstname=models.CharField(max_length=50)
+    weapon=models.CharField(max_length=50)
+    weapon_id=models.IntegerField()
+    weaponcredits=models.DecimalField(max_digits=10,decimal_places=2)
+    
+    class Meta:
+        managed=False
+        db_table='modelview_categorycredits'
 
 class NonTRMNParticipants(models.Model):
     session = models.ForeignKey(Session,on_delete=models.CASCADE)
@@ -188,6 +216,15 @@ class NonTRMNParticipants(models.Model):
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
     
+    def save(self, **kwargs):
+        self.modifiedon=datetime.Today
+        super().save(**kwargs)
+        
+    def delete(self, **kwargs):
+        self.active=False
+        self.modifiedon=datetime.Today
+        super().save(**kwargs)
+
     objects = models.Manager()
     active_objects = ActiveManager()
 

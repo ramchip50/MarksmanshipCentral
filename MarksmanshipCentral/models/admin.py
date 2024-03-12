@@ -53,11 +53,16 @@ class PersonAdmin(admin.ModelAdmin):
 
 @admin.register(TotalCredits)
 class TotalCreditsAdmin(admin.ModelAdmin):
-    list_display=("person","weapon","weapontotal","marksman","sharpshooter","expert","high_expert")
+    list_display=("person","person_branch","weapon","weapontotal","marksman","sharpshooter","expert","high_expert")
     list_select_related=True
     search_fields=["person__lastname"]
     ordering=("person__lastname","person__firstname")
     list_filter=("person__lastname",)
+    
+    def person_branch(self,obj):
+        return f"{obj.person.branch}"
+ 
+    person_branch.short__description="Branch"
     pass
 
 @admin.register(Chapter)
