@@ -170,9 +170,6 @@ class Session(models.Model):
         self.turnsplayed = turnsplayed
 
         
-
-    
-        
 class SessionParticipants(models.Model):
     session = models.ForeignKey(Session,on_delete=models.CASCADE)
     person = models.ForeignKey(Person,on_delete=models.CASCADE)
@@ -195,6 +192,19 @@ class SessionParticipants(models.Model):
         
     def __str__(self):
         return f"{self.person.lastname}, {self.person.firstname}"
+
+class CategoryCredits(models.Model):
+    id = models.IntegerField(primary_key=True)
+    person_id = models.IntegerField()
+    lastname = models.CharField(max_length=50)
+    firstname=models.CharField(max_length=50)
+    weapon=models.CharField(max_length=50)
+    weapon_id=models.IntegerField()
+    weaponcredits=models.DecimalField(max_digits=10,decimal_places=2)
+    
+    class Meta:
+        managed=False
+        db_table='modelview_categorycredits'
 
 class NonTRMNParticipants(models.Model):
     session = models.ForeignKey(Session,on_delete=models.CASCADE)
