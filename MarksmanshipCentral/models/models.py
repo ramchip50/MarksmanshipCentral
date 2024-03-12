@@ -1,4 +1,3 @@
-from typing import Required
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.db import models
 import datetime
@@ -8,8 +7,6 @@ import datetime
 class ActiveManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(active=True)
-
-
 
 class Fleet(models.Model):
     name = models.CharField(max_length=125)

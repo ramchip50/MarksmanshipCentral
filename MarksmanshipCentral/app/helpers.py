@@ -3,6 +3,7 @@
 
 from datetime import datetime
 from decimal import *
+from unicodedata import name
 from django.forms import BaseModelFormSet
 from django.db.models import Value
 from django.db.models.functions import Concat
@@ -140,44 +141,68 @@ def update_total_credits(personpk, earned_credits, game:Game):
 #region
 
 def Transfer_Branch(person:Person, newbranch:Branch):
-	weapontotals = CategoryCredits.objects.filter(person_id=person.pk)
-	savedtotals = TotalCredits.active_objects.filter(person_id=person.pk)
-	#Navy to Army
+	sessiontotals = CategoryCredits.objects.filter(person_id=person.pk) #totals from recorded sessions
+	weaponawards = TotalCredits.active_objects.filter(person_id=person.pk) #total from issued awards
+	pistolweapon = Weapon.objects.get(name='Pistol') 
+	rifleweapon = Weapon.objects.get(name='Rifle')
+	#Navy to Army , create total credits record for all CategoryCredits
 	if person.branch.name != 'RMA' and newbranch.name == 'RMA':
 		toArmy = True
 	else:
-		if newbranch.name != 'RMA' and person.branch.name == 'RMA':
+		if newbranch.name != 'RMA' and person.branch.name == 'RMA':  #Regroup Category credits to Pistol and Rifle
 			toArmy = False
 
-	#clear TC and reload 			   
-	for cc in weapontotals:
-		if toArmy:  
-			savedweapon = savedtotals.filter("weapon.pk"==cc.weapon_id)
-			if savedweapon is not None:
-				savedweapon.Clear()
+	#clear TC
+	for s in weaponawards:
+		s.clear()
+
+	if toArmy:  
+		for cc in sessiontotals:
+			savedaward = weaponawards.filter("weapon.pk"==cc.weapon_id)
+			if savedaward is not None:
+				savedaward.Clear()
 			else:   
-				savedweapon=TotalCredits()
-				savedweapon.person = person
-				savedweapon.weapon = cc.weapon
-				savedweapon.createdon = datetime.Today()
-				
-			savedweapon.weapontotal = cc.weaponcredits 
-			savedweapon.save()   
-		else:
-		    for s in savedtotals:
-			       s.clear()
-                  
-            savedpistol = savedtotals.filter("weapon_pk"==1) #Pistol
+				savedaward=TotalCredits()
+				savedaward.person = person
+				savedaward.weapon = cc.weapon
+				savedaward.createdon = datetime.Today()
+			savedaward.weapontotal = cc.weaponcredits 
+			savedaward.save()   
+	else:
+		pistolaward = weaponawards.get(weapon_id=1)
+		if pistolaward is None:
+			pistolaward = TotalCredits()
+			pistolaward.person = person
+			pistolaward.weapon = pistolweapon
+			pistolaward.createdon = datetime.Today()
+				  
+		rifleaward = weaponawards.get(weapon_id=6)
 			
-          if savedpistol: savedpistol.clear() 
-		# if (cc.weaponcredits>=5 and cc.weaponcredits < 100) and savedweapon.marksman == None:
-		# 	savedweapon.marksman = datetime.today()
-		# if (cc.weaponcredits>=100 and cc.weaponcredits < 200) and savedweapon.sharpshooter == None:
-		# 	savedweapon.sharpshooter = datetime.today()
-		# if (cc.weaponcredits>=200 and cc.weaponcredits < 600) and savedweapon.expert == None:
-		# 	savedweapon.expert = datetime.today()
-		# if (cc.weaponcredits>=600) and savedweapon.high_expert == None:
-		# 	savedweapon.high_expert = datetime.today()
+		if rifleaward is None:
+			rifleaward = TotalCredits()
+			rifleaward.person = person
+			rifleaward.weapon = rifleweapon
+			rifleaward.createdon = datetime.Today()
+
+		for cc in sessiontotals:
+			if cc.weapon_id < 6:
+					pistolaward.weapontotal+=cc.weaponcredits
+			else:
+					rifleaward.weapontotal+=cc.weaponcredits
+		pistolaward.save()
+		rifleaward.save()
+				
+	weaponawards = TotalCredits.active_objects.filter(person_id=person.pk)
+	for s in weaponawards:
+		if (s.weaponcredits>=5 and cc.weaponcredits < 100) and s.marksman == None:
+			s.marksman = datetime.today()
+		if (s.weaponcredits>=100 and s.weaponcredits < 200) and s.sharpshooter == None:
+			s.sharpshooter = datetime.today()
+		if (s.weaponcredits>=200 and cc.weaponcredits < 600) and s.expert == None:
+			s.expert = datetime.today()
+		if (s.weaponcredits>=600) and s.high_expert == None:
+			s.high_expert = datetime.today()
+		s.save()    
 
 
 #endregion
