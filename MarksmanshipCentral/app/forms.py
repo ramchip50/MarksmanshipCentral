@@ -33,12 +33,12 @@ class SessionForm(ModelForm):
         ('Time', 'Time Based'),
         ('Turn', 'Turn Based'),
     ]
-    gamelist = Game.objects.all().values_list('id','name') #Get dictionary list for populating dropdown
-    game = forms.ChoiceField(choices=gamelist,widget=forms.Select(attrs={'class':'form-control'}))
+    #gamelist = Game.active_objects.all().values_list("id","name") #Get dictionary list for populating dropdown
+    game = forms.ModelChoiceField(queryset=Game.active_objects.all(),widget=forms.Select(attrs={'class':'form-control'}))
     playmode = forms.ChoiceField(widget=forms.RadioSelect(attrs={'onclick':"javascript:yesnoCheck();"}), choices=CHOICES, initial='Time')
     startdate = forms.CharField(widget=forms.TextInput(attrs={ 'type': 'datetime-local', 'class':'form-control'}))
     enddate = forms.CharField(widget=forms.TextInput(attrs={ 'type': 'datetime-local', 'class':'form-control'}))
-    turnsplayed = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}),required=False)
+    turnsplayed = forms.IntegerField(widget=forms.NumberInput(attrs={'class':'form-control'}),required=False)
     
     class Meta:
         model=Session
@@ -52,28 +52,16 @@ class SessionForm(ModelForm):
           
 
 
-class TRMNpartForm(ModelForm):
-    
-    person = forms.CharField(label="Name ")
-    session = forms.CharField(widget=forms.TextInput(attrs={ 'type': 'hidden'}))
-    class Meta:
-        model=SessionParticipants
-        fields=(
-            'person',
-            'session',
-#            'minutes',
-#            'credits'
-        )
-        
+class TRMNpartForm(forms.Form):
+        person = forms.ChoiceField(choices=Person.active_objects.all().order_by("lastname","firstname")
+                                   .annotate(full_name = Concat('lastname',Value(', '),'firstname'))
+                                   .values_list("id","full_name"),widget=forms.Select(),show_hidden_initial=True)
+
+               
  
-class NonpartForm(ModelForm):
-    class Meta:
-        model=NonTRMNParticipants
-        fields=(
-		    'firstname',
-		    'lastname'
-#		    'session',
-        ) 
+class NonpartForm(forms.Form):
+        firstname = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
+        lastname = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
         
 
 class PersonForm(ModelForm):

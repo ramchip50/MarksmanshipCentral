@@ -3,10 +3,11 @@ Definition of views.
 """
 
 from datetime import datetime
+from tabnanny import check
 from django.shortcuts import redirect, render
 from django.http import HttpRequest, HttpResponse
 from app.forms import *
-from django.forms.models import modelformset_factory
+from django.forms.models import modelformset_factory, formset_factory
 from app.helpers import *
 from models.models import *
 from django.shortcuts import render, get_object_or_404
@@ -68,6 +69,10 @@ def login(request):
         if form.is_valid():
             person_email = form.cleaned_data
             person = get_object_or_404(Person,emailaddress=person_email)
+            ## Test
+            newbranch = Branch.objects.get(pk=4)
+            transfer_branch(person,newbranch)
+            ## END TEST
             request.session["personid"] = person.pk
             return HttpResponseRedirect('/landing/')
     else:
@@ -86,12 +91,13 @@ def logout(request):
 def personal(request):
     personpk = request.session["personid"]
     person = get_object_or_404(Person,pk=personpk)
+    categorycounts = CategoryCredits.objects.filter(person_id=personpk)
     submitted = False
     form = PersonForm(request.POST or None, instance=person)
     if form.is_valid():
          form.save()
          return redirect('app/personal')
-    context = {"person": person, "form":form }
+    context = {"person": person, "form":form, "categorycounts":categorycounts }
     return render(request, 'app/Personal.html',context)    
 
 def newgame(request):
@@ -108,30 +114,21 @@ def newgame(request):
 		return render(request, "app/NewGame.html", {'form':form, 'submitted':submitted})
 
 def newsession(request):
+	personpk = request.session["personid"]  
 	submitted = False
 	if request.method == 'POST':
 		form = SessionForm(request.POST or None)
-		TRMNSessionformset = modelformset_factory(SessionParticipants, form=TRMNpartForm, extra = 10, max_num=10)
-		NonSessionformset = modelformset_factory(NonTRMNParticipants, form=NonpartForm, extra = 3, max_num=3)
+		TRMNSessionformset = formset_factory(TRMNpartForm, extra = 4, max_num=4)
+		NonSessionformset = formset_factory(NonpartForm, extra = 2, max_num=2)
 		formset1 = TRMNSessionformset(request.POST or None) 
 		formset2 = NonSessionformset(request.POST or None) 
 		if all([form.is_valid(), formset1.is_valid(), formset2.is_valid()]):
-            #Calculate minutes and credits      
-			parent = form.save()
-			parent.save()
-			for form in formset1:
-				child1 = formset1.save()
-				child1.session = parent.pk
-				child1.save()
-			for form in formset2:
-				child2=formset2.save()
-				child2.session = parent.pk
-				child2.save()
-			return HttpResponseRedirect('app/NewSession2?submitted=True')
+			check_session_and_save(personpk,form,formset1,formset2)
+
 	else:
 		form = SessionForm()
-		TRMNSessionformset = modelformset_factory(SessionParticipants, form=TRMNpartForm, extra = 10, max_num=10)
-		NonSessionformset = modelformset_factory(NonTRMNParticipants, form=NonpartForm, extra = 3, max_num=3)
+		TRMNSessionformset = formset_factory(TRMNpartForm, extra = 4, max_num=4)
+		NonSessionformset = formset_factory(NonpartForm, extra = 2, max_num=2)
 		formset1 = TRMNSessionformset() 
 		formset2 = NonSessionformset() 
 		if "submitted" in request.GET:

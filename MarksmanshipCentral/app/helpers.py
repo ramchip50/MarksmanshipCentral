@@ -3,6 +3,7 @@
 
 from datetime import datetime
 from decimal import *
+from unicodedata import name
 from django.forms import BaseModelFormSet
 from django.db.models import Value
 from django.db.models.functions import Concat
@@ -14,6 +15,9 @@ from models.models import *
 
 def no_coffee():
     return "I'm a teapot"
+
+#Award Functions
+#region
 
 class awardentry:
     def __init__(self,weapon_name,weapon_total,marksman,sharpshooter,expert,high_expert):
@@ -39,6 +43,11 @@ def award_list(personpk):
         
     return awardgrid
 
+#endregion
+
+#Session Functions
+# region
+
 def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:BaseModelFormSet,nontrmn:BaseModelFormSet):
 #check for duplicates
     #map the incoming form to a session object that we can save later.
@@ -52,7 +61,7 @@ def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:Ba
     if saved != None:
         csum = personpk
         for t in trmn_participants:
-            if t.cleaned_data : csum += int(t.cleaned_data["playername"])
+            if t.cleaned_data : csum += int(t.cleaned_data["person"])
         #compare to checksum of personids from save
         saved_trmnpart = SessionParticipants.active_objects.filter(session_id=saved.pk)
         csum1=0
@@ -67,9 +76,10 @@ def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:Ba
         enddate = datetime.strptime(newsession.enddate,date_format)
         diff = enddate - session_startdate
         minutes=diff.total_seconds()/60
-        basecredits = minutes/60
+        basecredits = Decimal(minutes/60)
     else:
-        basecredits = newsession.turnsplayed*.25
+        minutes=0
+        basecredits = Decimal(newsession.turnsplayed)*Decimal(.25)
     #Multipier
     mult = len(trmn_participants)
     earned_credits = Decimal(basecredits*mult)
@@ -88,7 +98,7 @@ def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:Ba
     #save the rest of the players
     for t in trmn_participants:
         nextplayer= SessionParticipants()
-        nextplayer.person = Person.active_objects.get(pk=t.cleaned_data["playername"])
+        nextplayer.person = Person.active_objects.get(pk=t.cleaned_data["person"])
         nextplayer.session = newsession
         nextplayer.minutes = minutes
         nextplayer.credits = earned_credits
@@ -126,9 +136,80 @@ def update_total_credits(personpk, earned_credits, game:Game):
         tc.high_expert = datetime.today()
     tc.save()
             
-    
+# endregion    
 
+#Member Functions
+#region
 
+def transfer_branch(person:Person, newbranch:Branch):
+	sessiontotals = CategoryCredits.objects.filter(person_id=person.pk) #totals from recorded sessions
+	weaponawards = TotalCredits.objects.filter(person=person) #total from issued awards
+	pistolweapon = Weapon.objects.get(name='Pistol') 
+	rifleweapon = Weapon.objects.get(name='Rifle')
+	#Navy to Army , create total credits record for all CategoryCredits
+	if person.branch.name != 'RMA' and newbranch.name == 'RMA':
+		toArmy = True
+	else:
+		if newbranch.name != 'RMA' and person.branch.name == 'RMA':  #Regroup Category credits to Pistol and Rifle
+			toArmy = False
+
+	#clear TC
+	for s in weaponawards:
+		s.clear()
+
+	if toArmy == True:  
+		for cc in sessiontotals:
+			thisweapon = Weapon.objects.get(pk=cc.weapon_id)
+			try:
+				savedaward = TotalCredits.objects.get(person=person,weapon=thisweapon)
+			except:      
+				savedaward=TotalCredits()
+				savedaward.person = person
+				savedaward.weapon = thisweapon
+				savedaward.createdon = datetime.now()
+			savedaward.weapontotal = cc.weaponcredits 
+			savedaward.save()   
+	
+	else:
+		try:
+			pistolaward = TotalCredits.objects.get(person=person,weapon=pistolweapon)
+		except:  
+			pistolaward = TotalCredits()
+			pistolaward.person = person
+			pistolaward.weapon = pistolweapon
+			pistolaward.createdon = datetime.now()
+		try:          
+			rifleaward = TotalCredits.objects.get(person=person,weapon=rifleweapon)
+		except:
+			rifleaward = TotalCredits()
+			rifleaward.person = person
+			rifleaward.weapon = rifleweapon
+			rifleaward.createdon = datetime.now()
+
+		for cc in sessiontotals:
+			if cc.weapon_id < 6:
+					pistolaward.weapontotal+=cc.weaponcredits
+			else:
+					rifleaward.weapontotal+=cc.weaponcredits
+		pistolaward.save()
+		rifleaward.save()
+				
+	weaponawards = TotalCredits.active_objects.filter(person=person)
+	for s in weaponawards:
+		if (s.weapontotal>=5 and s.weapontotal < 100) and s.marksman == None:
+			s.marksman = datetime.now()
+		if (s.weapontotal>=100 and s.weapontotal < 200) and s.sharpshooter == None:
+			s.sharpshooter = datetime.now()
+		if (s.weapontotal>=200 and s.weapontotal < 600) and s.expert == None:
+			s.expert = datetime.now()
+		if (s.weapontotal>=600) and s.high_expert == None:
+			s.high_expert = datetime.now()
+		s.save()    
+	
+	person.branch=newbranch
+	person.save()
+
+#endregion
         
         
         
