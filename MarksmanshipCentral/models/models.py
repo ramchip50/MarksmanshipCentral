@@ -1,6 +1,6 @@
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.db import models
-import datetime
+from datetime import datetime
 
 # Create your models here.
 
@@ -95,18 +95,18 @@ class Person(models.Model):
     
     def delete(self, **kwargs):
         self.active=False
-        self.modifiedon = datetime.Today()
+        self.modifiedon = datetime.now()
         super().save(**kwargs)
     
     def save(self,*args, **kwargs):
-        self.modifiedon = datetime.Today()
+        self.modifiedon = datetime.now()
         super().save(**kwargs)
 
 
 
 class TotalCredits(models.Model):
     person = models.ForeignKey(Person,on_delete=models.CASCADE)
-    weapon = models.ForeignKey(Weapon,on_delete=models.CASCADE,default=0)
+    weapon = models.ForeignKey(Weapon,on_delete=models.DO_NOTHING,default=0)
     weapontotal = models.DecimalField(decimal_places=2,max_digits=10,default=0)
     marksman = models.DateField(null=True, blank=True)
     sharpshooter = models.DateField(null=True, blank=True)
@@ -121,15 +121,15 @@ class TotalCredits(models.Model):
     
     def delete(self, **kwargs):
         self.active=False
-        self.modifiedon = datetime.Today()
+        self.modifiedon = datetime.now()
         super().save(**kwargs)
     
     def save(self,*args, **kwargs):
-        self.modifiedon = datetime.Today()
+        self.modifiedon = datetime.now()
         super().save(**kwargs)
 
     def clear(self):
-        self.modifiedon = datetime.Today()
+        self.modifiedon = datetime.now()
         self.marksman = None
         self.sharpshooter = None
         self.expert = None
@@ -156,11 +156,11 @@ class Game(models.Model):
   
     def delete(self, **kwargs):
         self.active=False
-        self.modifiedon = datetime.Today()
+        self.modifiedon = datetime.now()
         super().save(**kwargs)
     
     def save(self,*args, **kwargs):
-        self.modifiedon = datetime.Today()
+        self.modifiedon = datetime.now()
         super().save(**kwargs)
 
     def __str__(self):
@@ -187,11 +187,11 @@ class Session(models.Model):
      
     def delete(self, **kwargs):
         self.active=False
-        self.modifiedon = datetime.Today()
+        self.modifiedon = datetime.now()
         super().save(**kwargs)
     
     def save(self,*args, **kwargs):
-        self.modifiedon = datetime.Today()
+        self.modifiedon = datetime.now()
         super().save(**kwargs)
         
     def fill(self,game, startdate, enddate, playmode, turnsplayed):
@@ -220,11 +220,11 @@ class SessionParticipants(models.Model):
         
     def delete(self, **kwargs):
         self.active=False
-        self.modifiedon = datetime.Today()
+        self.modifiedon = datetime.now()
         super().save(**kwargs)
     
     def save(self,*args, **kwargs):
-        self.modifiedon = datetime.Today()
+        self.modifiedon = datetime.now()
         super().save(**kwargs)        
 
     def __str__(self):
@@ -254,12 +254,12 @@ class NonTRMNParticipants(models.Model):
     active = models.BooleanField(default=True)
     
     def save(self, **kwargs):
-        self.modifiedon=datetime.Today
+        self.modifiedon=datetime.now()
         super().save(**kwargs)
         
     def delete(self, **kwargs):
         self.active=False
-        self.modifiedon=datetime.Today
+        self.modifiedon=datetime.now()
         super().save(**kwargs)
 
     objects = models.Manager()

@@ -61,7 +61,7 @@ def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:Ba
     if saved != None:
         csum = personpk
         for t in trmn_participants:
-            if t.cleaned_data : csum += int(t.cleaned_data["playername"])
+            if t.cleaned_data : csum += int(t.cleaned_data["person"])
         #compare to checksum of personids from save
         saved_trmnpart = SessionParticipants.active_objects.filter(session_id=saved.pk)
         csum1=0
@@ -76,9 +76,10 @@ def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:Ba
         enddate = datetime.strptime(newsession.enddate,date_format)
         diff = enddate - session_startdate
         minutes=diff.total_seconds()/60
-        basecredits = minutes/60
+        basecredits = Decimal(minutes/60)
     else:
-        basecredits = newsession.turnsplayed*.25
+        minutes=0
+        basecredits = Decimal(newsession.turnsplayed)*Decimal(.25)
     #Multipier
     mult = len(trmn_participants)
     earned_credits = Decimal(basecredits*mult)
@@ -97,7 +98,7 @@ def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:Ba
     #save the rest of the players
     for t in trmn_participants:
         nextplayer= SessionParticipants()
-        nextplayer.person = Person.active_objects.get(pk=t.cleaned_data["playername"])
+        nextplayer.person = Person.active_objects.get(pk=t.cleaned_data["person"])
         nextplayer.session = newsession
         nextplayer.minutes = minutes
         nextplayer.credits = earned_credits
@@ -140,9 +141,9 @@ def update_total_credits(personpk, earned_credits, game:Game):
 #Member Functions
 #region
 
-def Transfer_Branch(person:Person, newbranch:Branch):
+def transfer_branch(person:Person, newbranch:Branch):
 	sessiontotals = CategoryCredits.objects.filter(person_id=person.pk) #totals from recorded sessions
-	weaponawards = TotalCredits.active_objects.filter(person_id=person.pk) #total from issued awards
+	weaponawards = TotalCredits.objects.filter(person=person) #total from issued awards
 	pistolweapon = Weapon.objects.get(name='Pistol') 
 	rifleweapon = Weapon.objects.get(name='Rifle')
 	#Navy to Army , create total credits record for all CategoryCredits
@@ -156,33 +157,34 @@ def Transfer_Branch(person:Person, newbranch:Branch):
 	for s in weaponawards:
 		s.clear()
 
-	if toArmy:  
+	if toArmy == True:  
 		for cc in sessiontotals:
-			savedaward = weaponawards.filter("weapon.pk"==cc.weapon_id)
-			if savedaward is not None:
-				savedaward.Clear()
-			else:   
+			thisweapon = Weapon.objects.get(pk=cc.weapon_id)
+			try:
+				savedaward = TotalCredits.objects.get(person=person,weapon=thisweapon)
+			except:      
 				savedaward=TotalCredits()
 				savedaward.person = person
-				savedaward.weapon = cc.weapon
-				savedaward.createdon = datetime.Today()
+				savedaward.weapon = thisweapon
+				savedaward.createdon = datetime.now()
 			savedaward.weapontotal = cc.weaponcredits 
 			savedaward.save()   
+	
 	else:
-		pistolaward = weaponawards.get(weapon_id=1)
-		if pistolaward is None:
+		try:
+			pistolaward = TotalCredits.objects.get(person=person,weapon=pistolweapon)
+		except:  
 			pistolaward = TotalCredits()
 			pistolaward.person = person
 			pistolaward.weapon = pistolweapon
-			pistolaward.createdon = datetime.Today()
-				  
-		rifleaward = weaponawards.get(weapon_id=6)
-			
-		if rifleaward is None:
+			pistolaward.createdon = datetime.now()
+		try:          
+			rifleaward = TotalCredits.objects.get(person=person,weapon=rifleweapon)
+		except:
 			rifleaward = TotalCredits()
 			rifleaward.person = person
 			rifleaward.weapon = rifleweapon
-			rifleaward.createdon = datetime.Today()
+			rifleaward.createdon = datetime.now()
 
 		for cc in sessiontotals:
 			if cc.weapon_id < 6:
@@ -192,18 +194,20 @@ def Transfer_Branch(person:Person, newbranch:Branch):
 		pistolaward.save()
 		rifleaward.save()
 				
-	weaponawards = TotalCredits.active_objects.filter(person_id=person.pk)
+	weaponawards = TotalCredits.active_objects.filter(person=person)
 	for s in weaponawards:
-		if (s.weaponcredits>=5 and cc.weaponcredits < 100) and s.marksman == None:
-			s.marksman = datetime.today()
-		if (s.weaponcredits>=100 and s.weaponcredits < 200) and s.sharpshooter == None:
-			s.sharpshooter = datetime.today()
-		if (s.weaponcredits>=200 and cc.weaponcredits < 600) and s.expert == None:
-			s.expert = datetime.today()
-		if (s.weaponcredits>=600) and s.high_expert == None:
-			s.high_expert = datetime.today()
+		if (s.weapontotal>=5 and s.weapontotal < 100) and s.marksman == None:
+			s.marksman = datetime.now()
+		if (s.weapontotal>=100 and s.weapontotal < 200) and s.sharpshooter == None:
+			s.sharpshooter = datetime.now()
+		if (s.weapontotal>=200 and s.weapontotal < 600) and s.expert == None:
+			s.expert = datetime.now()
+		if (s.weapontotal>=600) and s.high_expert == None:
+			s.high_expert = datetime.now()
 		s.save()    
-
+	
+	person.branch=newbranch
+	person.save()
 
 #endregion
         
