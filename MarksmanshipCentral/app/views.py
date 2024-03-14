@@ -69,10 +69,6 @@ def login(request):
         if form.is_valid():
             person_email = form.cleaned_data
             person = get_object_or_404(Person,emailaddress=person_email)
-            ## Test
-            newbranch = Branch.objects.get(pk=4)
-            transfer_branch(person,newbranch)
-            ## END TEST
             request.session["personid"] = person.pk
             return HttpResponseRedirect('/landing/')
     else:
@@ -91,13 +87,12 @@ def logout(request):
 def personal(request):
     personpk = request.session["personid"]
     person = get_object_or_404(Person,pk=personpk)
-    categorycounts = CategoryCredits.objects.filter(person_id=personpk)
     submitted = False
     form = PersonForm(request.POST or None, instance=person)
     if form.is_valid():
          form.save()
          return redirect('app/personal')
-    context = {"person": person, "form":form, "categorycounts":categorycounts }
+    context = {"person": person, "form":form}
     return render(request, 'app/Personal.html',context)    
 
 def newgame(request):
