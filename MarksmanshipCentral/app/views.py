@@ -6,6 +6,7 @@ from datetime import datetime
 from tabnanny import check
 from django.shortcuts import redirect, render
 from django.http import HttpRequest, HttpResponse
+from app.datasvcs import *
 from app.forms import *
 from django.forms.models import modelformset_factory, formset_factory
 from app.helpers import *
@@ -51,6 +52,17 @@ def about(request):
         }
     )
 
+def test(request):
+    st=datetime(2024,2,1)
+    et=datetime(2024,4,1)
+    chap = Chapter.active_objects.get(id=66)
+    flt = Fleet.active_objects.get(id=2)
+    sessions=get_allsessioncredits_bydate_andchapter(st,et,chap)
+    #sessions=get_allsessioncredits_bydate_andfleet(st,et,flt)
+    context = {"coffee":no_coffee(),"sessions":sessions}
+    return render(request,'app/TestPage.html',context)
+
+
 def landing(request):
     personpk = request.session["personid"]
     person = get_object_or_404(Person,pk=personpk)
@@ -70,6 +82,8 @@ def login(request):
             person_email = form.cleaned_data
             person = get_object_or_404(Person,emailaddress=person_email)
             request.session["personid"] = person.pk
+            #newbranch=Branch.active_objects.get(id=6)
+            #transfer_branch(person,newbranch)
             return HttpResponseRedirect('/landing/')
     else:
         form = signinform

@@ -363,3 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 /MarksmanshipCentral/env
 /MarksmanshipCentral/env1
+/env
+/.gitignore
+/.gitignore
