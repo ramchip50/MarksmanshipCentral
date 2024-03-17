@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+
+    {{ coffee }}<br />
+    <br />
+    <table>
+        <tr><td>name</td><td>weapon</td><td>credits for period</td><td>chapter</td><td>fleet</td></tr>
+
+        {% for s in sessions %}
+        <tr><td>{{ s.lastname }}, {{ s.firstname}}</td><td>{{ s.weapon }}</td><td>{{ s.weaponcredits }}</td><td>{{ s.chapter }}</td><td>{{ s.fleet }}</td></tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>
