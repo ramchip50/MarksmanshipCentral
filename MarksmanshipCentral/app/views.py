@@ -5,10 +5,10 @@ Definition of views.
 from datetime import datetime
 from tabnanny import check
 from django.shortcuts import redirect, render
-from django.http import HttpRequest, HttpResponse
-from app.forms import *
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
+from .forms import *
 from django.forms.models import modelformset_factory, formset_factory
-from app.helpers import *
+from .helpers import *
 from models.models import *
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
@@ -132,7 +132,14 @@ def newsession(request):
 	return render(request, 'app/NewSession2.html', {'form':form,'formset1':formset1, 'formset2':formset2, 'submitted':submitted})
 
 
-
+def game_autocomplete(request):
+    if request.GET.get('q'):
+        q = request.GET['q']
+        data = Game.objects.using('legacy').filter(name__icontains=q).values_list('name',flat=True)
+        json = list(data)
+        return JsonResponse(json, safe=False)
+    else:
+        HttpResponse("No cookies")
     
 def reports(request):
     return render(request, 'app/Reports.html')

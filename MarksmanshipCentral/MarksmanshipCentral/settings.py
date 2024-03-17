@@ -76,19 +76,20 @@ WSGI_APPLICATION = 'MarksmanshipCentral.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 DATABASES = {
-    'default': {
+    'local': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     },
-    # 'remote': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME' : 'rlmndhmb_marksmanshipcentral',
-    #     'USER': 'rlmndhmb_admin',
-    #     'PASSWORD': '5BS%qWwFu35Z',
-    #     "HOST": "mysql.anaxanet.com",
-    #     "PORT": "3306",
-    #     }
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME' : 'marksmanship_central',
+        'USER': 'MCUser',
+        'PASSWORD': 'Let$Danc3',
+        "HOST": "localhost",
+        "PORT": "3306",
+        },
 }
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
