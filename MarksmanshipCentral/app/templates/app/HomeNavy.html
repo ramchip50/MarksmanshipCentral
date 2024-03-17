@@ -44,22 +44,22 @@
     <td>{{ tc.weapon_total }}</td>
     <td></td>
     {% if tc.marksman != None %}
-    <td>{{ tc.marksman }}</td>
+    <td>{{ tc.marksman | date:"F d, Y" }}</td>
     {% else %}
     <td></td>
     {% endif %}
     {% if tc.sharpshooter != None %}
-    <td>{{ tc.sharpshooter }}</td>
+    <td>{{ tc.sharpshooter | date:"F d, Y" }}</td>
     {% else %}
     <td></td>
     {% endif %}
     {% if tc.expert != None %}
-    <td>{{ tc.expert }}</td>
+    <td>{{ tc.expert | date:"F d, Y" }}</td>
     {% else %}
     <td></td>
     {% endif %}
     {% if tc.high_expert != None %}
-    <td>{{ tc.high_expert }}</td>
+    <td>{{ tc.high_expert | date:"F d, Y" }}</td>
     {% else %}
     <td></td>
     {% endif %}
