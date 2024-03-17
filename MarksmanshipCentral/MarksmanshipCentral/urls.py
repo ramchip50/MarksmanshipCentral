@@ -23,4 +23,5 @@ urlpatterns = [
     path('logout/', views.logout, name='logout'),
     path('test/',views.test,name='test'),
     path('admin/', admin.site.urls),
+    path('game_autocomplete/', views.game_autocomplete, name='game_autocomplete'),
 ]

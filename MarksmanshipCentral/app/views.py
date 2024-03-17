@@ -145,7 +145,12 @@ def newsession(request):
 	
 	return render(request, 'app/NewSession2.html', {'form':form,'formset1':formset1, 'formset2':formset2, 'submitted':submitted})
 
-
+def game_autocomplete(request):
+    if request.GET.get('q'):
+        q = request.GET['q']
+        data = Game.objects.using('legacy').filter(name__icontains=q).values_list('name',flat=True)
+        json = list(data)
+        return JsonResponse(json, safe=False)
 
     
 def reports(request):

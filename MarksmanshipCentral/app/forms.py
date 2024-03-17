@@ -28,12 +28,12 @@ class signinform(forms.Form):
           
         return self.cleaned_data["email_address"]
     
-class SessionForm(ModelForm):
+class SessionForm(forms.Form):
     CHOICES = [
         ('Time', 'Time Based'),
         ('Turn', 'Turn Based'),
     ]
-    #gamelist = Game.active_objects.all().values_list("id","name") #Get dictionary list for populating dropdown
+    game1=forms.CharField(required=True, widget=forms.TextInput(attrs={'style':'width:400px','class':'basicAutoComplete','data-url':"/game_autocomplete/"}))
     game = forms.ModelChoiceField(queryset=Game.active_objects.all(),widget=forms.Select(attrs={'class':'form-control'}))
     playmode = forms.ChoiceField(widget=forms.RadioSelect(attrs={'onclick':"javascript:yesnoCheck();"}), choices=CHOICES, initial='Time')
     startdate = forms.CharField(widget=forms.TextInput(attrs={ 'type': 'datetime-local', 'class':'form-control'}))
@@ -49,7 +49,6 @@ class SessionForm(ModelForm):
             'playmode',
             'turnsplayed'
             )
-          
 
 
 class TRMNpartForm(forms.Form):

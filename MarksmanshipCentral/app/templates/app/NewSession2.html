@@ -1,58 +1,76 @@
 {% extends 'app/BaseTemplate.html' %}
 
+
+<script src="https://cdn.rawgit.com/xcash/bootstrap-autocomplete/3de7ad37/dist/latest/bootstrap-autocomplete.js"></script>
+
+<script>
+
+    $('.basicAutoComplete').autoComplete(
+        { minLength: 2 }
+    )
+
+    $('.dropdown-menu').css({ 'top': 'auto', 'left': 'auto' })
+
+</script>
+
+
 {% block content %}
   {% if submitted %}
-	  <br/><br/>
-	  <h2>Your session was submitted successfully!</h2>
+<br />
+<br />
+<h2>Your session was submitted successfully!</h2>
   {% else %}
-    <form action='' method=POST>
-        {% csrf_token %}
-      <div class="row">
+<form action='' method=POST>
+    {% csrf_token %}
+    <div class="row">
         <div class="col">
-          <h2>Game Information</h2>
-          <label for="StartDate"> Starting Date and Time:</label>
-          {{ form.startdate }}
-          <br>
-          <label for="EndDate"> Ending Date and Time:</label>
-          {{ form.enddate }}
-          <br/>
-          <label for="GameName"> Name of the Game Played:</label>
-          {{ form.game }}  
-          <br/>                    
-          <ledgend>Select the mode of game play:</ledgend><br>
-          {{ form.playmode }}
-          
-          <div id="hide" style="display:none" >
-            <label for="TurnsPlayed">Enter the number of turns played:</label>
-            {{ form.turnsplayed }}
-            <br><br>
-          </div>
-          <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-          <script type="text/javascript">
-              function yesnoCheck() {
-                  if (document.getElementById('id_playmode_1').checked) {
-                      document.getElementById('hide').style.display = 'block';
-                  } else {
-                      document.getElementById('hide').style.display = 'none';;
-                  }
-              }
-          </script>
-          {%comment%}
-          <button type="cancel" name="Cancel" value="Cancel" class="btn btn-danger btn-lg btn-block" href="{% url 'landing' %"}>Cancel</button><br>
-          {%endcomment%}
-          <button type="submit" name="save" value="save" class="btn btn-primary btn-lg btn-block">Save</button><br><br>
+            <h2>Game Information</h2>
+            <label for="StartDate"> Starting Date and Time:</label>
+            {{ form.startdate }}
+            <br>
+            <label for="EndDate"> Ending Date and Time:</label>
+            {{ form.enddate }}
+            <br />
+            <label for="GameName"> Name of the Game Played:</label>
+            {{ form.game }}
+
+            {{ form.game1 }}
+            <input class="form-control basicAutoComplete" type="text" autocomplete="off">
+            <br />
+            <ledgend>Select the mode of game play:</ledgend><br>
+            {{ form.playmode }}
+
+            <div id="hide" style="display:none">
+                <label for="TurnsPlayed">Enter the number of turns played:</label>
+                {{ form.turnsplayed }}
+                <br><br>
+            </div>
+            <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+            <script type="text/javascript">
+                function yesnoCheck() {
+                    if (document.getElementById('id_playmode_1').checked) {
+                        document.getElementById('hide').style.display = 'block';
+                    } else {
+                        document.getElementById('hide').style.display = 'none';;
+                    }
+                }
+            </script>
+            {%comment%}
+            <button type="cancel" name="Cancel" value="Cancel" class="btn btn-danger btn-lg btn-block" href="{% url 'landing' %" }>Cancel</button><br>
+            {%endcomment%}
+            <button type="submit" name="save" value="save" class="btn btn-primary btn-lg btn-block">Save</button><br><br>
         </div>
         <div class="col">
-          <h3>TRMN Participants</h3>
+            <h3>TRMN Participants</h3>
             {{ formset1.as_p }}
         </div>
         <div class="col">
-          <h3>Non-TRMN Participants</h3>
+            <h3>Non-TRMN Participants</h3>
             {{ formset2.as_p }}
         </div>
-      </div>
-    </form>
+    </div>
+</form>
   {% endif %}
-  
+
 
 {% endblock %}
