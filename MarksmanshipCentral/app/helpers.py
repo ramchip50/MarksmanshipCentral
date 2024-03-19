@@ -52,7 +52,8 @@ def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:Ba
 #check for duplicates
     #map the incoming form to a session object that we can save later.
     newsession = Session()
-    newsession.fill(sessionform.cleaned_data["game"],sessionform.cleaned_data["startdate"],sessionform.cleaned_data["enddate"],sessionform.cleaned_data["playmode"],turnsplayed=sessionform.cleaned_data["turnsplayed"])
+    game = Game.active_objects.get(name=sessionform.cleaned_data["game"])
+    newsession.fill(game,sessionform.cleaned_data["startdate"],sessionform.cleaned_data["enddate"],sessionform.cleaned_data["playmode"],turnsplayed=sessionform.cleaned_data["turnsplayed"])
     #get the game and date
     date_format = '%Y-%m-%dT%H:%M'
     session_startdate = datetime.strptime(newsession.startdate,date_format)
@@ -98,7 +99,8 @@ def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:Ba
     #save the rest of the players
     for t in trmn_participants:
         nextplayer= SessionParticipants()
-        nextplayer.person = Person.active_objects.get(pk=t.cleaned_data["person"])
+        names=t.cleaned_data["person"].split(',')
+        nextplayer.person = Person.active_objects.get(lastname=names[0].strip(),firstname=names[1].strip())
         nextplayer.session = newsession
         nextplayer.minutes = minutes
         nextplayer.credits = earned_credits

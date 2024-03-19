@@ -24,4 +24,5 @@ urlpatterns = [
     path('test/',views.test,name='test'),
     path('admin/', admin.site.urls),
     path('game_autocomplete/', views.game_autocomplete, name='game_autocomplete'),
+    path('member_autocomplete/', views.member_autocomplete, name='member_autocomplete'),
 ]
