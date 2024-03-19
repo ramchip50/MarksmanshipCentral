@@ -173,9 +173,21 @@ def award_reports(request):
 
 def oversight(request):
     games = Game.active_objects.filter(verified = False)
+    
     sessions = Session.active_objects.order_by('startdate').filter(flagged = True)
-    participants=SessionParticipants.active_objects.filter(session=sessions.pk)
-    nonTRMN=NonTRMNParticipants.active_objects.filter(session=sessions.pk)
+    participants = []
+    for s in sessions:
+        for sp in SessionParticipants.active_objects.filter(session=s.id):
+            participants.append(str(sp))
+        
+        
+    nonTRMN = []
+    for s in sessions:
+        names=[]
+        for n in NonTRMNParticipants.active_objects.filter(session=s.id):
+            names.append(n.txt)
+        nonTRMN.append({str(s):n})
+            
     if request.method == 'POST':
         if request.POST.get('one'):
             id_list1 = request.POST.getlist('boxes')
@@ -183,15 +195,17 @@ def oversight(request):
                 Game.active_objects.filter(pk=int(x)).update(verified = True)
                 messages.success(request, ("Records Approved!"))
                 return HttpResponseRedirect('app/oversight.html')
+            
     elif request.POST.get('two'):
         id_list2 = request.POST.getlist('dups')
         sessions.update(flagged=False)
         for x in id_list2:
-            Session.objects.filter(pk=int(x)).delete() #change active to 0 instead of delete
+            Session.objects.filter(pk=int(x)).update(active=0) 
             messages.success(request, ("Records Deleted!"))
             for SessionParticipant in participants:
 	            update_total_credits(participants.person, participants.credits, participants.session.name)
         return HttpResponseRedirect('app/oversight.html')
+    
     else:
         return render(request, 'app/Oversight.html', {'games':games,'sessions':sessions,'nonTRMN':nonTRMN,'participants':participants})
 
