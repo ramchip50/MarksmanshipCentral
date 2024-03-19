@@ -1,21 +1,8 @@
 {% extends 'app/BaseTemplate.html' %}
 
-
-<script src="https://cdn.rawgit.com/xcash/bootstrap-autocomplete/3de7ad37/dist/latest/bootstrap-autocomplete.js"></script>
-
-<script>
-
-    $('.basicAutoComplete').autoComplete(
-        { minLength: 2 }
-    )
-
-    $('.dropdown-menu').css({ 'top': 'auto', 'left': 'auto' })
-
-</script>
-
-
 {% block content %}
-  {% if submitted %}
+
+{% if submitted %}
 <br />
 <br />
 <h2>Your session was submitted successfully!</h2>
@@ -33,9 +20,6 @@
             <br />
             <label for="GameName"> Name of the Game Played:</label>
             {{ form.game }}
-
-            {{ form.game1 }}
-            <input class="form-control basicAutoComplete" type="text" autocomplete="off">
             <br />
             <ledgend>Select the mode of game play:</ledgend><br>
             {{ form.playmode }}
@@ -72,5 +56,19 @@
 </form>
   {% endif %}
 
+
+{% endblock %}
+{% block script %}
+
+
+<script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script>
+
+<script>
+
+    $('.basicAutoComplete').autoComplete()
+
+    $('.dropdown-menu').css({ 'top': 'auto', 'left': 'auto' })
+
+</script>
 
 {% endblock %}
