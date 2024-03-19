@@ -1,0 +1,37 @@
+{% extends 'app/baseReport.html' %}
+
+{% block content %}
+
+<center>
+    <div class="container-fluid">
+        <table class="table-striped table-dark" cellpadding="10">
+            <thead>
+                <tr>
+                    <th>Starting</th>
+                    <th>Ending</th>
+                    <th>Game</th>
+                    <th>Weapon</th>
+                    <th>Credits</th>
+                    <th>Players</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{info.start}}</td>
+                    <td>{{info.end}}</td>
+                    <td>{{info.game}}</td>
+                    <td>{{info.weapon}}</td>
+                    <td>{{info.credit}}</td>
+                    <td>{{info.name}}</td>
+                    <td>{{info.name}}</td>
+                    <td>{{info.name}}</td>
+                    <td>{{info.name}}</td>
+                    <td>{{info.name}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div><br><br><br>
+</center>
+{% endblock %}
+
+
