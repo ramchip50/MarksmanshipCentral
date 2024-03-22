@@ -69,7 +69,10 @@ def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:Ba
     if saved != None:
         csum = personpk
         for t in trmn_participants:
-            if t.cleaned_data : csum += int(t.cleaned_data["person"])  ####  Get the person id and change to use has_changed()
+            if t.has_changed() :
+                names=t.cleaned_data["person"].split(',')
+                p=Person.active_objects.get(lastname=names[0].strip(),firstname=names[1].strip())
+                csum += p.pk  
         #compare to checksum of personids from save
         saved_trmnpart = SessionParticipants.active_objects.filter(session_id=saved.pk)
         csum1=0
@@ -93,7 +96,7 @@ def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:Ba
     earned_credits = Decimal(basecredits*mult)
     newsession.save()
        
-    #save this person as a participant?
+    #save this person as a participant
     thisplayer = SessionParticipants()
     thisplayer.person = Person.active_objects.get(pk=personpk)
     thisplayer.session = newsession
@@ -117,9 +120,9 @@ def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:Ba
             nextplayer.save()
 
     for n in nontrmn:
-        if(n.cleaned_data):
+        if n.has_changed():
             non=NonTRMNParticipants()
-            non.firstname=n.cleaned_data["name"]
+            non.fullname=n.cleaned_data["fullname"]
             non.session = newsession
             non.save()
 

@@ -3,6 +3,7 @@ Definition of views.
 """
 
 from datetime import datetime
+from pickle import NONE
 from tabnanny import check
 from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
@@ -146,7 +147,7 @@ def newsession(request):
 		else:
 			message = "Misfire. Session Not Saved"
 	else:
-		message = None
+		message = ''
 		form = SessionForm()
 		TRMNSessionformset = formset_factory(TRMNpartForm, extra = 6, max_num=6)
 		NonSessionformset = formset_factory(NonpartForm, extra = 2, max_num=2)

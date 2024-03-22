@@ -36,11 +36,6 @@ class PlayerField(forms.CharField):
         except:
             raise ValidationError(_('Member not found in roster'))  
 
-
-
-
-
-
 #endregion
 
 #region Forms
@@ -84,12 +79,10 @@ class SessionForm(forms.Form):
    
 
 class TRMNpartForm(forms.Form):
-        person = PlayerField()
+        person = PlayerField(label='Member Name')
 
 class NonpartForm(forms.Form):
-        name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
-
-        
+        fullname = forms.CharField(label='Player Name',widget=forms.TextInput(attrs={'class':'form-control','style':'width:350px'}))
 
 class PersonForm(ModelForm):
     class Meta:
