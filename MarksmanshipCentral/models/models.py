@@ -245,9 +245,6 @@ class CategoryCredits(models.Model):
 
 class NonTRMNParticipants(models.Model):
     session = models.ForeignKey(Session,on_delete=models.CASCADE)
-    emailaddress = models.CharField(max_length=255)
-    firstname = models.CharField(max_length=50)
-    lastname = models.CharField(max_length=50)
     fullname = models.CharField(max_length=100, null=True)
     createdon = models.DateTimeField(auto_now=True)
     modifiedon = models.DateTimeField(auto_now=True)
