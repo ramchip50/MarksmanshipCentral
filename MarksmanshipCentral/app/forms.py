@@ -89,12 +89,17 @@ class PersonForm(ModelForm):
         model = Person
         fields = ('memberid', 'firstname', 'lastname', 'emailaddress', 'chapter', 'branch')
 
-class GameForm(ModelForm):
-    class Meta:
-        model = Game
-        fields = ('name', 'alias', 'weapon')
+class GameForm(forms.Form):
+
+    # class Meta:
+    #     model = Game
+    #     fields = ('name', 'alias', 'weapon')
 
 
+    name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','style':'width:350px'}))    
+    alias = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','style':'width:350px'}))
+    l = Weapon.objects.all().values_list("id","name")
+    weapon = forms.ChoiceField(choices=l,widget=forms.Select(attrs={'class':'form-control','style':'width:350px'}))
 
 #endregion       
 
