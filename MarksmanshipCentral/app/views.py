@@ -115,7 +115,11 @@ def newgame(request):
 	if request.method == "POST":
 		form = GameForm(request.POST)
 		if form.is_valid():
-			form.save()
+			g = Game()
+			g.name=form.cleaned_data["name"]
+			g.alias=form.cleaned_data["alias"]
+			g.weapon = Weapon.objects.get(pk=form.cleaned_data["weapon"])
+			g.save()
 			return HttpResponseRedirect('/NewGame?submitted=True')
 	else: 
 		form = GameForm
