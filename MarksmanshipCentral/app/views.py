@@ -134,6 +134,9 @@ def newsession(request):
 		formset2 = NonSessionformset(request.POST or None) 
 		if all([form.is_valid(), formset1.is_valid(), formset2.is_valid()]):
 			result=check_session_and_save(personpk,form,formset1,formset2)
+			formset1 = TRMNSessionformset()        
+			formset2 = NonSessionformset()
+			form = SessionForm()
 			if result =="NOT_ELIGIBLE":  
 				message = "Must have one other TRMN player or two non-TRMN players"
 			elif result=="DUP_SESSION":
