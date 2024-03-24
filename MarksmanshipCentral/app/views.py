@@ -111,7 +111,6 @@ def personal(request):
     return render(request, 'app/Personal.html',context)    
 
 def newgame(request):
-	submitted = False
 	if request.method == "POST":
 		form = GameForm(request.POST)
 		if form.is_valid():
@@ -120,12 +119,13 @@ def newgame(request):
 			g.alias=form.cleaned_data["alias"]
 			g.weapon = Weapon.objects.get(pk=form.cleaned_data["weapon"])
 			g.save()
-			return HttpResponseRedirect('/NewGame?submitted=True')
+			submitted = True     
+			form=GameForm      
 	else: 
+		submitted = False
 		form = GameForm
-		if 'submitted' in request.GET:
-			submitted = True 
-		return render(request, "app/NewGame.html", {'form':form, 'submitted':submitted})
+
+	return render(request, "app/NewGame.html", {'form':form, 'submitted':submitted})
 
 def newsession(request):
 	personpk = request.session["personid"]  

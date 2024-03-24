@@ -78,10 +78,5 @@ class BranchAdmin(admin.ModelAdmin):
 class FleetAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(Award)
-class AwardAdmin(admin.ModelAdmin):
-    list_display=("awardname","branch")
-    pass
 
-#admin.register(AwardSubcategory)
 
