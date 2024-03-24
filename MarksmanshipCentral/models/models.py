@@ -46,6 +46,10 @@ class Branch(models.Model):
     objects = models.Manager()
     active_objects = ActiveManager()
 
+    class Meta:
+        verbose_name = "Branch"
+        verbose_name_plural = "Branches"
+
     def __str__(self):
         return f"{self.name}"
 
