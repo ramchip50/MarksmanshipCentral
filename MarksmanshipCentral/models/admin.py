@@ -83,5 +83,8 @@ class AwardAdmin(admin.ModelAdmin):
     list_display=("awardname","branch")
     pass
 
-#admin.register(AwardSubcategory)
+@admin.register(Role)
+class Role(admin.ModelAdmin):
+    list_display=("name",)  
+    pass
 

@@ -4,6 +4,7 @@ Definition of views.
 
 from datetime import datetime
 from tabnanny import check
+from django.core.checks import messages
 from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 from app.datasvcs import *
@@ -60,7 +61,6 @@ def test(request):
     context = {"coffee":no_coffee(),"sessions":sessions}
     return render(request,'app/TestPage.html',context)
 
-
 def landing(request):
     personpk = request.session["personid"]
     person = get_object_or_404(Person,pk=personpk)
@@ -71,7 +71,6 @@ def landing(request):
         template = 'app/HomeNavy.html'
     context = {"person": person,"credits":credits}
     return render(request, template, context)
-
                         
 def login(request):
     if request.method == 'POST':
@@ -156,9 +155,7 @@ def member_autocomplete(request):
         data = Person.active_objects.filter(lastname__icontains=q).order_by("lastname","firstname").annotate(full_name = Concat('lastname',Value(', '),'firstname')).values_list("full_name")
         json = list(data)
         return JsonResponse(json, safe=False)
-     
 
-    
 def reports(request):
     return render(request, 'app/Reports.html')
 
@@ -166,7 +163,15 @@ def member_reports(request):
     return render(request, 'app/MemberActivity.html')
 
 def credit_reports(request):
-    return render(request, 'app/CreditActivity.html')
+    personpk = request.session["personid"]
+    person = get_object_or_404(Person,pk=personpk)
+    submitted = False
+    personal = PersonForm(request.POST or None, instance=person)
+    form = ReportSearch()
+    if request.method == 'POST':
+        
+         
+    return render(request, 'app/CreditActivity.html', {'form':form, 'personal':personal})
 
 def award_reports(request):
     return render(request, 'app/AwardActivity.html')
@@ -196,18 +201,19 @@ def oversight(request):
                 messages.success(request, ("Records Approved!"))
                 return HttpResponseRedirect('app/oversight.html')
             
-    elif request.POST.get('two'):
-        id_list2 = request.POST.getlist('dups')
-        sessions.update(flagged=False)
-        for x in id_list2:
-            Session.objects.filter(pk=int(x)).update(active=0) 
-            messages.success(request, ("Records Deleted!"))
-            for SessionParticipant in participants:
-	            update_total_credits(participants.person, participants.credits, participants.session.name)
-        return HttpResponseRedirect('app/oversight.html')
-    
-    else:
-        return render(request, 'app/Oversight.html', {'games':games,'sessions':sessions,'nonTRMN':nonTRMN,'participants':participants})
+        elif request.POST.get('two'):
+            id_list2 = request.POST.getlist('dups')
+            sessions.update(flagged=False)
+            
+            for x in id_list2:
+                Session.objects.filter(pk=int(x)).update(active=0) 
+                messages.success(request, ("Records Deleted!"))
+                for SessionParticipant in participants:
+	                update_total_credits(participants.person, participants.credits, participants.session.name)
+            
+            return HttpResponseRedirect('app/oversight.html')
+        else:
+            return render(request, 'app/Oversight.html', {'games':games,'sessions':sessions,'nonTRMN':nonTRMN,'participants':participants})
 
 
 

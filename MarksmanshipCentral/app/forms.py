@@ -2,7 +2,10 @@
 Definition of forms.
 """
 
-from django import forms 
+from os import name
+from random import choice
+from django import forms
+from django.db.models import QuerySet 
 from django.forms import ChoiceField, ModelForm
 from django.core.exceptions import ValidationError
 from django.http import Http404
@@ -35,10 +38,6 @@ class PlayerField(forms.CharField):
            return
         except:
             raise ValidationError(_('Member not found in roster'))  
-
-
-
-
 
 
 #endregion
@@ -110,6 +109,14 @@ class NonPartForm(ModelForm):
     class Meta:
         model = NonTRMNParticipants
         fields= ('session', 'emailaddress', 'firstname', 'lastname')
+        
+class ReportSearch(forms.Form):
+    CH1=Chapter.objects.all()
+    CH2=Fleet.objects.all()
+    startdate = forms.CharField(widget=forms.TextInput(attrs={ 'type': 'datetime-local', 'class':'form-control'}))
+    enddate = forms.CharField(widget=forms.TextInput(attrs={ 'type': 'datetime-local', 'class':'form-control'}))
+    chapter = forms.ModelChoiceField(queryset = CH1, widget=forms.Select(attrs={'class':'form-control'}))
+    branch = forms.ModelChoiceField(queryset = CH2, widget=forms.Select(attrs={'class':'form-control'}))
 
 #endregion       
 
