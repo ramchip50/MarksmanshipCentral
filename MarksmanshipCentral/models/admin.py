@@ -11,6 +11,7 @@ from .models import *
 @admin.register(Game)
 class GameAdmin(admin.ModelAdmin):
     list_display=("name","alias","weapon","verified")
+    list_filter=("verified",)
     search_fields=("name__startswith","alias__startswith")
     ordering = ("name",)
     
@@ -26,7 +27,7 @@ class ParticipantsInLine(admin.StackedInline):
 class SessionAdmin(admin.ModelAdmin):
     list_display=("game","startdate","enddate","playmode")
     list_select_related=True
-    list_filter=("game","playmode")
+    list_filter=("playmode","flagged","game")
     date_hierarchy='startdate'
     search_fields=["game__name"]
     ordering=("startdate","game")
@@ -78,10 +79,5 @@ class BranchAdmin(admin.ModelAdmin):
 class FleetAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(Award)
-class AwardAdmin(admin.ModelAdmin):
-    list_display=("awardname","branch")
-    pass
 
-#admin.register(AwardSubcategory)
 
