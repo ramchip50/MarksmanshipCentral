@@ -1,118 +1,113 @@
-{% extends 'app/BaseTemplate.html' %}
- 
+{% extends 'main/BaseTemplate.html' %}
+
 {% block content %}
 
 
-<h2 style="text-align: center;">Marksmanship Central Management</h2><br>
+<h2 style="text-align: center;">Marksmanship Central Management</h2>
+<br>
 
-<div class="container-fluid ">
+<form action=”” method=POST>
+    {% csrf_token %}
+    <div class="container-fluid ">
 
-  <h3 style="text-align: center;">New Game Review</h3>
-  
-  <table class="table table-dark">
-    <thead>
-      <tr>
-          <th scope="col">Accept</th>
-          <th scope="col">First</th>
-          <th scope="col">Last</th>
-          <th scope="col">Handle</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-          <th scope="row"><input type="checkbox"></th>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-      </tr>
-      <tr>
-          <th scope="row"><input type="checkbox" ></th>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-      </tr>
-      <tr>
-          <th scope="row"><input type="checkbox" ></th>
-          <td>Larry</td>
-          <td>the Bird</td>
-          <td>@twitter</td>
-      </tr>
-    </tbody>
-  </table>
-  <input type="submit" value="Process" class="btn btn-secondary"> 
- 
-</div>
-<div class="container-fluid ">
- 
-  <h3 style="text-align: center;">Potential Duplicate Entry Review</h3>
-  <table class="table table-dark">
-    <thead>
-      <tr>
-          <th scope="col">Delete</th>
-          <th scope="col">First</th>
-          <th scope="col">Last</th>
-          <th scope="col">Handle</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-          <th scope="row"><input type="checkbox" ></th>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-      </tr>
-      <tr>
-          <th scope="row"><input type="checkbox" ></th>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-      </tr>
-      <tr>
-          <th scope="row"><input type="checkbox" ></th>
-          <td>Larry</td>
-          <td>the Bird</td>
-          <td>@twitter</td>
-      </tr>
-    </tbody>
-  </table>
-  <input type="submit" value="Process" class="btn btn-secondary"> 
-</div>
-<div class="container-fluid ">
-    
-  <h3 style="text-align: center;">Other Odds and Ends</h3>
-  <table class="table table-dark">
-    <thead>
-      <tr>
-          <th scope="col">#</th>
-          <th scope="col">First</th>
-          <th scope="col">Last</th>
-          <th scope="col">Handle</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-          <th scope="row"><input type="checkbox" ></th>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-      </tr>
-      <tr>
-          <th scope="row"><input type="checkbox" ></th>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-      </tr>
-      <tr>
-          <th scope="row"><input type="checkbox" ></th>
-          <td>Larry</td>
-          <td>the Bird</td>
-          <td>@twitter</td>
-      </tr>
-    </tbody>
-  </table>
-  <input type="submit" value="Process" class="btn btn-secondary"> 
-</div>
+        <h3 style="text-align: center;">New Game Review</h3>
 
+        <table class="table table-dark">
+            <thead>
+                <tr>
+                    <th scope="col">Approved</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Alias</th>
+                    <th scope="col">Weapon</th>
+                    <th scope="col">Creation Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for Game in games %}
+                <tr>
+                    <td>
+                        <div class=”form-check”>
+                            <input class=”form-check =input” type=”checkbox” checked= value={{ games.id}} name=”boxes”>
+                        </div>
+                    </td>
+                    <td> {{games.name}}</td>
+                    <td> {{games.alias}}</td>
+                    <td> {{games.weapon}}</td>
+                    <td> {{games.createdon}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <button class=’btn btn-secondary’ type=”submit” name=”one”>Save Changes</button>
+    </div>
+    <div class="container-fluid ">
+
+        <h3 style="text-align: center;">Potential Duplicate Entry Review</h3>
+        <table class="table table-dark">
+            <thead>
+                <tr>
+                    <th scope="col">Delete</th>
+                    <th scope="col">Start Date</th>
+                    <th scope="col">End Date</th>
+                    <th scope="col">Game</th>
+                    <th scope="col">Play Mode</th>
+                    <th scope="col">TurnDays</th>
+                    <th scope="col">Players</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for Session in sessions %}
+                <tr>
+                    <td>
+                        <div class=”form-check”>
+                            <input class=”form-check =input” type=”checkbox” checked= value={{ sessions.id}} name=”dups”>
+                        </div>
+                    </td>
+                    <td> {{sessions.startdate}}</td>
+                    <td> {{sessions.enddate}}</td>
+                    <td> {{sessions.game}}</td>
+                    <td> {{sessions.playmode}}</td>
+                    <td> {{sessions.turnsplayed}}</td>
+                    {% for SessionParticipants in participants %}
+                    {% if participants.session = sessions.id %}
+                    <td> {{participants.person}} </td>
+                    {% endif %}
+                    {% endfor %}
+                    {% for NonTRMNParticipants in nonTRMN%}
+                    {% if nonTRMN.session = sessions.id %}
+                    <td> {{nonTRMN.person}} </td>
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+
+            </tbody>
+        </table>
+        <button class=’btn btn-secondary’ type=”submit” name=”two”>Delete Duplicates</button>
+    </div>
+    <div class="container-fluid ">
+
+        <h3 style="text-align: center;">Other Odds and Ends</h3>
+        <table class="table table-dark">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Handle</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                </tr>
+            </tbody>
+        </table>
+        <button class=’btn btn-secondary’ type=”submit” name=”three”>Submit</button>
+    </div>
+
+</form>
 
 
 

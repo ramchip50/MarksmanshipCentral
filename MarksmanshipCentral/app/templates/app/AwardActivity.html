@@ -1,0 +1,52 @@
+{% extends 'app/baseReport.html' %}
+
+{% block content %}
+<main>
+    <center>
+        <div class="border border-white container-fluid">
+
+            <table cellpadding="15">
+                <tr>
+                    <td>
+                        <label for="searchfleet">Fleet Name:</label>
+                        <input type="text" class="form-control" id="searchfleet">
+                    </td>
+                    <td>   </td>
+                    <td>
+                        <label for="searchchapter">Chapter Name:</label>
+                        <input type="text" class="form-control" id="searchchapter">
+                    </td>
+                    <td></td>
+                    <td>
+                        <label for="firstdate">Starting Date:</label>
+                        <input type="date" class="form-control" id="firstdate">
+                    </td>
+                    <td></td>
+                    <td>
+                        <label for="seconddate">Ending Date:</label>
+                        <input type="date" class="form-control" id="seconddate">
+                    </td>
+                </tr>
+            </table>
+            <input class="btn btn-secondary" type="submit" value="Submit">
+        </div>
+    </center>
+    <br>
+    <input class="btn btn-secondary" type="submit" value="Print">
+    <div class="container-fluid">
+        <center>
+            <h3>Marksmenship Awards <br> for <br> {{firstdate}} to {{enddate}}</h3>
+        </center>
+        <br>
+        <a>{{searchfleet}}</a><br>
+        <a>&nbsp&nbsp&nbsp&nbsp{{y.award}}</a><br>
+        {% for x in y %}
+        <a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{y.name}}</a>
+        <a>&nbsp&nbsp&nbsp&nbsp{{y.chapter}}</a><br>
+        {% endfor %}
+    </div><br><br><br>
+</main>
+
+{% endblock %}
+
+
