@@ -27,7 +27,7 @@ class ParticipantsInLine(admin.StackedInline):
 class SessionAdmin(admin.ModelAdmin):
     list_display=("game","startdate","enddate","playmode")
     list_select_related=True
-    list_filter=("playmode","flagged","game")
+    list_filter=("playmode","dupsessid","game")
     date_hierarchy='startdate'
     search_fields=["game__name"]
     ordering=("startdate","game")

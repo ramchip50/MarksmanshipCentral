@@ -202,7 +202,7 @@ def award_reports(request):
 def oversight(request):
 	games = Game.active_objects.filter(verified = False)
 	
-	sessions = Session.active_objects.order_by('startdate').filter(flagged = True)
+	sessions = Session.active_objects.order_by('startdate').filter(dupsessid__gt=0)
 	participants = []
 	for s in sessions:
 		for sp in SessionParticipants.active_objects.filter(session=s.id).values_list("session_id","person"):
