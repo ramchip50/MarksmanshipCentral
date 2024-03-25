@@ -3,6 +3,7 @@ Definition of views.
 """
 
 from datetime import datetime
+from pickle import NONE
 from tabnanny import check
 from django.core.checks import messages
 from django.shortcuts import redirect, render, get_object_or_404
@@ -14,6 +15,8 @@ from app.helpers import *
 from models.models import *
 from django.urls import reverse
 from django.core import serializers
+from django.db.models import Q
+from django.contrib import messages
 
 def home(request):
     """Renders the home page."""
@@ -107,52 +110,71 @@ def personal(request):
     return render(request, 'app/Personal.html',context)    
 
 def newgame(request):
-	submitted = False
 	if request.method == "POST":
 		form = GameForm(request.POST)
 		if form.is_valid():
-			form.save()
-			return HttpResponseRedirect('/NewGame?submitted=True')
+			g = Game()
+			g.name=form.cleaned_data["name"]
+			g.alias=form.cleaned_data["alias"]
+			g.weapon = Weapon.objects.get(pk=form.cleaned_data["weapon"])
+			g.save()
+			submitted = True     
+			form=GameForm      
 	else: 
+		submitted = False
 		form = GameForm
-		if 'submitted' in request.GET:
-			submitted = True 
-		return render(request, "app/NewGame.html", {'form':form, 'submitted':submitted})
+
+	return render(request, "app/NewGame.html", {'form':form, 'submitted':submitted})
 
 def newsession(request):
 	personpk = request.session["personid"]  
 	submitted = False
 	if request.method == 'POST':
 		form = SessionForm(request.POST or None)
-		TRMNSessionformset = formset_factory(TRMNpartForm, extra = 4, max_num=4)
+		TRMNSessionformset = formset_factory(TRMNpartForm, extra = 6, max_num=6)
 		NonSessionformset = formset_factory(NonpartForm, extra = 2, max_num=2)
 		formset1 = TRMNSessionformset(request.POST or None) 
 		formset2 = NonSessionformset(request.POST or None) 
 		if all([form.is_valid(), formset1.is_valid(), formset2.is_valid()]):
-			check_session_and_save(personpk,form,formset1,formset2)
+			result=check_session_and_save(personpk,form,formset1,formset2)
+			formset1 = TRMNSessionformset()        
+			formset2 = NonSessionformset()
+			form = SessionForm()
+			if result =="NOT_ELIGIBLE":  
+				message = "Must have one other TRMN player or two non-TRMN players"
+			elif result=="DUP_SESSION":
+				message = "Duplicate Session"
+			elif result=="SAVED":
+				message = "Session Saved"
+			else:
+				message = no_coffee()  
 
+			#HttpResponseRedirect('/landing/')
+		else:
+			message = "Misfire. Session Not Saved"
 	else:
+		message = ''
 		form = SessionForm()
-		TRMNSessionformset = formset_factory(TRMNpartForm, extra = 4, max_num=4)
+		TRMNSessionformset = formset_factory(TRMNpartForm, extra = 6, max_num=6)
 		NonSessionformset = formset_factory(NonpartForm, extra = 2, max_num=2)
 		formset1 = TRMNSessionformset() 
 		formset2 = NonSessionformset() 
 		if "submitted" in request.GET:
 			Submitted = True
 	
-	return render(request, 'app/NewSession2.html', {'form':form,'formset1':formset1, 'formset2':formset2, 'submitted':submitted})
+	return render(request, 'app/NewSession2.html', {'form':form,'formset1':formset1, 'formset2':formset2, 'submitted':submitted,'message':message})
 
 def game_autocomplete(request):
     if request.GET.get('q'):
         q = request.GET['q']
-        data = Game.active_objects.filter(name__icontains=q).values_list('name',flat=True)
+        data = Game.active_objects.filter(Q(name__icontains=q) | Q(alias__icontains=q)).values_list('name',flat=True)
         json = list(data)
         return JsonResponse(json, safe=False)
 
 def member_autocomplete(request):
     if request.GET.get('q'):
         q = request.GET['q']
-        data = Person.active_objects.filter(lastname__icontains=q).order_by("lastname","firstname").annotate(full_name = Concat('lastname',Value(', '),'firstname')).values_list("full_name")
+        data = Person.active_objects.filter(Q(lastname__icontains=q) | Q(firstname__icontains=q)).order_by("lastname","firstname").annotate(full_name = Concat('lastname',Value(', '),'firstname')).values_list("full_name")
         json = list(data)
         return JsonResponse(json, safe=False)
 

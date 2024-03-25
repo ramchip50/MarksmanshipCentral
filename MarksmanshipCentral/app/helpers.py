@@ -4,7 +4,7 @@
 from datetime import datetime
 from decimal import *
 from unicodedata import name
-from django.forms import BaseModelFormSet
+from django.forms import BaseFormSet
 from django.db.models import Value
 from django.db.models.functions import Concat
 from django.shortcuts import get_object_or_404
@@ -48,8 +48,15 @@ def award_list(personpk):
 #Session Functions
 # region
 
-def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:BaseModelFormSet,nontrmn:BaseModelFormSet):
-#check for duplicates
+def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:BaseFormSet,nontrmn:BaseFormSet):
+    #check for eligibility.
+    has_one_trmn = trmn_participants[0].has_changed()
+    has_two_nontrmn = nontrmn[0].has_changed() and nontrmn[1].has_changed()
+    if has_one_trmn == False:
+        if has_two_nontrmn == False:
+              return "NOT_ELIGIBLE"
+    
+    #check for duplicates
     #map the incoming form to a session object that we can save later.
     newsession = Session()
     game = Game.active_objects.get(name=sessionform.cleaned_data["game"])
@@ -62,14 +69,17 @@ def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:Ba
     if saved != None:
         csum = personpk
         for t in trmn_participants:
-            if t.cleaned_data : csum += int(t.cleaned_data["person"])
+            if t.has_changed() :
+                names=t.cleaned_data["person"].split(',')
+                p=Person.active_objects.get(lastname=names[0].strip(),firstname=names[1].strip())
+                csum += p.pk  
         #compare to checksum of personids from save
         saved_trmnpart = SessionParticipants.active_objects.filter(session_id=saved.pk)
         csum1=0
         for s in saved_trmnpart:
             csum1 += s.person_id
         if csum == csum1:
-            return 'Duplicate Session Detected'
+            return 'DUP_SESSION'
         else:
             newsession.flagged=True
     #Calculate Credits
@@ -86,7 +96,7 @@ def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:Ba
     earned_credits = Decimal(basecredits*mult)
     newsession.save()
        
-    #save this person as a participant?
+    #save this person as a participant
     thisplayer = SessionParticipants()
     thisplayer.person = Person.active_objects.get(pk=personpk)
     thisplayer.session = newsession
@@ -98,25 +108,25 @@ def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:Ba
     
     #save the rest of the players
     for t in trmn_participants:
-        nextplayer= SessionParticipants()
-        names=t.cleaned_data["person"].split(',')
-        nextplayer.person = Person.active_objects.get(lastname=names[0].strip(),firstname=names[1].strip())
-        nextplayer.session = newsession
-        nextplayer.minutes = minutes
-        nextplayer.credits = earned_credits
-        if newsession.flagged != True:
-            update_total_credits(nextplayer.person.pk, earned_credits, newsession.game)
-        nextplayer.save()
+        if t.has_changed():
+            nextplayer= SessionParticipants()
+            names=t.cleaned_data["person"].split(',')
+            nextplayer.person = Person.active_objects.get(lastname=names[0].strip(),firstname=names[1].strip())
+            nextplayer.session = newsession
+            nextplayer.minutes = minutes
+            nextplayer.credits = earned_credits
+            if newsession.flagged != True:
+                update_total_credits(nextplayer.person.pk, earned_credits, newsession.game)
+            nextplayer.save()
 
     for n in nontrmn:
-        if(n.cleaned_data):
+        if n.has_changed():
             non=NonTRMNParticipants()
-            non.firstname=n.cleaned_data["firstname"]
-            non.lastname=n.cleaned_data["lastname"]
+            non.fullname=n.cleaned_data["fullname"]
             non.session = newsession
             non.save()
 
-    return 'Session Saved'
+    return 'SAVED'
 
 def update_total_credits(personpk, earned_credits, game:Game):
     person = get_object_or_404(Person,pk=personpk)

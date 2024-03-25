@@ -7,6 +7,7 @@
 <br />
 <h2>Your session was submitted successfully!</h2>
   {% else %}
+{{ message }}
 <form action='' method=POST>
     {% csrf_token %}
     <div class="row">
@@ -39,6 +40,13 @@
                     }
                 }
             </script>
+            {% if form.errors %}
+                {% for error in form.errors.as_data.values %}
+                    {% for data in error.0 %}
+                        {{ data }}
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
             {%comment%}
             <button type="cancel" name="Cancel" value="Cancel" class="btn btn-danger btn-lg btn-block" href="{% url 'landing' %" }>Cancel</button><br>
             {%endcomment%}

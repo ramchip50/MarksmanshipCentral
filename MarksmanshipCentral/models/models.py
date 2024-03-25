@@ -46,6 +46,10 @@ class Branch(models.Model):
     objects = models.Manager()
     active_objects = ActiveManager()
 
+    class Meta:
+        verbose_name = "Branch"
+        verbose_name_plural = "Branches"
+
     def __str__(self):
         return f"{self.name}"
 
@@ -245,9 +249,6 @@ class CategoryCredits(models.Model):
 
 class NonTRMNParticipants(models.Model):
     session = models.ForeignKey(Session,on_delete=models.CASCADE)
-    emailaddress = models.CharField(max_length=255)
-    firstname = models.CharField(max_length=50)
-    lastname = models.CharField(max_length=50)
     fullname = models.CharField(max_length=100, null=True)
     createdon = models.DateTimeField(auto_now=True)
     modifiedon = models.DateTimeField(auto_now=True)
@@ -266,31 +267,11 @@ class NonTRMNParticipants(models.Model):
     active_objects = ActiveManager()
 
 
-class Award(models.Model):
-    branch = models.ForeignKey(Branch,on_delete=models.DO_NOTHING)
-    awardname = models.CharField(max_length=25)
-    weapon = models.ForeignKey(Weapon,on_delete=models.CASCADE,default=0)
-    createdon = models.DateTimeField(auto_now=True)
-    modifiedon = models.DateTimeField(auto_now=True)
-    active = models.BooleanField(default=True)
-
-    objects = models.Manager()
-    active_objects = ActiveManager()
-    
-    def __str__(self):
-        return f"{self.awardname}"    
+   
 
 
   
-class AwardSubcategory(models.Model):
-    award = models.ForeignKey(Award,on_delete=models.CASCADE)
-    weapon = models.ForeignKey(Weapon,on_delete=models.CASCADE,default=0)
-    createdon = models.DateTimeField(auto_now=True)
-    modifiedon = models.DateTimeField(auto_now=True)
-    active = models.BooleanField(default=True)
 
-    objects = models.Manager()
-    active_objects = ActiveManager()
     
 
 

@@ -17,7 +17,7 @@ from app.formhelpers import *
 #region Fields
 
 class GameField(forms.CharField):
-    widget=forms.TextInput(attrs={'style':'width:500px','class':'basicAutoComplete formcontrol',
+    widget=forms.TextInput(attrs={'style':'width:350px','class':'basicAutoComplete formcontrol',
            'placeholder':'Type name to search','data-url':'/game_autocomplete/','autocomplete':'off'})
 
     def validate(self,value):
@@ -28,7 +28,7 @@ class GameField(forms.CharField):
             raise ValidationError(_('Game not in directory. Go to New Game page to add it'))
 
 class PlayerField(forms.CharField):
-    widget=forms.TextInput(attrs={'style':'width:500px','class':'basicAutoComplete formcontrol',
+    widget=forms.TextInput(attrs={'style':'width:350px','class':'basicAutoComplete formcontrol',
            'placeholder':'Type name to search','data-url':'/member_autocomplete/','autocomplete':'off'})
      
     def validate(self,value):
@@ -38,7 +38,6 @@ class PlayerField(forms.CharField):
            return
         except:
             raise ValidationError(_('Member not found in roster'))  
-
 
 #endregion
 
@@ -71,8 +70,8 @@ class SessionForm(forms.Form):
     ]
     game = GameField()
     playmode = forms.ChoiceField(widget=forms.RadioSelect(attrs={'onclick':"javascript:yesnoCheck();"}), choices=CHOICES, initial='Time')
-    startdate = forms.CharField(widget=forms.TextInput(attrs={ 'type': 'datetime-local', 'class':'form-control'}))
-    enddate = forms.CharField(widget=forms.TextInput(attrs={ 'type': 'datetime-local', 'class':'form-control'}))
+    startdate = forms.CharField(widget=forms.TextInput(attrs={'style':'width:350px', 'type': 'datetime-local', 'class':'form-control'}))
+    enddate = forms.CharField(widget=forms.TextInput(attrs={'style':'width:350px', 'type': 'datetime-local', 'class':'form-control'}))
     turnsplayed = forms.IntegerField(widget=forms.NumberInput(attrs={'class':'form-control'}),required=False)
     
     def clean(self):
@@ -80,30 +79,25 @@ class SessionForm(forms.Form):
         ed = self.cleaned_data["enddate"]
         if ed <= sd:
             raise ValidationError(_('End date must be after start date')) 
-
+   
 
 class TRMNpartForm(forms.Form):
-        person = PlayerField()
+        person = PlayerField(label='Member Name')
 
 class NonpartForm(forms.Form):
-        firstname = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
-        lastname = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
-        
+        fullname = forms.CharField(label='Player Name',widget=forms.TextInput(attrs={'class':'form-control','style':'width:350px'}))
 
 class PersonForm(ModelForm):
     class Meta:
         model = Person
         fields = ('memberid', 'firstname', 'lastname', 'emailaddress', 'chapter', 'branch')
 
-class GameForm(ModelForm):
-    class Meta:
-        model = Game
-        fields = ('name', 'alias', 'weapon')
+class GameForm(forms.Form):
 
-class ParticipantForm(ModelForm):
-    class Meta:
-        model = SessionParticipants
-        fields= ('session', 'person', 'minutes', 'credits')
+    # class Meta:
+    #     model = Game
+    #     fields = ('name', 'alias', 'weapon')
+
 
 class NonPartForm(ModelForm):
     class Meta:
@@ -117,6 +111,11 @@ class ReportSearch(forms.Form):
     enddate = forms.CharField(widget=forms.TextInput(attrs={ 'type': 'datetime-local', 'class':'form-control'}))
     chapter = forms.ModelChoiceField(queryset = CH1, widget=forms.Select(attrs={'class':'form-control'}))
     branch = forms.ModelChoiceField(queryset = CH2, widget=forms.Select(attrs={'class':'form-control'}))
+    name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','style':'width:350px'}))    
+    alias = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','style':'width:350px'}))
+    l = Weapon.objects.all().values_list("id","name")
+    weapon = forms.ChoiceField(choices=l,widget=forms.Select(attrs={'class':'form-control','style':'width:350px'}))
+
 
 #endregion       
 
