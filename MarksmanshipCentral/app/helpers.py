@@ -81,7 +81,7 @@ def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:Ba
         if csum == csum1:
             return 'DUP_SESSION'
         else:
-            newsession.flagged=True
+            newsession.dupsessid=saved.pk
     #Calculate Credits
     if newsession.playmode == 'Time':
         enddate = datetime.strptime(newsession.enddate,date_format)
@@ -103,7 +103,7 @@ def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:Ba
     thisplayer.minutes = minutes
     thisplayer.credits = earned_credits
     thisplayer.save()
-    if newsession.flagged != True:
+    if newsession.dupsessid == None:
         update_total_credits(personpk, earned_credits, newsession.game)
     
     #save the rest of the players
@@ -115,7 +115,7 @@ def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:Ba
             nextplayer.session = newsession
             nextplayer.minutes = minutes
             nextplayer.credits = earned_credits
-            if newsession.flagged != True:
+            if newsession.dupsessid == None:
                 update_total_credits(nextplayer.person.pk, earned_credits, newsession.game)
             nextplayer.save()
 

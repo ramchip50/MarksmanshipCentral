@@ -177,7 +177,7 @@ class Session(models.Model):
     enddate = models.DateTimeField()
     playmode = models.CharField(max_length=10)
     turnsplayed = models.IntegerField(null=True)
-    flagged = models.BooleanField(default=False)
+    dupsessid = models.IntegerField(null=True)
     createdon = models.DateTimeField(auto_now=True)
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)

@@ -1,2 +1,30 @@
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `modelview_categorycredits` AS select `m`.`id` AS `person_id`,`w`.`id` AS `weapon_id`,`m`.`lastname` AS `lastname`,`m`.`firstname` AS `firstname`,`w`.`name` AS `weapon`,`b`.`name` AS `branch`,sum(`p`.`credits`) AS `weaponcredits` from (((((`models_sessionparticipants` `p` join `models_person` `m` on(((`p`.`person_id` = `m`.`id`) and (`m`.`active` = 1)))) join `models_branch` `b` on(((`m`.`branch_id` = `b`.`id`) and (`b`.`active` = 1)))) join `models_session` `s` on(((`p`.`session_id` = `s`.`id`) and (`s`.`active` = 1) and (`s`.`flagged` = 0)))) join `models_game` `g` on(((`s`.`game_id` = `g`.`id`) and (`g`.`active` = 1) and (`g`.`verified` = 1)))) join `models_weapon` `w` on((`g`.`weapon_id` = `w`.`id`))) where (`p`.`active` = 1) group by `p`.`person_id`,`g`.`weapon_id`;
-SELECT * FROM marksmanship_central.modelview_categorycredits;
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `MCUser`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `modelview_categorycredits` AS
+    SELECT 
+        `m`.`id` AS `id`,
+        `m`.`id` AS `person_id`,
+        `m`.`lastname` AS `lastname`,
+        `m`.`firstname` AS `firstname`,
+        `w`.`name` AS `weapon`,
+        `w`.`id` AS `weapon_id`,
+        `b`.`name` AS `branch`,
+        SUM(`p`.`credits`) AS `weaponcredits`
+    FROM
+        (((((`models_sessionparticipants` `p`
+        JOIN `models_person` `m` ON (((`p`.`person_id` = `m`.`id`)
+            AND (`m`.`active` = 1))))
+        JOIN `models_branch` `b` ON (((`m`.`branch_id` = `b`.`id`)
+            AND (`b`.`active` = 1))))
+        JOIN `models_session` `s` ON (((`p`.`session_id` = `s`.`id`)
+            AND (`s`.`active` = 1)
+            AND (`s`.`dupsessid` IS NULL))))
+        JOIN `models_game` `g` ON (((`s`.`game_id` = `g`.`id`)
+            AND (`g`.`active` = 1)
+            AND (`g`.`verified` = 1))))
+        JOIN `models_weapon` `w` ON ((`g`.`weapon_id` = `w`.`id`)))
+    WHERE
+        (`p`.`active` = 1)
+    GROUP BY `p`.`person_id` , `g`.`weapon_id`;

@@ -93,22 +93,14 @@ class PersonForm(ModelForm):
         fields = ('memberid', 'firstname', 'lastname', 'emailaddress', 'chapter', 'branch')
 
 class GameForm(forms.Form):
-    pass
-    # class Meta:
-    #     model = Game
-    #     fields = ('name', 'alias', 'weapon')
-
-
-class NonPartForm(ModelForm):
-    pass
-    # class Meta:
-    #     model = NonTRMNParticipants
-    #     fields= ('session', 'emailaddress', ' fullname')
+    name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','style':'width:350px'}))    
+    alias = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','style':'width:350px'}))
+    l = Weapon.objects.all().values_list("id","name")
+    weapon = forms.ChoiceField(choices=l,widget=forms.Select(attrs={'class':'form-control','style':'width:350px'}))
         
 class BaseReportSearch(forms.Form):
     startdate = forms.CharField(widget=forms.TextInput(attrs={ 'type': 'datetime-local', 'class':'form-control'}))
     enddate = forms.CharField(widget=forms.TextInput(attrs={ 'type': 'datetime-local', 'class':'form-control'}))
-
 
 class ReportSearch_fleet(BaseReportSearch):
     CH1=Chapter.objects.all().values_list('id','name')
@@ -124,7 +116,6 @@ class ReportSearch_chapter(BaseReportSearch):
 class ReportSearch_user(BaseReportSearch):
     chapter = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
     fleet = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
-
 
 
 #endregion       
