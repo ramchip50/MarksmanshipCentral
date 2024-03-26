@@ -1,5 +1,7 @@
-{% extends 'app/baseReport.html' %}
-
+{% extends 'app/base.html' %}
+{% block nav %}
+  {% include 'app/ReportNav.html' %}
+{% endblock %}
 {% block content %}
 <main>
     <center>
@@ -29,8 +31,8 @@
                 <input class="btn btn-secondary" type="submit" value="Submit">
             </form>
         </div>
-</center>
-      <br>
+    </center>
+    <br>
     <input class="btn btn-secondary" type="submit" value="Print">
     <div class="container-fluid">
         <center>
@@ -47,5 +49,3 @@
 </main>
 
 {% endblock %}
-
-

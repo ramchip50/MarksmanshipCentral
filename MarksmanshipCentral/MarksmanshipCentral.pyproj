@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\templates\app\AwardReport.html" />
+    <Content Include="app\templates\app\base.html" />
     <Content Include="app\templates\app\baseReport.html" />
     <Content Include="app\templates\app\BaseTemplate.html" />
     <Content Include="app\templates\app\CreditReport.html" />
@@ -92,10 +93,12 @@
     <Content Include="app\templates\app\HomeNavyPHE.html" />
     <Content Include="app\templates\app\HomeNavyRHE.html" />
     <Content Include="app\templates\app\landing.html" />
+    <Content Include="app\templates\app\MemberReport.html" />
     <Content Include="app\templates\app\NewGame.html" />
     <Content Include="app\templates\app\NewSession2.html" />
     <Content Include="app\templates\app\Oversight.html" />
     <Content Include="app\templates\app\Personal.html" />
+    <Content Include="app\templates\app\ReportNav.html" />
     <Content Include="app\templates\app\Reports.html" />
     <Content Include="app\templates\app\reportTemplate.html" />
     <Content Include="app\templates\app\Testpage.html" />

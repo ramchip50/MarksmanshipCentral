@@ -1,42 +1,43 @@
-	<style type="text/css">
-	  .sidenav {
-			height:100%;
-			width:220px;
-			position: fixed;
-			z-index:0;
-			top:0;
-			left:0;
-			background-color:#111;
-			overflow-x: hidden;
-			padding-top:20px;
-			
-		}    
 
-    .sidenav a {
-			padding:6px 8px 6px 16px;
-			text-decoration: none;
-			font-size:35px;
-			color: #FFD700;
-			display:block;
-			
-		}  
-  
-    sidenav a:hover{
-			color:#f1f1f1;
-		}     
+<style type="text/css">
+    .sidenav {
+        height: 100%;
+        width: 220px;
+        position: fixed;
+        z-index: 0;
+        top: 0;
+        left: 0;
+        background-color: #111;
+        overflow-x: hidden;
+        padding-top: 20px;
+    }
+
+        .sidenav a {
+            padding: 6px 8px 6px 16px;
+            text-decoration: none;
+            font-size: 35px;
+            color: #FFD700;
+            display: block;
+        }
+
+    sidenav a:hover {
+        color: #f1f1f1;
+    }
 </style>
 <div class="sidenav">
-	    <a href="https://medusa.trmn.org"><img src="https://www.trmn.org/user/themes/trmn/images/trmn-2023.png" alt="TRMN Seal" width="150px" height="150px"
-                                   data-src="https://www.trmn.org/user/themes/trmn/images/trmn-2023.png"></a>
-	    
-		<a href="/landing">Home</a><br>
-		<a href="{% url 'member-reports' %}>Member Report</a><br>
-        	<a href="{% url 'credit-reports' %}>Credit Report</a><br>
-		<a href="{% url 'award-reports' %}>Award Report</a><br>
-        	<a href="/logout">Log Out</a><br>
-		<br><br><br><br>
+    <a href="https://medusa.trmn.org">
+        <img src="https://www.trmn.org/user/themes/trmn/images/trmn-2023.png" alt="TRMN Seal" width="150px" height="150px"
+             data-src="https://www.trmn.org/user/themes/trmn/images/trmn-2023.png">
+    </a>
+
+    <a href="/landing">Home</a><br>
+    <a href="{% url 'member-reports' %}>Member Report</a><br>
+    <a href="{% url 'credit-reports' %}>Credit Report</a><br>
+    <a href="{% url 'award-reports' %}>Award Report</a><br>
+    <a href="/logout">Log Out</a><br>
+    <br><br><br><br>
 
 
-		<br><br><br><br>
-		
-	</div>
+    <br><br><br><br>
+
+</div>
