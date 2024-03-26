@@ -97,15 +97,25 @@ class GameForm(forms.Form):
     alias = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','style':'width:350px'}))
     l = Weapon.objects.all().values_list("id","name")
     weapon = forms.ChoiceField(choices=l,widget=forms.Select(attrs={'class':'form-control','style':'width:350px'}))
-
         
-class ReportSearch(forms.Form):
-    CH1=Chapter.objects.all()
-    CH2=Fleet.objects.all()
+class BaseReportSearch(forms.Form):
     startdate = forms.CharField(widget=forms.TextInput(attrs={ 'type': 'datetime-local', 'class':'form-control'}))
     enddate = forms.CharField(widget=forms.TextInput(attrs={ 'type': 'datetime-local', 'class':'form-control'}))
-    chapter = forms.ModelChoiceField(queryset = CH1, widget=forms.Select(attrs={'class':'form-control'}))
-    branch = forms.ModelChoiceField(queryset = CH2, widget=forms.Select(attrs={'class':'form-control'}))
+
+class ReportSearch_fleet(BaseReportSearch):
+    CH1=Chapter.objects.all().values_list('id','name')
+    CH2=Fleet.objects.all().values_list('id','name')
+    chapter = forms.ChoiceField(choices = CH1, widget=forms.Select(attrs={'class':'form-control'}))
+    fleet = forms.ChoiceField(choices = CH2, widget=forms.Select(attrs={'class':'form-control'}))
+
+class ReportSearch_chapter(BaseReportSearch):
+    CH1=Chapter.objects.all().values_list('id','name')
+    chapter = forms.ChoiceField(choices = CH1, widget=forms.Select(attrs={'class':'form-control'}))
+    fleet = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
+                             
+class ReportSearch_user(BaseReportSearch):
+    chapter = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
+    fleet = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
 
 
 #endregion       
