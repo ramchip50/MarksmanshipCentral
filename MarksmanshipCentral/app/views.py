@@ -189,53 +189,71 @@ def credit_reports(request):
     person = get_object_or_404(Person,pk=personpk)
     submitted = False
     personal = PersonForm(request.POST or None, instance=person)
-    form = ReportSearch()
+    if person.role == 1:
+        form = ReportSearch_user()
+    elif person.role == 2:
+        form = ReportSearch_chapter()
+    else :
+        form = ReportSearch_fleet()
     if request.method == 'POST':
-        
+        pass
          
-    return render(request, 'app/CreditActivity.html', {'form':form, 'personal':personal})
+    return render(request, 'app/CreditReport.html', {'form':form, 'personal':personal})
 
 def award_reports(request):
-    return render(request, 'app/AwardActivity.html')
+    personpk = request.session["personid"]
+    person = get_object_or_404(Person,pk=personpk)
+    submitted = False
+    personal = PersonForm(request.POST or None, instance=person)
+    if person.role == 1:
+        form = ReportSearch_user()
+    elif person.role == 2:
+        form = ReportSearch_chapter()
+    else :
+        form = ReportSearch_fleet()
+    if request.method == 'POST':
+        pass
+         
+    return render(request, 'app/AwardReport.html', {'form':form, 'personal':personal})
 
 def oversight(request):
-    games = Game.active_objects.filter(verified = False)
-    
-    sessions = Session.active_objects.order_by('startdate').filter(flagged = True)
-    participants = []
-    for s in sessions:
-        for sp in SessionParticipants.active_objects.filter(session=s.id):
-            participants.append(str(sp))
-        
-        
-    nonTRMN = []
-    for s in sessions:
-        names=[]
-        for n in NonTRMNParticipants.active_objects.filter(session=s.id):
-            names.append(n.txt)
-        nonTRMN.append({str(s):n})
-            
-    if request.method == 'POST':
-        if request.POST.get('one'):
-            id_list1 = request.POST.getlist('boxes')
-            for x in id_list1:
-                Game.active_objects.filter(pk=int(x)).update(verified = True)
-                messages.success(request, ("Records Approved!"))
-                return HttpResponseRedirect('app/oversight.html')
-            
-        elif request.POST.get('two'):
-            id_list2 = request.POST.getlist('dups')
-            sessions.update(flagged=False)
-            
-            for x in id_list2:
-                Session.objects.filter(pk=int(x)).update(active=0) 
-                messages.success(request, ("Records Deleted!"))
-                for SessionParticipant in participants:
-	                update_total_credits(participants.person, participants.credits, participants.session.name)
-            
-            return HttpResponseRedirect('app/oversight.html')
-        else:
-            return render(request, 'app/Oversight.html', {'games':games,'sessions':sessions,'nonTRMN':nonTRMN,'participants':participants})
+	games = Game.active_objects.filter(verified = False)
+	
+	sessions = Session.active_objects.order_by('startdate').filter(flagged = True)
+	participants = []
+	for s in sessions:
+		for sp in SessionParticipants.active_objects.filter(session=s.id):
+			participants.append(str(sp))
+		
+		
+	nonTRMN = []
+	for s in sessions:
+		names=[]
+		for n in NonTRMNParticipants.active_objects.filter(session=s.id):
+			names.append(n.txt)
+		nonTRMN.append({str(s):n})
+			
+	if request.method == 'POST':
+		if request.POST.get('one'):
+			id_list1 = request.POST.getlist('boxes')
+			for x in id_list1:
+				Game.active_objects.filter(pk=int(x)).update(verified = True)
+				messages.success(request, ("Records Approved!"))
+				return HttpResponseRedirect('app/oversight.html')
+			
+		elif request.POST.get('two'):
+			id_list2 = request.POST.getlist('dups')
+			sessions.update(flagged=False)
+			
+			for x in id_list2:
+				Session.objects.filter(pk=int(x)).update(active=0) 
+				messages.success(request, ("Records Deleted!"))
+				for SessionParticipant in participants:
+					update_total_credits(participants.person, participants.credits, participants.session.name)
+			
+			return HttpResponseRedirect('app/oversight.html')
+		else:
+			return render(request, 'app/Oversight.html', {'games':games,'sessions':sessions,'nonTRMN':nonTRMN,'participants':participants})
 
 
 
