@@ -14,6 +14,7 @@ from django.utils.translation import gettext_lazy as _
 from models.models import *
 from app.formhelpers import *
 
+#Fields
 #region Fields
 
 class GameField(forms.CharField):
@@ -41,6 +42,8 @@ class PlayerField(forms.CharField):
 
 #endregion
 
+
+#Forms
 #region Forms
 
 

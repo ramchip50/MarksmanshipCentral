@@ -17,7 +17,8 @@ from django.urls import reverse
 from django.core import serializers
 from django.db.models import Q
 from django.contrib import messages
-
+#Site
+#region Site
 def home(request):
 	"""Renders the home page."""
 	assert isinstance(request, HttpRequest)
@@ -26,7 +27,6 @@ def home(request):
 		return HttpResponseRedirect('landing/')
 	else:
 		return HttpResponseRedirect('login/')
-	
 
 def contact(request):
 	"""Renders the contact page."""
@@ -63,7 +63,10 @@ def test(request):
 	#sessions=get_allsessioncredits_bydate_andfleet(st,et,flt)
 	context = {"coffee":no_coffee(),"sessions":sessions}
 	return render(request,'app/TestPage.html',context)
+#endregion
 
+#Admin
+#region Admin
 def landing(request):
 	personpk = request.session["personid"]
 	person = get_object_or_404(Person,pk=personpk)
@@ -109,7 +112,10 @@ def personal(request):
 	
 	context = {"person": person, "form":form}
 	return render(request, 'app/Personal.html',context)    
+#endregion
 
+#DataEntry
+#region DataEntry
 def newgame(request):
 	if request.method == "POST":
 		form = GameForm(request.POST)
@@ -165,28 +171,6 @@ def newsession(request):
 	
 	return render(request, 'app/NewSession2.html', {'form':form,'formset1':formset1, 'formset2':formset2, 'submitted':submitted,'message':message})
 
-
-
-def reports(request):
-	return render(request, 'app/Reports.html')
-
-def member_reports(request):
-	return render(request, 'app/MemberActivity.html')
-
-def credit_reports(request):
-	personpk = request.session["personid"]
-	person = get_object_or_404(Person,pk=personpk)
-	submitted = False
-	personal = PersonForm(request.POST or None, instance=person)
-	form = ReportSearch()
-	if request.method == 'POST':
-		form=PersonForm()
-		 
-	return render(request, 'app/CreditActivity.html', {'form':form, 'personal':personal})
-
-def award_reports(request):
-	return render(request, 'app/AwardActivity.html')
-
 def oversight(request):
 	games = Game.active_objects.filter(verified = False)
 	sessions = Session.active_objects.order_by('startdate').filter(dupsessid__gt=0)
@@ -222,6 +206,31 @@ def oversight(request):
 	
 
 	return render(request, 'app/Oversight.html', {'games':games,'sessions':sessions,'nonTRMN':nonTRMN,'participants':participants})
+#endregion
+
+#Reports
+#region Reports
+def reports(request):
+	return render(request, 'app/Reports.html')
+
+def member_reports(request):
+	return render(request, 'app/MemberActivity.html')
+
+def credit_reports(request):
+	personpk = request.session["personid"]
+	person = get_object_or_404(Person,pk=personpk)
+	submitted = False
+	personal = PersonForm(request.POST or None, instance=person)
+	form = ReportSearch()
+	if request.method == 'POST':
+		form=PersonForm()
+		 
+	return render(request, 'app/CreditActivity.html', {'form':form, 'personal':personal})
+
+def award_reports(request):
+	return render(request, 'app/AwardActivity.html')
+
+#endregion
 
 
 
