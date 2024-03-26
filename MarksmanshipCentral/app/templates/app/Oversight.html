@@ -69,14 +69,14 @@
                     <td> {{session.playmode}}</td>
                     <td> {{session.turnsplayed}}</td>
                     <td>
-                        {% for sessionparticipant in participants %}
-                        {% if sessionparticipant.session == session.id %}
-                        {{sessionparticipant.person}} <br />
-                        {% endif%}
+                        {% for sp in participants %}
+                        {% if sp.session_id == session.id %}
+                        {{sp.name}} <br />
+                        {% endif %}
                         {% endfor %}
-                        {% for nontrmnparticipants in nonTRMN%}
-                        {% if nontrmnparticipants.session == sessions.id %}
-                        {{nontrmnparticipants.fullname}}
+                        {% for non in nonTRMN%}
+                        {% if non.session_id == session.id %}
+                        {{non.name}} <br />
                         {% endif %}
                         {% endfor %}
                     </td>
@@ -111,4 +111,8 @@
     </div>
 </form>
 
+        {% endblock %}
+
+        {% block script %}
+            
         {% endblock %}

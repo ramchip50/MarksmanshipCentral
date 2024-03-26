@@ -17,7 +17,8 @@ from django.urls import reverse
 from django.core import serializers
 from django.db.models import Q
 from django.contrib import messages
-
+#Site
+#region Site
 def home(request):
 	"""Renders the home page."""
 	assert isinstance(request, HttpRequest)
@@ -26,7 +27,6 @@ def home(request):
 		return HttpResponseRedirect('landing/')
 	else:
 		return HttpResponseRedirect('login/')
-	
 
 def contact(request):
 	"""Renders the contact page."""
@@ -63,7 +63,10 @@ def test(request):
 	#sessions=get_allsessioncredits_bydate_andfleet(st,et,flt)
 	context = {"coffee":no_coffee(),"sessions":sessions}
 	return render(request,'app/TestPage.html',context)
+#endregion
 
+#Admin
+#region Admin
 def landing(request):
 	personpk = request.session["personid"]
 	person = get_object_or_404(Person,pk=personpk)
@@ -109,7 +112,10 @@ def personal(request):
 	
 	context = {"person": person, "form":form}
 	return render(request, 'app/Personal.html',context)    
+#endregion
 
+#DataEntry
+#region DataEntry
 def newgame(request):
 	if request.method == "POST":
 		form = GameForm(request.POST)
@@ -165,20 +171,45 @@ def newsession(request):
 	
 	return render(request, 'app/NewSession2.html', {'form':form,'formset1':formset1, 'formset2':formset2, 'submitted':submitted,'message':message})
 
-def game_autocomplete(request):
-	if request.GET.get('q'):
-		q = request.GET['q']
-		data = Game.active_objects.filter(Q(name__icontains=q) | Q(alias__icontains=q)).values_list('name',flat=True)
-		json = list(data)
-		return JsonResponse(json, safe=False)
+def oversight(request):
+	games = Game.active_objects.filter(verified = False)
+	sessions = Session.active_objects.order_by('startdate').filter(dupsessid__gt=0)
+	participants = list()
+	for s in sessions:
+		for sp in SessionParticipants.active_objects.filter(session=s.id).values_list("session_id","person"):
+			p=Person.active_objects.get(pk=sp[1])
+			participants.append({'session_id': sp[0],'name': p.lastname +', '+p.firstname})
+	nonTRMN = list()
+	for s in sessions:
+		for n in NonTRMNParticipants.active_objects.filter(session=s.id).values_list("session_id","fullname"):
+			nonTRMN.append({'session_id': n[0],'name': n[1]})
+			
+	# if request.method == 'POST':
+	# 	if request.POST.get('one'):
+	# 		id_list1 = request.POST.getlist('boxes')
+	# 		for x in id_list1:
+	# 			Game.active_objects.filter(pk=int(x)).update(verified = True)
+	# 			messages.success(request, ("Records Approved!"))
+	# 			return HttpResponseRedirect('app/oversight.html')
+			
+	# 	elif request.POST.get('two'):
+	# 		id_list2 = request.POST.getlist('dups')
+	# 		sessions.update(flagged=False)
+			
+	# 		for x in id_list2:
+	# 			Session.objects.filter(pk=int(x)).update(active=0) 
+	# 			messages.success(request, ("Records Deleted!"))
+	# 			for SessionParticipant in participants:
+	# 				update_total_credits(participants.person, participants.credits, participants.session.name)
+			
+	# 		return HttpResponseRedirect('app/oversight.html')
+	
 
-def member_autocomplete(request):
-	if request.GET.get('q'):
-		q = request.GET['q']
-		data = Person.active_objects.filter(Q(lastname__icontains=q) | Q(firstname__icontains=q)).order_by("lastname","firstname").annotate(full_name = Concat('lastname',Value(', '),'firstname')).values_list("full_name")
-		json = list(data)
-		return JsonResponse(json, safe=False)
+	return render(request, 'app/Oversight.html', {'games':games,'sessions':sessions,'nonTRMN':nonTRMN,'participants':participants})
+#endregion
 
+#Reports
+#region Reports
 def reports(request):
 	return render(request, 'app/Reports.html')
 
@@ -218,42 +249,7 @@ def award_reports(request):
     return render(request, 'app/AwardReport.html', {'form':form, 'personal':personal})
 
 
-def oversight(request):
-	games = Game.active_objects.filter(verified = False)
-	
-
-	sessions = Session.active_objects.order_by('startdate').filter(dupsessid__gt=0)
-	participants = []
-	for s in sessions:
-		for sp in SessionParticipants.active_objects.filter(session=s.id).values_list("session_id","person"):
-			participants.append(sp)
-		
-		
-	nonTRMN = []
-	for s in sessions:
-		for n in NonTRMNParticipants.active_objects.filter(session=s.id).values_list("session_id","fullname"):
-			nonTRMN.append(n)
-			
-	if request.method == 'POST':
-		if request.POST.get('one'):
-			id_list1 = request.POST.getlist('boxes')
-			for x in id_list1:
-				Game.active_objects.filter(pk=int(x)).update(verified = True)
-				messages.success(request, ("Records Approved!"))
-				return HttpResponseRedirect('app/oversight.html')
-			
-		elif request.POST.get('two'):
-			id_list2 = request.POST.getlist('dups')
-			sessions.update(flagged=False)
-			
-			for x in id_list2:
-				Session.objects.filter(pk=int(x)).update(active=0) 
-				messages.success(request, ("Records Deleted!"))
-				for SessionParticipant in participants:
-					update_total_credits(participants.person, participants.credits, participants.session.name)
-			
-			return HttpResponseRedirect('app/oversight.html')
-	return render(request, 'app/Oversight.html', {'games':games,'sessions':sessions,'nonTRMN':nonTRMN,'participants':participants})
+#endregion
 
 
 

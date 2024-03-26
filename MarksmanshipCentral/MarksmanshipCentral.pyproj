@@ -35,6 +35,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="app\ajaxviews.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="app\datasvcs.py">
       <SubType>Code</SubType>
     </Compile>
