@@ -6,7 +6,8 @@ from datetime import datetime
 from django.urls import path
 from django.contrib import admin
 from django.contrib.auth.views import LoginView, LogoutView
-from app import views
+from app import views, ajaxviews
+
 
 
 urlpatterns = [
@@ -23,8 +24,8 @@ urlpatterns = [
     path('logout/', views.logout, name='logout'),
     path('test/',views.test,name='test'),
     path('admin/', admin.site.urls),
-    path('game_autocomplete/', views.game_autocomplete, name='game_autocomplete'),
-    path('member_autocomplete/', views.member_autocomplete, name='member_autocomplete'),
+    path('game_autocomplete/', ajaxviews.game_autocomplete, name='game_autocomplete'),
+    path('member_autocomplete/', ajaxviews.member_autocomplete, name='member_autocomplete'),
     path('reports/member/', views.member_reports, name='member-reports'),
     path('reports/credit/', views.credit_reports, name='credit-reports'),
     path('reports/award/', views.award_reports, name='award-reports'),

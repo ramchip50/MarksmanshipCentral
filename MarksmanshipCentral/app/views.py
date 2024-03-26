@@ -165,19 +165,7 @@ def newsession(request):
 	
 	return render(request, 'app/NewSession2.html', {'form':form,'formset1':formset1, 'formset2':formset2, 'submitted':submitted,'message':message})
 
-def game_autocomplete(request):
-	if request.GET.get('q'):
-		q = request.GET['q']
-		data = Game.active_objects.filter(Q(name__icontains=q) | Q(alias__icontains=q)).values_list('name',flat=True)
-		json = list(data)
-		return JsonResponse(json, safe=False)
 
-def member_autocomplete(request):
-	if request.GET.get('q'):
-		q = request.GET['q']
-		data = Person.active_objects.filter(Q(lastname__icontains=q) | Q(firstname__icontains=q)).order_by("lastname","firstname").annotate(full_name = Concat('lastname',Value(', '),'firstname')).values_list("full_name")
-		json = list(data)
-		return JsonResponse(json, safe=False)
 
 def reports(request):
 	return render(request, 'app/Reports.html')
@@ -201,38 +189,36 @@ def award_reports(request):
 
 def oversight(request):
 	games = Game.active_objects.filter(verified = False)
-	
 	sessions = Session.active_objects.order_by('startdate').filter(dupsessid__gt=0)
-	participants = []
+	participants = list()
 	for s in sessions:
 		for sp in SessionParticipants.active_objects.filter(session=s.id).values_list("session_id","person"):
-			participants.append(sp)
-		
-		
-	nonTRMN = []
+			p=Person.active_objects.get(pk=sp[1])
+			participants.append({'session_id': sp[0],'name': p.lastname +', '+p.firstname})
+	nonTRMN = list()
 	for s in sessions:
 		for n in NonTRMNParticipants.active_objects.filter(session=s.id).values_list("session_id","fullname"):
-			nonTRMN.append(n)
+			nonTRMN.append({'session_id': n[0],'name': n[1]})
 			
-	if request.method == 'POST':
-		if request.POST.get('one'):
-			id_list1 = request.POST.getlist('boxes')
-			for x in id_list1:
-				Game.active_objects.filter(pk=int(x)).update(verified = True)
-				messages.success(request, ("Records Approved!"))
-				return HttpResponseRedirect('app/oversight.html')
+	# if request.method == 'POST':
+	# 	if request.POST.get('one'):
+	# 		id_list1 = request.POST.getlist('boxes')
+	# 		for x in id_list1:
+	# 			Game.active_objects.filter(pk=int(x)).update(verified = True)
+	# 			messages.success(request, ("Records Approved!"))
+	# 			return HttpResponseRedirect('app/oversight.html')
 			
-		elif request.POST.get('two'):
-			id_list2 = request.POST.getlist('dups')
-			sessions.update(flagged=False)
+	# 	elif request.POST.get('two'):
+	# 		id_list2 = request.POST.getlist('dups')
+	# 		sessions.update(flagged=False)
 			
-			for x in id_list2:
-				Session.objects.filter(pk=int(x)).update(active=0) 
-				messages.success(request, ("Records Deleted!"))
-				for SessionParticipant in participants:
-					update_total_credits(participants.person, participants.credits, participants.session.name)
+	# 		for x in id_list2:
+	# 			Session.objects.filter(pk=int(x)).update(active=0) 
+	# 			messages.success(request, ("Records Deleted!"))
+	# 			for SessionParticipant in participants:
+	# 				update_total_credits(participants.person, participants.credits, participants.session.name)
 			
-			return HttpResponseRedirect('app/oversight.html')
+	# 		return HttpResponseRedirect('app/oversight.html')
 	
 
 	return render(request, 'app/Oversight.html', {'games':games,'sessions':sessions,'nonTRMN':nonTRMN,'participants':participants})

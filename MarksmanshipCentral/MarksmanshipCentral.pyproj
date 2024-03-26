@@ -35,6 +35,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="app\ajaxviews.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="app\datasvcs.py">
       <SubType>Code</SubType>
     </Compile>
@@ -86,7 +89,6 @@
     <Content Include="app\templates\app\HomeNavy2HE.html" />
     <Content Include="app\templates\app\HomeNavyPHE.html" />
     <Content Include="app\templates\app\HomeNavyRHE.html" />
-
     <Content Include="app\templates\app\landing.html" />
     <Content Include="app\templates\app\NewGame.html" />
     <Content Include="app\templates\app\NewSession2.html" />
