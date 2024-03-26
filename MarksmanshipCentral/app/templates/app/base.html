@@ -1,0 +1,99 @@
+<!-- base.html -->
+<!doctype html>
+<html>
+<head>
+    <style type="text/css">
+        html {
+            position: relative;
+            min-height: 100%;
+        }
+
+        .main {
+            display: block;
+            margin-left: 220px;
+            padding: 0px 10px;
+            background-color: #111;
+            color: #F8F8FF;
+            font-size: 22px;
+            min-height: 100vh;
+        }
+
+
+        .footer {
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            background-color: #111;
+            font-size: 16px;
+            color: #FFD700;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-left: 220px;
+        }
+
+        .cropped1 {
+            width: 80px; /* width of container */
+            height: 80px; /* height of container */
+            object-fit: cover;
+            object-position: 20% 10%;
+            border: 5px solid black;
+        }
+    </style>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>{% block title %}TRMN Marksmanship{% endblock %}</title>
+
+</head>
+
+<body>
+    {% block nav %}
+    {% endblock %}
+    <div id="content" name="content" class="main">
+        <div class="row justify-content-center">
+            <div class="col-8">
+                <div class="align-self-center">
+                    <h1 class="mt-2" style="text-align: center;">TRMN Marksmanship Central</h1>
+                    <hr class="mt-0 mb-4">
+
+
+
+                    {% block content %}
+                    {% endblock %}
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>
+            Copyright &copy; 2024 The Royal Manticoran Navy: The Official Honor Harrington Fan
+            Association, Inc. <br>
+            Some Rights Reserved.<br>
+            Honor Harrington and all related materials are &copy; David Weber.
+        </p>
+        <span class="text-center">
+            <img class="cropped1" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Djehutymooncrown.jpg/800px-Djehutymooncrown.jpg" width="50px" height="75px"
+                 data-src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Djehutymooncrown.jpg/800px-Djehutymooncrown.jpg">
+        </span>
+        <p>Ibis Group (v0.1.0)</p>
+        <span id="siteseal">
+            <script type="text/javascript"
+                    src="https://seal.starfieldtech.com/getSeal?sealID=v0CA19iS5KO2zCDMQWVQcf848PG2A4U0OWBVbTgzfEuk6Lrf8ASy84CTVQ5M"></script>
+        </span>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    {% block script %}
+
+    {% endblock %}
+</body>
+</html>

@@ -1,5 +1,7 @@
-{% extends 'app/baseReport.html' %}
-
+{% extends 'app/base.html' %}
+{% block nav %}
+  {% include 'app/ReportNav.html' %}
+{% endblock %}
 {% block content %}
 <main>
     <center>
@@ -49,4 +51,3 @@
 
 </main>
 {% endblock %}
-

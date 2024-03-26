@@ -214,7 +214,7 @@ def reports(request):
 	return render(request, 'app/Reports.html')
 
 def member_reports(request):
-	return render(request, 'app/MemberActivity.html')
+	return render(request, 'app/MemberReport.html')
 
 def credit_reports(request):
     personpk = request.session["personid"]
