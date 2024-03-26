@@ -217,18 +217,37 @@ def member_reports(request):
 	return render(request, 'app/MemberActivity.html')
 
 def credit_reports(request):
-	personpk = request.session["personid"]
-	person = get_object_or_404(Person,pk=personpk)
-	submitted = False
-	personal = PersonForm(request.POST or None, instance=person)
-	form = ReportSearch()
-	if request.method == 'POST':
-		form=PersonForm()
-		 
-	return render(request, 'app/CreditActivity.html', {'form':form, 'personal':personal})
+    personpk = request.session["personid"]
+    person = get_object_or_404(Person,pk=personpk)
+    submitted = False
+    personal = PersonForm(request.POST or None, instance=person)
+    if person.role == 1:
+        form = ReportSearch_user()
+    elif person.role == 2:
+        form = ReportSearch_chapter()
+    else :
+        form = ReportSearch_fleet()
+    if request.method == 'POST':
+        pass
+         
+    return render(request, 'app/CreditReport.html', {'form':form, 'personal':personal})
 
 def award_reports(request):
-	return render(request, 'app/AwardActivity.html')
+    personpk = request.session["personid"]
+    person = get_object_or_404(Person,pk=personpk)
+    submitted = False
+    personal = PersonForm(request.POST or None, instance=person)
+    if person.role == 1:
+        form = ReportSearch_user()
+    elif person.role == 2:
+        form = ReportSearch_chapter()
+    else :
+        form = ReportSearch_fleet()
+    if request.method == 'POST':
+        pass
+         
+    return render(request, 'app/AwardReport.html', {'form':form, 'personal':personal})
+
 
 #endregion
 
