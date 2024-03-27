@@ -55,13 +55,29 @@ def about(request):
 	)
 
 def test(request):
-	st=datetime(2024,2,1)
-	et=datetime(2024,4,1)
-	chap = Chapter.active_objects.get(id=66)
-	flt = Fleet.active_objects.get(id=2)
-	sessions=get_allsessioncredits_bydate_andchapter(st,et,chap)
-	#sessions=get_allsessioncredits_bydate_andfleet(st,et,flt)
-	context = {"coffee":no_coffee(),"sessions":sessions}
+	# st=datetime(2024,2,1)
+	# et=datetime(2024,4,1)
+	# chap = Chapter.active_objects.get(id=66)
+	# flt = Fleet.active_objects.get(id=2)
+	# sessions=get_allsessioncredits_bydate_andchapter(st,et,chap)
+	# #sessions=get_allsessioncredits_bydate_andfleet(st,et,flt)
+	games = Game.active_objects.filter(verified = False)
+	sessions = Session.active_objects.order_by('startdate').filter(dupsessid__gt=0)
+	participants = list()
+	for s in sessions:
+		for sp in SessionParticipants.active_objects.filter(session=s.id).values_list("session_id","person"):
+			p=Person.active_objects.get(pk=sp[1])
+			participants.append({'session_id': sp[0],'name': p.lastname +', '+p.firstname})
+	nonTRMN = list()
+	for s in sessions:
+		for n in NonTRMNParticipants.active_objects.filter(session=s.id).values_list("session_id","fullname"):
+			nonTRMN.append({'session_id': n[0],'name': n[1]})
+
+#	return render(request, 'app/Oversight.html', {'games':games,'sessions':sessions,'nonTRMN':nonTRMN,'participants':participants})
+
+
+
+	context = {"coffee":no_coffee(),"games":games}
 	return render(request,'app/TestPage.html',context)
 #endregion
 
@@ -183,27 +199,6 @@ def oversight(request):
 	for s in sessions:
 		for n in NonTRMNParticipants.active_objects.filter(session=s.id).values_list("session_id","fullname"):
 			nonTRMN.append({'session_id': n[0],'name': n[1]})
-			
-	# if request.method == 'POST':
-	# 	if request.POST.get('one'):
-	# 		id_list1 = request.POST.getlist('boxes')
-	# 		for x in id_list1:
-	# 			Game.active_objects.filter(pk=int(x)).update(verified = True)
-	# 			messages.success(request, ("Records Approved!"))
-	# 			return HttpResponseRedirect('app/oversight.html')
-			
-	# 	elif request.POST.get('two'):
-	# 		id_list2 = request.POST.getlist('dups')
-	# 		sessions.update(flagged=False)
-			
-	# 		for x in id_list2:
-	# 			Session.objects.filter(pk=int(x)).update(active=0) 
-	# 			messages.success(request, ("Records Deleted!"))
-	# 			for SessionParticipant in participants:
-	# 				update_total_credits(participants.person, participants.credits, participants.session.name)
-			
-	# 		return HttpResponseRedirect('app/oversight.html')
-	
 
 	return render(request, 'app/Oversight.html', {'games':games,'sessions':sessions,'nonTRMN':nonTRMN,'participants':participants})
 #endregion

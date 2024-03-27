@@ -26,6 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('game_autocomplete/', ajaxviews.game_autocomplete, name='game_autocomplete'),
     path('member_autocomplete/', ajaxviews.member_autocomplete, name='member_autocomplete'),
+    path('game_approve/', ajaxviews.game_approve, name='approve_game'),
     path('reports/member/', views.member_reports, name='member-reports'),
     path('reports/credit/', views.credit_reports, name='credit-reports'),
     path('reports/award/', views.award_reports, name='award-reports'),

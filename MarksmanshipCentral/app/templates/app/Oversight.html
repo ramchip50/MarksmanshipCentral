@@ -115,4 +115,13 @@
 
         {% block script %}
             
+<script>
+
+    function approve_game() {
+
+        $.get("/approve_game/", { game_id: 45 });
+    }
+
+</script>
+
         {% endblock %}
