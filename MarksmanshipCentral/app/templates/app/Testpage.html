@@ -1,21 +1,115 @@
-<!DOCTYPE html>
+{% extends 'app/BaseTemplate.html' %}
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
-<body>
+{% block content %}
 
-    {{ coffee }}<br />
-    <br />
-    <table>
-        <tr><td>name</td><td>weapon</td><td>credits for period</td><td>chapter</td><td>fleet</td></tr>
+{{ coffee }}
+<br />
+<br />
 
-        {% for s in sessions %}
-        <tr><td>{{ s.lastname }}, {{ s.firstname}}</td><td>{{ s.weapon }}</td><td>{{ s.weaponcredits }}</td><td>{{ s.chapter }}</td><td>{{ s.fleet }}</td></tr>
-        {% endfor %}
+<div id="g_list" style="display:block">
+
+    <table class="table table-dark">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Name</th>
+                <th scope="col">Alias</th>
+                <th scope="col">Weapon</th>
+                <th scope="col">Creation Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for game in games %}
+            <tr id="row{{game.id}}">
+                <td>
+                    <button type="button" onclick="game_approve('{{game.id}}')" name="pushme">Approve</button>
+                    <button type="button" onclick="game_choose_replace('{{game.id}}','{{game.name}}')" name="pushme2">Replace</button>
+                    <button type="button" onclick="game_edit('{{game.id}}')" name="pushme3">Edit</button>
+                </td>
+                <td> {{game.name}}</td>
+                <td> {{game.alias}}</td>
+                <td> {{game.weapon}}</td>
+                <td> {{game.createdon}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
+</div>
 
-</body>
-</html>
+<div id="g_replace" style="display:none">
+
+    <span id="g_origname"></span><input type="hidden" id="g_orig_id" /><br /><br />
+
+    Choose Replacement Game:<input class="form-control basicAutoComplete" style="width:350px;" type="text" data-url="/game_autocomplete/" autocomplete="off" id="g_newname" /><br /><br />
+
+    <button type="button" onclick="game_replace()" name="replace">Replace</button><button type="button" onclick="reset_g()" name="cancel">Cancel</button>
+
+</div>
+
+<div id="g_edit" style="display:none">
+    Edit me
+
+
+</div>
+
+
+
+{% endblock %}
+
+        {% block script %}
+
+<script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script>
+
+
+<script>
+
+    $('.basicAutoComplete').autoComplete()
+
+    $('.dropdown-menu').css({ 'top': 'auto', 'left': 'auto' })
+
+    function game_approve(gameId) {
+
+        $.get("/game_approve/", { game_id: gameId });
+        rw = '#row' + gameId;
+        $(rw).hide();
+    }
+
+    function game_choose_replace(gameId, gameName) {
+        $('#g_origname').html('Submitted Game: ' + gameName);
+        $('#g_origid').val(gameId);
+        $('#g_list').hide();
+        $('#g_replace').show();
+        //document.getElementById('row1').style.display = 'none';
+        //S$("#row1").hide();
+    }
+
+    function game_replace() {
+        oldid = $('#g_orig_id').text();
+        newname = $('#g_newname').text();
+        $.get("/game_replace/", { old_id: oldid, new_name: newname });
+        rw = '#row' + oldid;
+        $(rw).hide();
+        reset_g();
+    }
+
+    function game_edit() {
+        $('#g_list').hide();
+        $('#g_replace').hide();
+        $('#g_edit').show();
+    }
+
+    function reset_g() {
+        $('#g_list').show();
+        $('#g_replace').hide();
+        $('#g_edit').hide();
+    }
+
+</script>
+
+        {% endblock %}
+
+
+
+
+
+

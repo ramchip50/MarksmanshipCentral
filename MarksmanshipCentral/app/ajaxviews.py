@@ -32,7 +32,7 @@ def update_scoring(session_id:int,game_id:int):
 	g = Game.active_objects.get(id=game_id)
 	pl = SessionParticipants.active_objects.filter(session_id=session_id)
 	for p in pl:
-		update_total_credits(p.person_id,p.earned_credits,g)
+		update_total_credits(p.person_id,p.credits,g)
 
 def game_approve(request):
 		g_id = request.GET['game_id']
@@ -40,26 +40,42 @@ def game_approve(request):
 		game.verified = True
 		game.save()
 		sess=Session.active_objects.filter(game_id=g_id)
-		update_scoring(sess.id,g_id)
+		for s in sess:
+			update_scoring(s.id,g_id)
 		return no_coffee()
 
 def game_replace(request):
-	g_id_new = request.GET['new_game_id']
-	g_id_old = request.GET['old_game_id']
-	new_g=Game.active_objects.get(id=g_id_new)
+	g_new = request.GET['new_name']
+	g_old_id = request.GET['old_id']
+	add_alias = request.GET['add_alias']
+	new_g=Game.active_objects.get(name=g_new)
 	new_g.verified=True
+	if add_alias == 'true':
+		g_old=Game.active_objects.get(pk=g_old_id)
+		new_g.alias = new_g.alias+','+g_old.name
 	new_g.save()
-	sess=Session.active_objects.filter(game_id=g_id_old)
+	sess=Session.active_objects.filter(game_id=g_old_id)
 	for s in sess:
-		s.game_id=g_id_new
-		update_scoring(s.id,g_id_new)
-	old_g=Game.active_objects.get(id=g_id_old)
-	old_g.delete()
+		s.game_id=new_g.pk
+		update_scoring(s.id,new_g.pk)
+	g_old=Game.active_objects.get(pk=g_old_id)
+	g_old.delete()
 	return no_coffee()
 
-def game_edit(request):
-			
+def game_save(request):
+	g_id = request.GET['game_id']
+	alias = request.GET['alias']
+	weapon_id = request.GET['weapon_id']
+	game=Game.active_objects.get(pk=g_id)
+	game.verified=True
+	game.alias=alias
+	weap=Weapon.objects.get(pk=weapon_id)
+	game.weapon=weap
+	game.save()
+	sess=Session.active_objects.filter(game_id=g_id)
+	for s in sess:
+		update_scoring(s.id,g_id)
 	
- 	return no_coffee()
+	return None
 
 
