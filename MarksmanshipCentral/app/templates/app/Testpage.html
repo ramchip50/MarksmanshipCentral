@@ -6,7 +6,7 @@
 <br />
 <br />
 
-<div id="g_list" style="display:block">
+<div id="g_list" style="display:none">
 
     <table class="table table-dark">
         <thead>
@@ -20,11 +20,11 @@
         </thead>
         <tbody>
             {% for game in games %}
-            <tr id="row{{game.id}}">
+            <tr id="g_row{{game.id}}">
                 <td>
                     <button type="button" onclick="game_approve('{{game.id}}')" name="pushme">Approve</button>
                     <button type="button" onclick="game_choose_replace('{{game.id}}','{{game.name}}')" name="pushme2">Replace</button>
-                    <button type="button" onclick="game_edit('{{game.id}}')" name="pushme3">Edit</button>
+                    <button type="button" onclick="game_edit('{{game.id}}','{{game.name}}','{{game.alias}}','{{game.weapon_id}}')" name="pushme3">Edit</button>
                 </td>
                 <td> {{game.name}}</td>
                 <td> {{game.alias}}</td>
@@ -38,17 +38,31 @@
 
 <div id="g_replace" style="display:none">
 
-    <span id="g_origname"></span><input type="hidden" id="g_orig_id" /><br /><br />
+    <span id="g_origname">This name</span><input type="hidden" id="g_origid"/><br /><br />
 
-    Choose Replacement Game:<input class="form-control basicAutoComplete" style="width:350px;" type="text" data-url="/game_autocomplete/" autocomplete="off" id="g_newname" /><br /><br />
+    Choose Library Game:<input class="form-control basicAutoComplete" style="width:350px;" type="text" data-url="/game_autocomplete/" autocomplete="off" id="g_newname" /><br /><br />
 
-    <button type="button" onclick="game_replace()" name="replace">Replace</button><button type="button" onclick="reset_g()" name="cancel">Cancel</button>
+    <button type="button" onclick="game_replace()" name="replace">Replace</button><button type="button" onclick="game_addalias()" name="replace">Add Alias</button>
+    <button type="button" onclick="reset_g()" name="cancel">Cancel</button>
 
 </div>
 
 <div id="g_edit" style="display:none">
-    Edit me
 
+    <span id="g_editorigname">This name</span><input type="hidden" id="g_editorigid" /><br /><br />
+    Alias: <input id="g_editalias" type="text" />
+    Weapon:&nbsp;<select id="g_weapon">
+        <option value="1">Pistol</option>
+        <option value="2">Grenade</option>
+        <option value="3">Flechette Gun</option>
+        <option value="4">Plasma Carbine</option>
+        <option value="5">Tribarrel</option>
+        <option value="6">Rifle</option>
+        <option value="7">Disruptor</option>
+        <option value="8">Grenade Launcher</option>
+        <option value="9">Plasma Rifle</option>
+    </select>
+    <button type="button" onclick="game_save()" name="save">Save</button><button type="button" onclick="reset_g()" name="cancel">Cancel</button>
 
 </div>
 
@@ -70,32 +84,56 @@
     function game_approve(gameId) {
 
         $.get("/game_approve/", { game_id: gameId });
-        rw = '#row' + gameId;
+        rw = '#g_row' + gameId;
         $(rw).hide();
     }
 
     function game_choose_replace(gameId, gameName) {
-        $('#g_origname').html('Submitted Game: ' + gameName);
+        t = "Submitted Game: " + gameName;
+        $('#g_origname').html(t);
         $('#g_origid').val(gameId);
         $('#g_list').hide();
         $('#g_replace').show();
-        //document.getElementById('row1').style.display = 'none';
-        //S$("#row1").hide();
+
     }
 
     function game_replace() {
-        oldid = $('#g_orig_id').text();
-        newname = $('#g_newname').text();
-        $.get("/game_replace/", { old_id: oldid, new_name: newname });
-        rw = '#row' + oldid;
+        oldid = $('#g_origid').val();
+        newname = $('#g_newname').val();
+        $.get("/game_replace/", { old_id: oldid, new_name: newname, add_alias : false });
+        rw = '#g_row' + oldid;
         $(rw).hide();
         reset_g();
     }
 
-    function game_edit() {
+    function game_addalias() {
+        oldid = $('#g_origid').val();
+        newname = $('#g_newname').val();
+        $.get("/game_replace/", { old_id: oldid, new_name: newname, add_alias: true });
+        rw = '#g_row' + oldid;
+        $(rw).hide();
+        reset_g();
+    }
+
+    function game_edit(gameId,gameName,gameAlias,gameWeapon) {
+        $('#g_weapon').val(gameWeapon);
+        $('#g_editalias').val(gameAlias);
+        t = "Submitted Game: " + gameName;
+        $('#g_editorigname').html(t);
+        $('#g_editorigid').val(gameId);
         $('#g_list').hide();
         $('#g_replace').hide();
         $('#g_edit').show();
+    }
+
+    function game_save() {
+        g_id = $('#g_editorigid').val();
+        g_alias = $('#g_editalias').val();
+        g_weapon = $('#g_weapon').val();
+        $.get("/game_save/", { game_id: g_id, alias: g_alias, weapon_id: g_weapon });
+        rw = '#g_row' + g_id;
+        $(rw).hide();
+        reset_g();
     }
 
     function reset_g() {

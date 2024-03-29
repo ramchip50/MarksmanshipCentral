@@ -7,10 +7,8 @@
 
 <h2 style="text-align: center;">Marksmanship Central Management</h2>
 <br>
-
-<form action=”” method=POST>
-    {% csrf_token %}
-    <div class="container-fluid ">
+{% if games %}
+    <div class="container-fluid">
 
         <h3 style="text-align: center;">New Game Review</h3>
         <div id="g_list" style="display:block">
@@ -74,13 +72,15 @@
         </div>
                
     </div>
+{% endif %}
 
-    <div class="container-fluid ">
+{% if submittedsessions %}
+    <div class="container-fluid" id="s_list">
         <h3 style="text-align: center;">Potential Duplicate Entry Review</h3>
         <table class="table table-dark">
             <thead>
                 <tr>
-                    <th scope="col">Delete</th>
+                    <th />
                     <th scope="col">Start Date</th>
                     <th scope="col">End Date</th>
                     <th scope="col">Game</th>
@@ -90,15 +90,13 @@
                 </tr>
             </thead>
             <tbody>
-                {% for session in sessions %}
-                <tr>
-                    <td>
-                        <div class=”form-check”>
-                            <input type="checkbox" class=”form-check” value={{ session.id}} name=”dups”>
-                        </div>
+                {% for session in submittedsessions %}
+                <tr id="s_row{{session.id}}" class="submitted">
+                    <td id="rvw{{session.id}}"><button type="button" id="s_btn{{session.id}}" onclick="session_review('{{session.id}}','{{session.dupsessid}}')">Review</button></td>
+                    <td id="appr{{session.id}}" style="display:none"><button type="button" onclick="session_resolve('{{session.id}}',true)">Approve</button><button type="button" onclick="session_resolve('{{session.id}}',false)">Reject</button>
                     </td>
-                    <td> {{session.startdate}}</td>
-                    <td> {{session.enddate}}</td>
+                    <td> {{session.startdate | date:"m/d/Y H:i"}}</td>
+                    <td> {{session.enddate | date:"m/d/Y H:i"}}</td>
                     <td> {{session.game}}</td>
                     <td> {{session.playmode}}</td>
                     <td> {{session.turnsplayed}}</td>
@@ -116,10 +114,33 @@
                     </td>
                 </tr>
                 {% endfor %}
+                {% for c in conflictsessions %}
+                <tr id="c_row{{c.id}}" style="display:none" class="conflict">
+                    <td>Resolve Conflict</td>
+                    <td> {{c.startdate | date:"m/d/Y H:i"}}</td>
+                    <td> {{c.enddate | date:"m/d/Y H:i"}}</td>
+                    <td> {{c.game}}</td>
+                    <td> {{c.playmode}}</td>
+                    <td> {{c.turnsplayed}}</td>
+                    <td>
+                        {% for sp in participants %}
+                        {% if sp.session_id == c.id %}
+                        {{sp.name}} <br />
+                        {% endif %}
+                        {% endfor %}
+                        {% for non in nonTRMN%}
+                        {% if non.session_id == c.id %}
+                        {{non.name}} <br />
+                        {% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
             </tbody>
         </table>
-        <button type="submit" class=’btn btn-secondary’ name=”two”>Delete Duplicates</button>
+
     </div>
+{% endif %}
     <div class="container-fluid ">
 
         <h3 style="text-align: center;">Other Odds and Ends</h3>
@@ -143,7 +164,6 @@
         </table>
         <button class=’btn btn-secondary’ name=”three”>Submit</button>
     </div>
-</form>
 
         {% endblock %}
 
@@ -218,6 +238,29 @@
         $('#g_replace').hide();
         $('#g_edit').hide();
     }
+
+    function session_review(submittedid, conflictid) {
+        cr = '#c_row' + conflictid;
+        sr = '#s_row' + submittedid;
+        sb = '#rvw' + submittedid;
+        ap = '#appr' + submittedid;
+        $('[id^=s_row]').hide()
+        $('[id^=c_row]').hide()
+        $(sb).hide();
+        $(ap).show();
+        $(cr).show();
+        $(sr).show();
+
+    }
+
+    function session_resolve(submittedid,approved) {
+        $.get("/session_resolve/", { session_id: submittedid, 'approved':approved });
+        sr = '#s_row' + submittedid;
+        $(sr).remove();
+        $('[id^=s_row]').show()
+        $('[id^=c_row]').hide()
+    }
+
 
 </script>
 

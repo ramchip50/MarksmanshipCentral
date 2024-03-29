@@ -20,7 +20,7 @@
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
-    <WebBrowserUrl>http://localhost/oversight</WebBrowserUrl>
+    <WebBrowserUrl>http://localhost/</WebBrowserUrl>
     <LaunchProvider>Django launcher</LaunchProvider>
     <DjangoSettingsModule>MarksmanshipCentral.settings</DjangoSettingsModule>
     <OutputPath>.</OutputPath>
