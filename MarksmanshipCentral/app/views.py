@@ -3,6 +3,8 @@ Definition of views.
 """
 
 from datetime import datetime
+from http.client import CONFLICT
+from json import JSONEncoder
 from pickle import NONE
 from tabnanny import check
 from django.core.checks import messages
@@ -54,6 +56,15 @@ def about(request):
 		}
 	)
 
+class sessiondisplay():
+	def __init__(self,id,startdate,enddate,playmode,turnsplayed):
+		self.id=id
+		self.startdate=startdate
+		self.enddate=enddate
+		self.playmode=playmode
+		self.turnsplayed=turnsplayed
+	players = None
+	
 def test(request):
 	# st=datetime(2024,2,1)
 	# et=datetime(2024,4,1)
@@ -61,6 +72,13 @@ def test(request):
 	# flt = Fleet.active_objects.get(id=2)
 	# sessions=get_allsessioncredits_bydate_andchapter(st,et,chap)
 	# #sessions=get_allsessioncredits_bydate_andfleet(st,et,flt)
+	sess1 = Session.active_objects.get(pk=34)
+	sd = sessiondisplay(sess1.pk,sess1.startdate,sess1.enddate,sess1.playmode,sess1.turnsplayed)
+	players = SessionParticipants.active_objects.filter(session_id=34)
+	sd.players = list(players)
+	
+	j=JSONEncoder.encode(sd);
+
 	games = Game.active_objects.filter(verified = False)
 	sessions = Session.active_objects.order_by('startdate').filter(dupsessid__gt=0)
 	participants = list()
@@ -188,19 +206,34 @@ def newsession(request):
 	return render(request, 'app/NewSession2.html', {'form':form,'formset1':formset1, 'formset2':formset2, 'submitted':submitted,'message':message})
 
 def oversight(request):
-	games = Game.active_objects.filter(verified = False)
-	sessions = Session.active_objects.order_by('startdate').filter(dupsessid__gt=0)
+	submittedgames = Game.active_objects.filter(verified = False)
+	submittedsessions = Session.active_objects.order_by('startdate').filter(dupsessid__gt=0)
 	participants = list()
-	for s in sessions:
+	nonTRMN = list()
+	linkedsessions=[]
+	for s in submittedsessions:
+		linkedsessions.append(Session.active_objects.get(pk=s.dupsessid).pk)
 		for sp in SessionParticipants.active_objects.filter(session=s.id).values_list("session_id","person"):
 			p=Person.active_objects.get(pk=sp[1])
 			participants.append({'session_id': sp[0],'name': p.lastname +', '+p.firstname})
-	nonTRMN = list()
-	for s in sessions:
+
 		for n in NonTRMNParticipants.active_objects.filter(session=s.id).values_list("session_id","fullname"):
 			nonTRMN.append({'session_id': n[0],'name': n[1]})
 
-	return render(request, 'app/Oversight.html', {'games':games,'sessions':sessions,'nonTRMN':nonTRMN,'participants':participants})
+	conflictsessions = Session.active_objects.filter(pk__in=linkedsessions)
+	for c in conflictsessions:
+			for sp in SessionParticipants.active_objects.filter(session=c.id).values_list("session_id","person"):
+				p=Person.active_objects.get(pk=sp[1])
+				participants.append({'session_id': sp[0],'name': p.lastname +', '+p.firstname})
+
+	context={
+		'games':submittedgames,
+		'submittedsessions':submittedsessions,
+		'conflictsessions' :conflictsessions,
+		'nonTRMN' : nonTRMN,
+		'participants':participants
+		}
+	return render(request, 'app/Oversight.html', context)
 #endregion
 
 #Reports

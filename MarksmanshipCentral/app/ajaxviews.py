@@ -42,7 +42,7 @@ def game_approve(request):
 		sess=Session.active_objects.filter(game_id=g_id)
 		for s in sess:
 			update_scoring(s.id,g_id)
-		return no_coffee()
+		return None
 
 def game_replace(request):
 	g_new = request.GET['new_name']
@@ -60,7 +60,7 @@ def game_replace(request):
 		update_scoring(s.id,new_g.pk)
 	g_old=Game.active_objects.get(pk=g_old_id)
 	g_old.delete()
-	return no_coffee()
+	return None
 
 def game_save(request):
 	g_id = request.GET['game_id']
@@ -75,7 +75,25 @@ def game_save(request):
 	sess=Session.active_objects.filter(game_id=g_id)
 	for s in sess:
 		update_scoring(s.id,g_id)
-	
 	return None
+
+def session_resolve(request):
+	session_id = request.GET['session_id']
+	approved = request.GET['approved']
+	sess = Session.active_objects.get(pk=session_id)
+	players = SessionParticipants.active_objects.filter(session_id=session_id)
+	sess.dupsessid = None
+	if approved == 'true':
+		for p in players:
+			update_total_credits(p.person_id,p.credits,sess.game)
+	else:
+		for p in players:
+			p.active=False
+			p.save()
+		sess.active=False
+	sess.save()
+		
+
+
 
 

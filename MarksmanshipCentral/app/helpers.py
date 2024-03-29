@@ -48,6 +48,8 @@ def award_list(personpk):
 #Session Functions
 # region
 
+
+
 def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:BaseFormSet,nontrmn:BaseFormSet):
     #check for eligibility.
     has_one_trmn = trmn_participants[0].has_changed()
