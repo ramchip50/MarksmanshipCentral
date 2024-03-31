@@ -5,6 +5,7 @@ Definition of views.
 from datetime import datetime
 from http.client import CONFLICT
 from json import JSONEncoder
+import json
 from pickle import NONE
 from tabnanny import check
 from django.core.checks import messages
@@ -66,36 +67,24 @@ class sessiondisplay():
 	players = None
 	
 def test(request):
-	# st=datetime(2024,2,1)
-	# et=datetime(2024,4,1)
+	st=datetime(2024,3,1)
+	et=datetime(2024,3,31)
 	# chap = Chapter.active_objects.get(id=66)
 	# flt = Fleet.active_objects.get(id=2)
 	# sessions=get_allsessioncredits_bydate_andchapter(st,et,chap)
 	# #sessions=get_allsessioncredits_bydate_andfleet(st,et,flt)
-	sess1 = Session.active_objects.get(pk=34)
-	sd = sessiondisplay(sess1.pk,sess1.startdate,sess1.enddate,sess1.playmode,sess1.turnsplayed)
-	players = SessionParticipants.active_objects.filter(session_id=34)
-	sd.players = list(players)
+	history= get_session_history_bydate(st,et,7012)
 	
-	j=JSONEncoder.encode(sd);
-
-	games = Game.active_objects.filter(verified = False)
-	sessions = Session.active_objects.order_by('startdate').filter(dupsessid__gt=0)
-	participants = list()
-	for s in sessions:
-		for sp in SessionParticipants.active_objects.filter(session=s.id).values_list("session_id","person"):
-			p=Person.active_objects.get(pk=sp[1])
-			participants.append({'session_id': sp[0],'name': p.lastname +', '+p.firstname})
-	nonTRMN = list()
-	for s in sessions:
-		for n in NonTRMNParticipants.active_objects.filter(session=s.id).values_list("session_id","fullname"):
-			nonTRMN.append({'session_id': n[0],'name': n[1]})
-
-#	return render(request, 'app/Oversight.html', {'games':games,'sessions':sessions,'nonTRMN':nonTRMN,'participants':participants})
-
-
-
-	context = {"coffee":no_coffee(),"games":games}
+	#plyrs = history[4].players
+	#plyrs.append(history[4].players.split(','))
+	#u  history[4].players.toJson()
+	#u='{"lastname": "Admin", "firstname": "Test"},{"lastname": "Blue", "firstname": "Chaco"},{"lastname": "Greene", "firstname": "Kevin"}'
+	#l = dict(u)
+	#uj = json.loads(u)
+#	p = history[4].players.split(,[')
+#	for o in u:
+		
+	context = {"coffee":no_coffee(),"history":history}
 	return render(request,'app/TestPage.html',context)
 #endregion
 
@@ -273,7 +262,28 @@ def reports(request):
 	return render(request, 'app/Reports.html')
 
 def member_reports(request):
-	return render(request, 'app/MemberReport.html')
+	personpk = request.session["personid"]
+	person = get_object_or_404(Person,pk=personpk)
+	form=BaseReportSearch()
+	history = None
+	startdate=None
+	enddate=None 
+	if request.method == 'POST':
+		form=BaseReportSearch(request.POST or None)
+		if form.is_valid():
+			startdate = datetime.strptime(form.cleaned_data['startdate'],"%Y-%m-%d")    #2024-04-04
+			enddate = datetime.strptime(form.cleaned_data['enddate'],"%Y-%m-%d") 
+			history = get_session_history_bydate(startdate,enddate,personpk)
+		else:
+			form=BaseReportSearch()
+	context = {
+		"startdate":startdate,
+		"enddate":enddate,
+		"person":person,
+		"form":form,
+		"history":history}
+
+	return render(request, 'app/MemberReport.html',context)
 
 def credit_reports(request):
 	personpk = request.session["personid"]

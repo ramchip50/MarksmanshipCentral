@@ -24,23 +24,25 @@
 				}
 </style>
 <div class="sidenav">
-		<a href="https://medusa.trmn.org">
-			<img src="https://www.trmn.org/user/themes/trmn/images/trmn-2023.png" alt="TRMN Seal" width="150px" height="150px"
-				 data-src="https://www.trmn.org/user/themes/trmn/images/trmn-2023.png">
-		</a>
+	<a href="https://medusa.trmn.org">
+		<img src="https://www.trmn.org/user/themes/trmn/images/trmn-2023.png" alt="TRMN Seal" width="150px" height="150px"
+			 data-src="https://www.trmn.org/user/themes/trmn/images/trmn-2023.png">
+	</a>
 
-		<a href="{% url 'landing'%}">Home</a><br>
-		<a href="{% url 'personal'%}">Personal Information</a><br>
-		<a href="{% url 'newgame'%}">New Game</a><br>
-		<a href="{% url 'newsession'%}">New Session</a><br>
-		<a href="{% url 'logout' %}">Log Out</a><br>
-		{% if person.role_id > 0 %}
-		<a href="{% url 'reports'%}">Reports</a><br>
-		<a href="{% url 'oversight'%}">Oversight</a><br>
-		<a href="/admin">Admin</a>
-		<br><br><br><br>
-		{% endif %}
+	<a href="{% url 'landing'%}">Home</a><br>
+	<a href="{% url 'personal'%}">Personal Information</a><br>
+	<a href="{% url 'newgame'%}">New Game</a><br>
+	<a href="{% url 'newsession'%}">New Session</a><br>
+	<a href="{% url 'logout' %}">Log Out</a><br>
+	<a href="{% url 'reports'%}">Reports</a><br>
+	{% if person.role_id > 2 %}
+	<a href="{% url 'oversight'%}">Oversight</a><br>
+	{% endif %}
+	{% if person.role_id > 3 %}
+	<a href="/admin">Admin</a>
+	<br><br><br><br>
+	{% endif %}
 
-		<br><br><br><br>
+	<br><br><br><br>
 
-	</div>
+</div>

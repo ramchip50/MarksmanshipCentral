@@ -4,8 +4,10 @@ Definition of forms.
 
 from os import name
 from random import choice
+from typing import Any
 from django import forms
-from django.db.models import QuerySet 
+from django.db.models import QuerySet
+from django.db.models.functions import Now 
 from django.forms import ChoiceField, ModelForm
 from django.core.exceptions import ValidationError
 from django.http import Http404
@@ -106,8 +108,16 @@ class GameForm(forms.Form):
             raise ValidationError(_('That title is already in the library')) 
         
 class BaseReportSearch(forms.Form):
-    startdate = forms.CharField(widget=forms.TextInput(attrs={ 'type': 'datetime-local', 'class':'form-control'}))
-    enddate = forms.CharField(widget=forms.TextInput(attrs={ 'type': 'datetime-local', 'class':'form-control'}))
+    startdate = forms.CharField(widget=forms.TextInput(attrs={ 'type': 'date', 'class':'form-control'}))
+    enddate = forms.CharField(widget=forms.TextInput(attrs={ 'type': 'date', 'class':'form-control'}))
+    
+
+    def clean(self) -> dict[str, Any]:
+        sd = self.cleaned_data["startdate"]
+        ed = self.cleaned_data["enddate"]
+        if ed <= sd:
+            raise ValidationError(_('End date must be after start date')) 
+        return super().clean()
 
 class ReportSearch_fleet(BaseReportSearch):
     CH1=Chapter.objects.all().values_list('id','name')
@@ -121,8 +131,8 @@ class ReportSearch_chapter(BaseReportSearch):
     fleet = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
                              
 class ReportSearch_user(BaseReportSearch):
-    chapter = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
-    fleet = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
+    chapter = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}),required=False,disabled=True)
+    fleet = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}),required=False,disabled=True)
 
 
 #endregion       
