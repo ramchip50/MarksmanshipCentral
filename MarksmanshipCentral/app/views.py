@@ -151,6 +151,8 @@ def personal(request):
 #DataEntry
 #region DataEntry
 def newgame(request):
+	personpk = request.session["personid"]
+	person = get_object_or_404(Person,pk=personpk)
 	if request.method == "POST":
 		form = GameForm(request.POST)
 		if form.is_valid():
@@ -160,15 +162,25 @@ def newgame(request):
 			g.weapon = Weapon.objects.get(pk=form.cleaned_data["weapon"])
 			g.save()
 			submitted = True     
-			form=GameForm      
+			form=GameForm 
+		else:
+			submitted=False
 	else: 
 		submitted = False
 		form = GameForm
 
-	return render(request, "app/NewGame.html", {'form':form, 'submitted':submitted})
+	context = {
+		'person': person,
+		'form':form,
+	    'submitted':submitted
+		}
+		
+		
+	return render(request, "app/NewGame.html", context)
 
 def newsession(request):
-	personpk = request.session["personid"]  
+	personpk = request.session["personid"]
+	person = get_object_or_404(Person,pk=personpk)
 	submitted = False
 	if request.method == 'POST':
 		form = SessionForm(request.POST or None)
@@ -203,10 +215,28 @@ def newsession(request):
 		if "submitted" in request.GET:
 			Submitted = True
 	
-	return render(request, 'app/NewSession2.html', {'form':form,'formset1':formset1, 'formset2':formset2, 'submitted':submitted,'message':message})
+	context = {
+		'person':person,
+		'form':form,
+		'formset1':formset1,
+	    'formset2':formset2,
+	    'submitted':submitted,
+		'message':message
+		}
+		
+	return render(request, 'app/NewSession2.html', context)
 
 def oversight(request):
+	personpk = request.session["personid"]
+	person = get_object_or_404(Person,pk=personpk)
 	submittedgames = Game.active_objects.filter(verified = False)
+	newgames=list()
+	for sg in submittedgames:
+		if Session.active_objects.filter(game_id=sg.pk).exists():
+			newgames.append({'game_id':sg.pk,'name':sg.name,'alias':sg.alias,'weapon':sg.weapon,'createdon':sg.createdon,'has_session':True})
+		else:
+			newgames.append({'game_id':sg.pk,'name':sg.name,'alias':sg.alias,'weapon':sg.weapon,'createdon':sg.createdon,'has_session':False})
+		
 	submittedsessions = Session.active_objects.order_by('startdate').filter(dupsessid__gt=0)
 	participants = list()
 	nonTRMN = list()
@@ -227,7 +257,8 @@ def oversight(request):
 				participants.append({'session_id': sp[0],'name': p.lastname +', '+p.firstname})
 
 	context={
-		'games':submittedgames,
+		'person':person,
+		'games': newgames,
 		'submittedsessions':submittedsessions,
 		'conflictsessions' :conflictsessions,
 		'nonTRMN' : nonTRMN,
@@ -245,36 +276,49 @@ def member_reports(request):
 	return render(request, 'app/MemberReport.html')
 
 def credit_reports(request):
-    personpk = request.session["personid"]
-    person = get_object_or_404(Person,pk=personpk)
-    submitted = False
-    personal = PersonForm(request.POST or None, instance=person)
-    if person.role == 1:
-        form = ReportSearch_user()
-    elif person.role == 2:
-        form = ReportSearch_chapter()
-    else :
-        form = ReportSearch_fleet()
-    if request.method == 'POST':
-        pass
-         
-    return render(request, 'app/CreditReport.html', {'form':form, 'personal':personal})
+	personpk = request.session["personid"]
+	person = get_object_or_404(Person,pk=personpk)
+	submitted = False
+	personal = PersonForm(request.POST or None, instance=person)
+	if person.role == 1:
+		form = ReportSearch_user()
+	elif person.role == 2:
+		form = ReportSearch_chapter()
+	else :
+		form = ReportSearch_fleet()
+	if request.method == 'POST':
+		
+		pass
+
+	context={
+		'person': person,
+		'form': form,
+		'personal': personal
+		}
+		 
+	return render(request, 'app/CreditReport.html', context)
 
 def award_reports(request):
-    personpk = request.session["personid"]
-    person = get_object_or_404(Person,pk=personpk)
-    submitted = False
-    personal = PersonForm(request.POST or None, instance=person)
-    if person.role == 1:
-        form = ReportSearch_user()
-    elif person.role == 2:
-        form = ReportSearch_chapter()
-    else :
-        form = ReportSearch_fleet()
-    if request.method == 'POST':
-        pass
-         
-    return render(request, 'app/AwardReport.html', {'form':form, 'personal':personal})
+	personpk = request.session["personid"]
+	person = get_object_or_404(Person,pk=personpk)
+	submitted = False
+	personal = PersonForm(request.POST or None, instance=person)
+	if person.role == 1:
+		form = ReportSearch_user()
+	elif person.role == 2:
+		form = ReportSearch_chapter()
+	else :
+		form = ReportSearch_fleet()
+	if request.method == 'POST':
+		pass
+		 
+	context={
+	'person': person,
+	'form': form,
+	'personal': personal
+	}
+
+	return render(request, 'app/AwardReport.html', context)
 
 
 #endregion

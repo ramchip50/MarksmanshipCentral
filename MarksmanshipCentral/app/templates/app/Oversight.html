@@ -25,16 +25,16 @@
                 </thead>
                 <tbody>
                     {% for game in games %}
-                    <tr id="g_row{{game.id}}">
+                    <tr id="g_row{{game.game_id}}">
                         <td>
-                            <button type="button" onclick="game_approve('{{game.id}}')" name="pushme">Approve</button>
-                            <button type="button" onclick="game_choose_replace('{{game.id}}','{{game.name}}')" name="pushme2">Replace</button>
-                            <button type="button" onclick="game_edit('{{game.id}}','{{game.name}}','{{game.alias}}','{{game.weapon_id}}')" name="pushme3">Edit</button>
+                            <button type="button" onclick="game_approve('{{game.game.id}}')" name="pushme">Approve</button>
+                            <button type="button" onclick="game_choose_replace('{{game.game_id}}','{{game.name}}','{{game.has_session}}')" name="pushme2">Replace</button>
+                            <button type="button" onclick="game_edit('{{game.game_id}}','{{game.name}}','{{game.alias}}','{{game.weapon.id}}')" name="pushme3">Edit</button>
                         </td>
                         <td> {{game.name}}</td>
                         <td> {{game.alias}}</td>
                         <td> {{game.weapon}}</td>
-                        <td> {{game.createdon}}</td>
+                        <td> {{game.createdon | date:"m/d/Y"}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -45,16 +45,16 @@
 
             <span id="g_origname">This name</span><input type="hidden" id="g_origid" /><br /><br />
 
-            Choose Library Game:<input class="form-control basicAutoComplete" style="width:350px;" type="text" data-url="/game_autocomplete/" autocomplete="off" id="g_newname" /><br /><br />
+            Choose Library Game:<input class="form-control basicAutoComplete" style="width:600px;" type="text" data-url="/game_autocomplete/full/" autocomplete="off" id="g_newname" placeholder="Type name to search" /><br /><br />
 
             <button type="button" onclick="game_replace()" name="replace">Replace</button><button type="button" onclick="game_addalias()" name="replace">Add Alias</button>
-            <button type="button" onclick="reset_g()" name="cancel">Cancel</button>
+            <button type="button" onclick="game_delete()" name="delete" id="delete_g">Delete</button> <button type="button" onclick="reset_g()" name="cancel">Cancel</button>
 
         </div>
 
         <div id="g_edit" style="display:none">
 
-            <span id="g_editorigname"></span><input type="hidden" id="g_editorigid" /><br /><br />
+            Name: <input type="text" id="g_editname" /><input type="hidden" id="g_editorigid" /><br /><br />
             Alias: <input id="g_editalias" type="text" />
             Weapon:&nbsp;<select id="g_weapon">
                 <option value="1">Pistol</option>
@@ -67,7 +67,7 @@
                 <option value="8">Grenade Launcher</option>
                 <option value="9">Plasma Rifle</option>
             </select>
-            <button type="button" onclick="game_save()" name="save">Save</button><button type="button" onclick="reset_g()" name="cancel">Cancel</button>
+            <button type="button" onclick="game_save()" name="save">Save &amp; Approve</button><button type="button" onclick="reset_g()" name="cancel">Cancel</button>
 
         </div>
                
@@ -94,6 +94,7 @@
                 <tr id="s_row{{session.id}}" class="submitted">
                     <td id="rvw{{session.id}}"><button type="button" id="s_btn{{session.id}}" onclick="session_review('{{session.id}}','{{session.dupsessid}}')">Review</button></td>
                     <td id="appr{{session.id}}" style="display:none"><button type="button" onclick="session_resolve('{{session.id}}',true)">Approve</button><button type="button" onclick="session_resolve('{{session.id}}',false)">Reject</button>
+                    <button type="button" onclick="document.location.reload(true)" >Cancel</button>
                     </td>
                     <td> {{session.startdate | date:"m/d/Y H:i"}}</td>
                     <td> {{session.enddate | date:"m/d/Y H:i"}}</td>
@@ -141,7 +142,7 @@
 
     </div>
 {% endif %}
-    <div class="container-fluid ">
+    <!--<div class="container-fluid ">
 
         <h3 style="text-align: center;">Other Odds and Ends</h3>
         <table class="table table-dark">
@@ -163,14 +164,11 @@
             </tbody>
         </table>
         <button class=’btn btn-secondary’ name=”three”>Submit</button>
-    </div>
+    </div>-->
 
         {% endblock %}
 
         {% block script %}
-
-<script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script>
-
 
 <script>
 
@@ -185,11 +183,24 @@
         $(rw).hide();
     }
 
-    function game_choose_replace(gameId, gameName) {
+    function game_delete() {
+        gameId = $('#g_origid').val();
+        $.get("/game_delete/", { game_id: gameId });
+        rw = '#g_row' + gameId;
+        $(rw).hide();
+        $reset_g();
+    }
+
+    function game_choose_replace(gameId, gameName, has_session) {
         t = "Submitted Game: " + gameName;
         $('#g_origname').html(t);
         $('#g_origid').val(gameId);
         $('#g_list').hide();
+        $('#s_list').hide();
+        if (has_session == 'True')
+        { $('#delete_g').prop('disabled', true); }
+        else
+        { $('#delete_g').prop('disabled', false); }
         $('#g_replace').show();
 
     }
@@ -215,8 +226,7 @@
     function game_edit(gameId, gameName, gameAlias, gameWeapon) {
         $('#g_weapon').val(gameWeapon);
         $('#g_editalias').val(gameAlias);
-        t = "Submitted Game: " + gameName;
-        $('#g_editorigname').html(t);
+        $('#g_editname').val(gameName);
         $('#g_editorigid').val(gameId);
         $('#g_list').hide();
         $('#g_replace').hide();
@@ -235,6 +245,7 @@
 
     function reset_g() {
         $('#g_list').show();
+        $('#s_list').show();
         $('#g_replace').hide();
         $('#g_edit').hide();
     }
