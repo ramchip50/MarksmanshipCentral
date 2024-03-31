@@ -55,23 +55,29 @@ def get_earned_awards_bydate(startdate:datetime,enddate:datetime):
 def get_earned_awards_bydate_andchapter(startdate:datetime,enddate:datetime,chapter:Chapter):
     
     allawards = get_earned_awards_bydate(startdate,enddate)
-    result = list()
+    results = list()
     for award in allawards:
         if award.chapter == chapter.name:
-            result.append(award)
+            results.append(award)
       
-    return result
+    return results
 
 
 def get_earned_awards_bydate_andfleet(startdate:datetime,enddate:datetime,fleet:Fleet):
     
     allawards = get_earned_awards_bydate(startdate,enddate)
-    result = list()
+    results = list()
     for award in allawards:
         if award.chapter == fleet.name:
-            result.append(award)
+            results.append(award)
       
-    return result
+    return results
 
     
-    
+def get_session_history_bydate(startdate:datetime,enddate:datetime,person_id:int):
+        
+    with connection.cursor() as cursor:
+            cursor.callproc('get_session_history',[startdate,enddate,person_id])
+            results = namedtuplefetchall(cursor)
+            
+    return results

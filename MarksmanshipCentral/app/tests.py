@@ -5,6 +5,9 @@ when you run "manage.py test".
 
 import django
 from django.test import TestCase
+import datetime
+from models.models import *
+from datasvcs import *
 
 # TODO: Configure your database in settings.py and sync before running tests.
 
@@ -32,3 +35,12 @@ class ViewTest(TestCase):
         """Tests the about page."""
         response = self.client.get('/about')
         self.assertContains(response, 'About', 3, 200)
+
+
+
+def member_activity_by_date(startdate:datetime,enddate:datetime,person:Person):
+    sh = get_session_history_bydate(datetime(2024,3,1),datetime(2024,3,31),7012)
+    
+    
+
+    pass

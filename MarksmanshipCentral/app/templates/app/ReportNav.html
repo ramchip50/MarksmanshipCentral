@@ -32,8 +32,10 @@
 
     <a href="/landing">Home</a><br>
     <a href="{% url 'member-reports' %}">Member Report</a><br>
+    {% if person.role > 0 %}
     <a href="{% url 'credit-reports' %}">Credit Report</a><br>
     <a href="{% url 'award-reports' %}">Award Report</a><br>
+    {% endif %}
     <a href="/logout">Log Out</a><br>
     <br><br><br><br>
 

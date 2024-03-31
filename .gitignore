@@ -366,3 +366,5 @@ FodyWeavers.xsd
 /env
 /.gitignore
 /.gitignore
+/MarksmanshipCentral/models/StoredProceduresAndViews/session_history.sql
+/MarksmanshipCentral/app/templates/app/Testpage.html
