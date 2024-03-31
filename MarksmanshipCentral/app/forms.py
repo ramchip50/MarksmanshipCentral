@@ -100,6 +100,10 @@ class GameForm(forms.Form):
     alias = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','style':'width:350px'}))
     l = Weapon.objects.all().values_list("id","name")
     weapon = forms.ChoiceField(choices=l,widget=forms.Select(attrs={'class':'form-control','style':'width:350px'}))
+    
+    def clean(self):
+        if Game.active_objects.filter(name__iexact=self.cleaned_data["name"]):
+            raise ValidationError(_('That title is already in the library')) 
         
 class BaseReportSearch(forms.Form):
     startdate = forms.CharField(widget=forms.TextInput(attrs={ 'type': 'datetime-local', 'class':'form-control'}))

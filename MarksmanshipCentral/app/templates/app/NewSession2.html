@@ -32,7 +32,6 @@
                 {{ form.turnsplayed }}
                 <br><br>
             </div>
-            <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
             <script type="text/javascript">
                 function yesnoCheck() {
                     if (document.getElementById('id_playmode_1').checked) {
@@ -50,12 +49,13 @@
                 {% endfor %}
             {% endif %}
             {%comment%}
-            <button type="cancel" name="Cancel" value="Cancel" class="btn btn-danger btn-lg btn-block" href="{% url 'landing' %" }>Cancel</button><br>
+            <button type="reset" name="Cancel" value="Cancel" class="btn btn-danger btn-lg btn-block" href="{% url 'landing' %" }>Cancel</button><br>
             {%endcomment%}
             <button type="submit" name="save" value="save" class="btn btn-primary btn-lg btn-block">Save</button><br><br>
         </div>
         <div class="col">
-            <h3>TRMN Participants</h3>
+            <h3>TRMN Participants</h3><br/>
+            <p>(you are already included)</p>
             {{ formset1.as_p }}
         </div>
         <div class="col">
@@ -69,9 +69,6 @@
 
 {% endblock %}
 {% block script %}
-
-
-<script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script>
 
 <script>
 
