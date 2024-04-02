@@ -2,6 +2,12 @@
 {% block nav %}
   {% include 'app/BaseNav.html' %}
 {% endblock %}
+{% block title %}
+    MC New Session
+{% endblock title %}
+{% block name %}
+    Add New Gaming Session
+{% endblock name%}
 {% block content %}
 
 {% if submitted %}
@@ -42,11 +48,11 @@
                 }
             </script>
             {% if form.errors %}
-                {% for error in form.errors.as_data.values %}
-                    {% for data in error.0 %}
-                        {{ data }}
-                    {% endfor %}
-                {% endfor %}
+            {% for error in form.errors.as_data.values %}
+            {% for data in error.0 %}
+            {{ data }}
+            {% endfor %}
+            {% endfor %}
             {% endif %}
             {%comment%}
             <button type="reset" name="Cancel" value="Cancel" class="btn btn-danger btn-lg btn-block" href="{% url 'landing' %" }>Cancel</button><br>
@@ -54,7 +60,7 @@
             <button type="submit" name="save" value="save" class="btn btn-primary btn-lg btn-block">Save</button><br><br>
         </div>
         <div class="col">
-            <h3>TRMN Participants</h3><br/>
+            <h3>TRMN Participants</h3><br />
             <p>(you are already included)</p>
             {{ formset1.as_p }}
         </div>

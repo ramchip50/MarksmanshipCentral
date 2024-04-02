@@ -1,48 +1,43 @@
-<style type="text/css">
-.sidenav {
-			height: 100%;
-			width: 220px;
-			position: fixed;
-			z-index: 0;
-			top: 0;
-			left: 0;
-			background-color: #111;
-			overflow-x: hidden;
-			padding-top: 20px;
-		}
 
-			.sidenav a {
-				padding: 6px 8px 6px 16px;
-				text-decoration: none;
-				font-size: 30px;
-				color: #FFD700;
-				display: block;
-			}
+<section class="nav">
+    <div data-v-4fe12f68="" class="container">
+        <div data-v-3e7d76b1="" data-v-4fe12f68="" class="modal">
+            <div data-v-3e7d76b1="" class="modal-background">
 
-				.sidenav a:hover {
-					color: #f1f1f1;
-				}
-</style>
-<div class="sidenav">
-	<a href="https://medusa.trmn.org">
-		<img src="https://www.trmn.org/user/themes/trmn/images/trmn-2023.png" alt="TRMN Seal" width="150px" height="150px"
-			 data-src="https://www.trmn.org/user/themes/trmn/images/trmn-2023.png">
-	</a>
+            </div>
+        </div>
+        <nav data-v-4fe12f68="" id="nav" class="navbar is-dark">
+            <div data-v-4fe12f68="" class="navbar-brand">
+                <a data-v-4fe12f68="" role="button" class="navbar-burger burger">
+                    <span data-v-4fe12f68="" aria-hidden="true">
 
-	<a href="{% url 'landing'%}">Home</a><br>
-	<a href="{% url 'personal'%}">Personal Information</a><br>
-	<a href="{% url 'newgame'%}">New Game</a><br>
-	<a href="{% url 'newsession'%}">New Session</a><br>
-	<a href="{% url 'logout' %}">Log Out</a><br>
-	<a href="{% url 'reports'%}">Reports</a><br>
-	{% if person.role_id > 2 %}
-	<a href="{% url 'oversight'%}">Oversight</a><br>
-	{% endif %}
-	{% if person.role_id > 3 %}
-	<a href="/admin">Admin</a>
-	<br><br><br><br>
-	{% endif %}
+                    </span>
+                    <span data-v-4fe12f68="" aria-hidden="true">
 
-	<br><br><br><br>
+                    </span>
+                    <span data-v-4fe12f68="" aria-hidden="true">
 
-</div>
+                    </span>
+                </a>
+            </div>
+            <div data-v-4fe12f68="" class="navbar-menu">
+                <div data-v-4fe12f68="" class="navbar-start">
+                    <a data-v-4fe12f68="" class="navbar-item" href="{% url 'landing'%}">Home</a>
+                    <a data-v-4fe12f68="" class="navbar-item" href="{% url 'personal'%}">Personal Information</a>
+                    <a data-v-4fe12f68="" class="navbar-item" href="{% url 'newgame'%}">New Game</a>
+                    <a data-v-4fe12f68="" class="navbar-item" href="{% url 'newsession'%}">New Session</a>
+                    <a data-v-4fe12f68="" class="navbar-item" href="{% url 'reports'%}">Reports</a>
+
+                    {% if person.role_id > 3 %}
+                    <a data-v-4fe12f68="" class="navbar-item" href="{% url 'oversight'%}">Oversight</a>
+                    {% endif %}
+                    {% if person.role_id > 4 %}
+                    <a data-v-4fe12f68="" class="navbar-item" href="/admin">Admin</a>
+                    {% endif %}
+                    <a data-v-4fe12f68="" class="navbar-item" href="{% url 'logout' %}">Log Out</a>
+                    <!---->
+                </div>
+            </div>
+        </nav>
+    </div>
+</section>

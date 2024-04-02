@@ -84,8 +84,10 @@
   <ItemGroup>
     <Content Include="app\templates\app\AwardReport.html" />
     <Content Include="app\templates\app\base.html" />
+    <Content Include="app\templates\app\BaseNav.html" />
+    <Content Include="app\templates\app\base_old.html" />
     <Content Include="app\templates\app\baseReport.html" />
-    <Content Include="app\templates\app\BaseTemplate.html" />
+    <Content Include="app\templates\app\BaseTemplate_old.html" />
     <Content Include="app\templates\app\CreditReport.html" />
     <Content Include="app\templates\app\HomeArmy.html" />
     <Content Include="app\templates\app\HomeNavy.html" />
@@ -99,6 +101,7 @@
     <Content Include="app\templates\app\Oversight.html" />
     <Content Include="app\templates\app\Personal.html" />
     <Content Include="app\templates\app\ReportNav.html" />
+    <Content Include="app\templates\app\ReportNav_old.html" />
     <Content Include="app\templates\app\Reports.html" />
     <Content Include="app\templates\app\reportTemplate.html" />
     <Content Include="app\templates\app\Testpage.html" />
