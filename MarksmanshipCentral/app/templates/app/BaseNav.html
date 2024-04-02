@@ -35,10 +35,10 @@
 	<a href="{% url 'newsession'%}">New Session</a><br>
 	<a href="{% url 'logout' %}">Log Out</a><br>
 	<a href="{% url 'reports'%}">Reports</a><br>
-	{% if person.role_id > 2 %}
+	{% if person.role_id > 3 %}
 	<a href="{% url 'oversight'%}">Oversight</a><br>
 	{% endif %}
-	{% if person.role_id > 3 %}
+	{% if person.role_id > 4 %}
 	<a href="/admin">Admin</a>
 	<br><br><br><br>
 	{% endif %}

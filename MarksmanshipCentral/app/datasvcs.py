@@ -18,11 +18,11 @@ def namedtuplefetchall(cursor):
     nt_result = namedtuple("Result", [col[0] for col in desc])
     return [nt_result(*row) for row in cursor.fetchall()]
 
-def get_allsessioncredits_bydate_andchapter(startdate:datetime,enddate:datetime,chapter:Chapter):
+def get_allsessioncredits_bydate_andchapter(startdate:datetime,enddate:datetime,chapter:int):
     allsessions = get_allsessioncredits_bydate(startdate,enddate)
     result = list()
     for sess in allsessions:
-        if sess.chapter == chapter.name:
+        if sess.chapter_id == chapter:
             result.append(sess)
       
     return result
