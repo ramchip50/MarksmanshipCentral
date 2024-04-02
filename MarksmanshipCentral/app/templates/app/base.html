@@ -3,34 +3,31 @@
 <html>
 <head>
     <style type="text/css">
-        html {
+        .html {
             position: relative;
             min-height: 100%;
         }
 
         .main {
             display: block;
-            margin-left: 220px;
             padding: 0px 10px;
-            background-color: #111;
-            color: #F8F8FF;
             font-size: 22px;
-            min-height: 100vh;
+            min-height: 63vh;
         }
 
-
-        .footer {
+        .hero-foot {
             position: relative;
             bottom: 0;
             width: 100%;
-            background-color: #111;
+            background-color: #272727;
             font-size: 16px;
-            color: #FFD700;
+            color: #fff;
             text-align: center;
-            display: flex;
             flex-direction: column;
             justify-content: center;
-            margin-left: 220px;
+        }
+
+        .foot-text {
         }
 
         .cropped1 {
@@ -40,60 +37,105 @@
             object-position: 20% 10%;
             border: 5px solid black;
         }
+
+        section.nav {
+            border-bottom: 1px solid #363636;
+            border-top: 1px solid #363636
+        }
+
+        .navbar.is-dark[data-v-4fe12f68] {
+            background-color: var(--hero-bg)
+        }
+
+        .hero {
+            background: #272727;
+            color: #fff;
+            font-family: Incised,Prociono,serif
+        }
+
+        .hero-body, section.nav {
+            background-color: #272727
+        }
+
+        .hero-body {
+            padding-top: 12px;
+            padding-bottom: 6px
+        }
+
+        .bring-down {
+            position: absolute;
+            bottom: 12px;
+            left: 172px
+        }
+
+        .navbar-item:hover {
+            background-color: rgb(176, 176, 176);
+            transform: scale(1.1, 1.1);
+        }
     </style>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>{% block title %}TRMN Marksmanship{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+
+    <title>{% block title %}{% endblock title%}</title>
 
 </head>
-
 <body>
-    {% block nav %}
-    {% endblock %}
-    <div id="content" name="content" class="main">
-        <div class="row justify-content-center">
-            <div class="col-8">
-                <div class="align-self-center">
-                    <h1 class="mt-2" style="text-align: center;">TRMN Marksmanship Central</h1>
-                    <hr class="mt-0 mb-4">
-
-
-
-                    {% block content %}
-                    {% endblock %}
-
-
+    <section class="hero is-dark">
+        <div class="hero-body">
+            <div class="container">
+                <div class="columns">
+                    <div class="column is-narrow">
+                        <img src="https://www.trmn.org/user/themes/trmn/images/trmn-2023.png" alt="TRMN Seal" width="160px">
+                    </div>
+                    <div class="column bring-down">
+                        <p class="title">Marksmanship Central</p>
+                        <p class="subtitle">{% block name %}{% endblock name %}</p><br>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="footer">
-        <p>
-            Copyright &copy; 2024 The Royal Manticoran Navy: The Official Honor Harrington Fan
-            Association, Inc. <br>
-            Some Rights Reserved.<br>
-            Honor Harrington and all related materials are &copy; David Weber.
-        </p>
-        <span class="text-center">
-            <img class="cropped1" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Djehutymooncrown.jpg/800px-Djehutymooncrown.jpg" width="50px" height="75px"
-                 data-src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Djehutymooncrown.jpg/800px-Djehutymooncrown.jpg">
-        </span>
-        <p>Ibis Group (v0.1.0)</p>
-        <span id="siteseal">
-            <script type="text/javascript"
-                    src="https://seal.starfieldtech.com/getSeal?sealID=v0CA19iS5KO2zCDMQWVQcf848PG2A4U0OWBVbTgzfEuk6Lrf8ASy84CTVQ5M"></script>
-        </span>
-    </div>
+    </section>
+    {% block nav %}
+    {% endblock %}
+    <section class="main">
+        {% block content %}
+        {% endblock content %}
+    </section>
+    <section class="hero-foot">
+        <div class="hero-body">
+            <div class="container">
+                <div class="columns">
+                    <div class="column">
+                        <br />  
+                        <legand>
+                        Copyright &copy; 2024 The Royal Manticoran Navy: The Official Honor Harrington Fan Association, Inc., some rights reserved.<br>
+                        Honor Harrington and all related materials are &copy; David Weber.
+                        </legand>
+                        <br>
+                    </div>
+                    <div class="column is-narrow">
+                        <span class="text-center">
+                            <img class="cropped1" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Djehutymooncrown.jpg/800px-Djehutymooncrown.jpg" width="50px" height="75px"
+                                 data-src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Djehutymooncrown.jpg/800px-Djehutymooncrown.jpg">
+                        </span>
+                        <p>Ibis Group (v0.5.0)</p>
+                        <span id="siteseal">
+                            <script type="text/javascript" src="https://seal.starfieldtech.com/getSeal?sealID=v0CA19iS5KO2zCDMQWVQcf848PG2A4U0OWBVbTgzfEuk6Lrf8ASy84CTVQ5M"></script>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script>
     {% block script %}
-
-    {% endblock %}
+    {% endblock script%}
 </body>
 </html>

@@ -2,75 +2,83 @@
 {% block nav %}
   {% include 'app/BaseNav.html' %}
 {% endblock %}
- 
+{% block title %}
+    TRMN Markshipmanship
+{% endblock title %}
+{% block name %}
+    Marksmanship Welcome
+{% endblock name%}
 {% block content %}
-<br/>
-	<h2 style="text-align: center;">Current Marksmanship Status</h2>
-	<br/><br/>
-	<form method="post" class="from-group">
-        <div class="container">
-            <div class="row">
-              <div class="col-sm">
+<br />
+<h2 style="text-align: center;">Current Marksmanship Status</h2>
+<br />
+<br />
+<form method="post" class="from-group">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
                 <b>Name:</b> {{person.firstname}} {{person.lastname}}
-              </div>
-              <div class="col-sm">
-                <b>Chapter:</b> {{person.chapter}} 
-              </div>
             </div>
-          </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-sm">
-                    <b>Email:</b> {{person.emailaddress}}    
-                </div>
-                <div class="col-sm">
-                    <b>Service:</b> {{person.branch}}
-                </div>
+            <div class="col-sm">
+                <b>Chapter:</b> {{person.chapter}}
             </div>
         </div>
-    </form>
-<br/><br/>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <b>Email:</b> {{person.emailaddress}}
+            </div>
+            <div class="col-sm">
+                <b>Service:</b> {{person.branch}}
+            </div>
+        </div>
+    </div>
+</form>
+<br />
+<br />
 
-     <table class="table table-bordered, text-white">
-         <tr>
-             <th>Category</th>
-             <th>Total Points</th>
-             <th>   </th>
-             <th>Marksman</th>
-             <th>Sharpshooter</th>
-             <th>Expert</th>
-             <th>High Expert</th>
-         </tr>
-         {% for tc in credits  %}
-         <tr>
-             <td>{{ tc.weapon_name }}</td>
-             <td>{{ tc.weapon_total }}</td>
-             <td></td>
-             {% if tc.marksman != None %}
-             <td>{{ tc.marksman | date:"F d, Y" }}</td>
-             {% else %}
-             <td></td>
-             {% endif %}
-             {% if tc.sharpshooter != None %}
-             <td>{{ tc.sharpshooter | date:"F d, Y" }}</td>
-             {% else %}
-             <td></td>
-             {% endif %}
-             {% if tc.expert != None %}
-             <td>{{ tc.expert | date:"F d, Y" }}</td>
-             {% else %}
-             <td></td>
-             {% endif %}
-             {% if tc.high_expert != None %}
-             <td>{{ tc.high_expert | date:"F d, Y" }}</td>
-             {% else %}
-             <td></td>
-             {% endif %}
-         </tr>
-         {% endfor %}
-     </table> 
+<table class="table table-bordered, text-white">
+    <tr>
+        <th>Category</th>
+        <th>Total Points</th>
+        <th>   </th>
+        <th>Marksman</th>
+        <th>Sharpshooter</th>
+        <th>Expert</th>
+        <th>High Expert</th>
+    </tr>
+    {% for tc in credits  %}
+    <tr>
+        <td>{{ tc.weapon_name }}</td>
+        <td>{{ tc.weapon_total }}</td>
+        <td></td>
+        {% if tc.marksman != None %}
+        <td>{{ tc.marksman | date:"F d, Y" }}</td>
+        {% else %}
+        <td></td>
+        {% endif %}
+        {% if tc.sharpshooter != None %}
+        <td>{{ tc.sharpshooter | date:"F d, Y" }}</td>
+        {% else %}
+        <td></td>
+        {% endif %}
+        {% if tc.expert != None %}
+        <td>{{ tc.expert | date:"F d, Y" }}</td>
+        {% else %}
+        <td></td>
+        {% endif %}
+        {% if tc.high_expert != None %}
+        <td>{{ tc.high_expert | date:"F d, Y" }}</td>
+        {% else %}
+        <td></td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
 
-    <br/><br/> 
+<br />
+<br />
 
     {% endblock %}
 
