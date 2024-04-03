@@ -2,15 +2,20 @@
 {% block nav %}
   {% include 'app/BaseNav.html' %}
 {% endblock %}
- 
+{% block title %}
+    MC Member Info
+{% endblock title %}
+{% block name %}
+    Member Information
+{% endblock name%}
 {% block content %}
 <center>
     <h1>Personal Information</h1>
     <br><br>
     {% if submitted %}
-        Information was updated successfully!
+    Information was updated successfully!
     {% endif %}
-    <form action="" method=POST>    
+    <form action="" method=POST>
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="Submit" class="btn btn-secondary">
