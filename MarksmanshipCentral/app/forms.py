@@ -120,19 +120,18 @@ class BaseReportSearch(forms.Form):
         return super().clean()
 
 class ReportSearch_fleet(BaseReportSearch):
-    CH1=Chapter.objects.all().values_list('id','name')
-    CH2=Fleet.objects.all().values_list('id','name')
-    chapter = forms.ChoiceField(choices = CH1, widget=forms.Select(attrs={'class':'form-control'}))
-    fleet = forms.ChoiceField(choices = CH2, widget=forms.Select(attrs={'class':'form-control'}))
-
-class ReportSearch_chapter(BaseReportSearch):
-    CH1=Chapter.objects.all().values_list('id','name')
-    chapter = forms.ChoiceField(choices = CH1, widget=forms.Select(attrs={'class':'form-control'}))
-    fleet = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
-                             
-class ReportSearch_user(BaseReportSearch):
-    chapter = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}),required=False,disabled=True)
-    fleet = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}),required=False,disabled=True)
+    def __init__(self, *args, **kwargs):
+        choices = kwargs.pop('chapters')
+        super(ReportSearch_fleet,self).__init__(*args, **kwargs)
+        self.fields["chapter"] = forms.ChoiceField(choices = choices, widget=forms.Select(attrs={'class':'form-control'}), required=False)
+#    CH1 = list(Chapter.objects.all().values_list('id','name'))
+#    CH1.insert(0,('','ALL'))
+#    chapter = forms.ChoiceField(choices = CH1, widget=forms.Select(attrs={'class':'form-control'}), required=False)
+                            
+class ReportSearch_staff(ReportSearch_fleet):
+    CH2= list(Fleet.objects.all().values_list('id','name'))
+    CH2.insert(0,('','ALL'))
+    fleet = forms.ChoiceField(choices = CH2, widget=forms.Select(attrs={'class':'form-control'}), required=False)
 
 
 #endregion       

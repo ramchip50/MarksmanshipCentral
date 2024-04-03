@@ -78,16 +78,16 @@ class Person(models.Model):
     lastname = models.CharField(max_length=50)
     emailaddress = models.CharField(max_length=255)
     passwrd = models.CharField(max_length=50)
-    role = models.ForeignKey(Role,on_delete=models.CASCADE,default=0)
+    role = models.ForeignKey(Role,on_delete=models.CASCADE,default=1)
     chapter = models.ForeignKey(Chapter,on_delete=models.CASCADE)
     branch = models.ForeignKey(Branch,on_delete=models.CASCADE)
     createdon = models.DateTimeField(auto_now=True)
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
     
-    objects = models.Manager()
+    
     active_objects = ActiveManager()
-
+    objects = models.Manager()
 
 
     class Meta:
@@ -119,9 +119,9 @@ class TotalCredits(models.Model):
     createdon = models.DateTimeField(auto_now=True)
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
-    
-    objects = models.Manager()
+
     active_objects = ActiveManager()
+    objects = models.Manager()
     
     def delete(self, **kwargs):
         self.active=False
@@ -155,8 +155,8 @@ class Game(models.Model):
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
     
-    objects = models.Manager()
     active_objects = ActiveManager()
+    objects = models.Manager()
   
     def delete(self, **kwargs):
         self.active=False
@@ -182,8 +182,8 @@ class Session(models.Model):
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
     
-    objects = models.Manager()
     active_objects = ActiveManager()
+    objects = models.Manager()
     
     class Meta:
         verbose_name = "Game Session"
@@ -215,8 +215,8 @@ class SessionParticipants(models.Model):
     modifiedon = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
 
-    objects = models.Manager()
     active_objects = ActiveManager()
+    objects = models.Manager()
     
     class Meta:
         verbose_name = "Game Session Player"

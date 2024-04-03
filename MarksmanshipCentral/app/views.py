@@ -259,7 +259,10 @@ def oversight(request):
 #Reports
 #region Reports
 def reports(request):
-	return render(request, 'app/Reports.html')
+	personpk = request.session["personid"]
+	person = get_object_or_404(Person,pk=personpk)
+
+	return render(request, 'app/Reports.html', {'person':person})
 
 def member_reports(request):
 	personpk = request.session["personid"]
@@ -289,21 +292,47 @@ def credit_reports(request):
 	personpk = request.session["personid"]
 	person = get_object_or_404(Person,pk=personpk)
 	submitted = False
-	personal = PersonForm(request.POST or None, instance=person)
-	if person.role == 1:
-		form = ReportSearch_user()
-	elif person.role == 2:
-		form = ReportSearch_chapter()
-	else :
-		form = ReportSearch_fleet()
+	startdate = None
+	enddate = None
+	credits = None
+	if person.role_id < 3:
+		form = BaseReportSearch()
+	elif person.role_id == 3 :
+		ch = list(Chapter.active_objects.filter(fleet_id=person.chapter.fleet_id).values_list('id','name'))
+		ch.insert(0,('','-- All --'))
+		form = ReportSearch_fleet(chapters=ch)
+	else:
+		form = ReportSearch_staff()
 	if request.method == 'POST':
-		
-		pass
+		if person.role_id < 3:
+			form = BaseReportSearch(request.POST or None)
+		elif person.role_id == 3 :
+			form = ReportSearch_fleet(request.POST or None,chapters=ch)
+		else:
+			form = ReportSearch_staff(request.POST or None)
+		if form.is_valid():
+			startdate = datetime.strptime(form.cleaned_data['startdate'],"%Y-%m-%d")    #2024-04-04
+			enddate = datetime.strptime(form.cleaned_data['enddate'],"%Y-%m-%d")
+			if person.role_id == 2:
+				credits = get_allsessioncredits_bydate_andchapter(startdate, enddate, person.chapter)
+			elif person.role_id == 3:
+				if form.cleaned_data["chapter"] == '':
+					credits = get_allsessioncredits_bydate_andfleet(startdate,enddate,person.chapter.fleet)
+				else:
+					credits = get_allsessioncredits_bydate_andchapter(startdate, enddate, int(form.cleaned_data["chapter"]))
+			else:
+				if form.cleaned_data["fleet"]=='All':
+					credits = get_allsessioncredits_bydate_andfleet(startdate,enddate)
+					
+			
+
 
 	context={
+		'startdate':startdate,
+		'enddate':enddate,
+		'credits':credits,
 		'person': person,
-		'form': form,
-		'personal': personal
+		'form': form
 		}
 		 
 	return render(request, 'app/CreditReport.html', context)
@@ -313,18 +342,18 @@ def award_reports(request):
 	person = get_object_or_404(Person,pk=personpk)
 	submitted = False
 	personal = PersonForm(request.POST or None, instance=person)
-	if person.role == 1:
-		form = ReportSearch_user()
-	elif person.role == 2:
-		form = ReportSearch_chapter()
-	else :
-		form = ReportSearch_fleet()
+	# if person.role == 1:
+	# 	form = ReportSearch_user()
+	# elif person.role == 2:
+	# 	form = ReportSearch_chapter()
+	# else :
+	# 	form = ReportSearch_fleet()
 	if request.method == 'POST':
 		pass
 		 
 	context={
 	'person': person,
-	'form': form,
+#	'form': form,
 	'personal': personal
 	}
 

@@ -1,7 +1,9 @@
 {% extends 'app/base.html' %}
+
 {% block nav %}
   {% include 'app/ReportNav.html' %}
 {% endblock %}
+
 {% block title %}
     MC Credit Report
 {% endblock title %}
@@ -9,27 +11,39 @@
     Activity Report by Total Number of Credits
 {% endblock name%}
 {% block content %}
+
 <main>
     <center>
         <div class="border border-white container-fluid">
 
-            <form methond=POST>
+            <form method=POST>
                 {% csrf_token %}
                 <table>
                     <thead>
                         <tr>
-                            <th>Chapter</th>
                             <th>Fleet</th>
+                            <th>Chapter</th>
                             <th>Start Date/Time</th>
                             <th>Ending Date/Time</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <th>{{ form.chapter }}</th>
-                            <th>{{ form.fleet }}</th>
+                            {% if person.role_id < 3  %}
+                            <td>{{ person.chapter.fleet }}</td>
+                            <td>{{ person.chapter }}</td>
+                            {% endif %}
+                            {% if person.role_id == 3  %}
+                            <td>{{ person.chapter.fleet }}</td>
+                            <td>{{ form.chapter }}</td>
+                            {% endif %}
+                            {% if person.role_id > 3  %}
+                            <td>{{ form.fleet }}</td>
+                            <td>{{ form.chapter }}</td>
+                            {% endif %}
                             <th>{{ form.startdate }}</th>
                             <th>{{ form.enddate }}</th>
+
                         </tr>
                     </tbody>
                 </table>
@@ -39,21 +53,58 @@
         </div>
     </center>
     <br>
-    <input class="btn btn-secondary" type="submit" value="Print">
+    <!--<input class="btn btn-secondary" type="submit" value="Print">-->
+    {% if credits %}
     <div class="container-fluid">
         <center>
-            <h3>Marksmenship Awards <br> for <br> {{firstdate}} to {{enddate}}</h3>
+            <h3>Marksmanship Scored Credit Awards <br> for <br> {{startdate | date:"m/d/y"}} to {{enddate  | date:"m/d/y"}}</h3>
+            <table class="table table-striped table-dark table-sm">
+                <thead>
+                    <tr>
+                        {% if person.role_id > 3 %}
+                        <th>Fleet</th>
+                        {% endif %}
+                        {% if person.role_id > 2 %}
+                        <th>Chapter</th>
+                        {% endif %}
+                        <th>Name</th>
+                        <th>Weapon</th>
+                        <th>Credits</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for Result in credits %}
+                    <tr>
+                        {% if person.role_id > 3 %}
+                        <td>{{Result.fleet}}</td>
+                        {% endif %}
+                        {% if person.role_id > 2 %}
+                        <td>{{Result.chapter}}</td>
+                        {% endif %}
+                        <td>{{Result.firstname}}&nbsp;{{Result.lastname}}</td>
+                        <td>{{Result.weapon}}</td>
+                        <td>{{Result.weaponcredits}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </center>
         <br>
-        <a>{{y.fleet}}</a><br>
-        {% for x in y %}
-        <a>&nbsp&nbsp&nbsp&nbsp{{y.chapter}}</a><br>
-        {% for z in y %}
-        <a>&nbsp&nbsp&nbsp&nbsp&nbsp;&nbsp;&nbsp;&nbsp;{{y.name}}&nbsp;&nbsp;&nbsp;&nbsp;{{y.score}}</a><br>
-        {% endfor %}
-        {% endfor %}
+        <!--fleet chapter name weapon credits (rollup navy)-->
+
 
     </div><br><br><br>
-
+    {% endif %}
 </main>
+
 {% endblock %}
+
+<!--{% regroup events by date as events_by_date %}
+{% for date in events_by_date %}
+<div class="content">
+    <h1>{{ date.grouper|date:"d F Y" }}</h1>
+    {% for event in date.list %}
+    {% include "partials/event.html" %}
+    {% endfor %}
+</div>
+{% endfor %}-->

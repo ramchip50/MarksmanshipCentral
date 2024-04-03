@@ -104,7 +104,6 @@
     <Content Include="app\templates\app\ReportNav_old.html" />
     <Content Include="app\templates\app\Reports.html" />
     <Content Include="app\templates\app\reportTemplate.html" />
-    <Content Include="app\templates\app\Testpage.html" />
     <Content Include="app\templates\app\TRMNlogin.html" />
     <Content Include="app\templates\app\TRMNlogout.html" />
     <Content Include="models\templates\models\index.html" />
