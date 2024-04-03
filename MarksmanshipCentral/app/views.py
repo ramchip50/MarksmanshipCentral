@@ -2,6 +2,7 @@
 Definition of views.
 """
 
+from ast import Name
 from datetime import datetime
 from http.client import CONFLICT
 from json import JSONEncoder
@@ -298,7 +299,7 @@ def credit_reports(request):
 	if person.role_id < 3:
 		form = BaseReportSearch()
 	elif person.role_id == 3 :
-		ch = list(Chapter.active_objects.filter(fleet_id=person.chapter.fleet_id).values_list('id','name'))
+		ch = list(Chapter.active_objects.filter(fleet_id=person.chapter.fleet_id).order_by('name').values_list('id','name'))
 		ch.insert(0,('','-- All --'))
 		form = ReportSearch_fleet(chapters=ch)
 	else:

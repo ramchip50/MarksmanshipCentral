@@ -1,7 +1,9 @@
+import json
 from datetime import datetime
 from django.core.checks import messages
 from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
+from django.core.serializers.json import DjangoJSONEncoder
 from app.datasvcs import *
 from app.forms import *
 from django.forms.models import modelformset_factory, formset_factory
@@ -114,7 +116,11 @@ def session_resolve(request):
 		sess.active=False
 	sess.save()
 		
-
+def fleet_chapters(request):
+	fleet_id = request.GET['fleet_id']
+	ch = Chapter.active_objects.filter(fleet_id=fleet_id).order_by('name').values('id','name')
+	json_ch = json.dumps(list(ch), cls=DjangoJSONEncoder)
+	return JsonResponse(json_ch,safe=False)
 
 
 

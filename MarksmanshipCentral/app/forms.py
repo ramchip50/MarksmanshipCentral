@@ -128,10 +128,13 @@ class ReportSearch_fleet(BaseReportSearch):
 #    CH1.insert(0,('','ALL'))
 #    chapter = forms.ChoiceField(choices = CH1, widget=forms.Select(attrs={'class':'form-control'}), required=False)
                             
-class ReportSearch_staff(ReportSearch_fleet):
-    CH2= list(Fleet.objects.all().values_list('id','name'))
-    CH2.insert(0,('','ALL'))
-    fleet = forms.ChoiceField(choices = CH2, widget=forms.Select(attrs={'class':'form-control'}), required=False)
+class ReportSearch_staff(BaseReportSearch):
+	ch = list(Chapter.active_objects.all().order_by('name').values_list('id','name'))
+	ch.insert(0,('','-- All --'))
+	chapter = forms.ChoiceField(choices=ch,widget=forms.Select(attrs={'class':'form-control'}), required=False)
+	CH2= list(Fleet.objects.all().order_by('name').values_list('id','name'))
+	CH2.insert(0,('','-- All --'))
+	fleet = forms.ChoiceField(choices = CH2, widget=forms.Select(attrs={'class':'form-control','onchange':'fleet_change()'}), required=False)
 
 
 #endregion       

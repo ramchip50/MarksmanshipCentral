@@ -32,7 +32,9 @@ urlpatterns = [
     path('game_save/', ajaxviews.game_save, name='save_game'),
     path('game_delete/', ajaxviews.game_delete, name='delete_game'),
     path('session_resolve/', ajaxviews.session_resolve, name='resolve_session'),
+    path('fleet_chapters/', ajaxviews.fleet_chapters, name='fleet_chapters'),
     path('reports/member/', views.member_reports, name='member-reports'),
     path('reports/credit/', views.credit_reports, name='credit-reports'),
     path('reports/award/', views.award_reports, name='award-reports'),
+    
 ]

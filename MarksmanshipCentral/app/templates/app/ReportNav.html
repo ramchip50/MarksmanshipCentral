@@ -23,7 +23,7 @@
                 <div data-v-4fe12f68="" class="navbar-start">
                     <a data-v-4fe12f68="" class="navbar-item" href="{% url 'landing'%}">Home</a>
                     <a data-v-4fe12f68="" class="navbar-item" href="{% url 'member-reports'%}">Member Report</a>
-                    {% if person.role >= 2 %}
+                    {% if person.role_id >= 2 %}
                     <a data-v-4fe12f68="" class="navbar-item" href="{% url 'credit-reports' %}">Credit Report</a>
                     <a data-v-4fe12f68="" class="navbar-item" href="{% url 'award-reports' %}">Award Report</a>
                     {% endif %}

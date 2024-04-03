@@ -50,6 +50,10 @@
                 <br />
                 <input class="btn btn-secondary" type="submit" value="Submit">
             </form>
+            <div id="test1">
+
+
+            </div>
         </div>
     </center>
     <br>
@@ -108,3 +112,27 @@
     {% endfor %}
 </div>
 {% endfor %}-->
+
+{% block script %}
+
+<script>
+
+    function fleet_change()
+    {
+        flt = $('#id_fleet').val();
+        $.getJSON("/fleet_chapters/", { fleet_id: flt }, function (result) {
+            $('#id_chapter').empty();
+            $('#id_chapter').append($("<option></option>")
+                .attr("value", '').text('-- All --'));
+            var chaplist = JSON.parse(result);
+            $.each(chaplist, function (key, value) {
+                $('#id_chapter').append($("<option></option>")
+                .attr("value",value.id).text(value.name));
+            })
+        });
+    }
+            
+
+</script>
+
+{% endblock %}
