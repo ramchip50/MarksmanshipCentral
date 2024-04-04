@@ -118,7 +118,10 @@ def session_resolve(request):
 		
 def fleet_chapters(request):
 	fleet_id = request.GET['fleet_id']
-	ch = Chapter.active_objects.filter(fleet_id=fleet_id).order_by('name').values('id','name')
+	if fleet_id != '':
+		ch = Chapter.active_objects.filter(fleet_id=fleet_id).order_by('name').values('id','name')
+	else:
+		ch = Chapter.active_objects.all().order_by('name').values('id','name')
 	json_ch = json.dumps(list(ch), cls=DjangoJSONEncoder)
 	return JsonResponse(json_ch,safe=False)
 

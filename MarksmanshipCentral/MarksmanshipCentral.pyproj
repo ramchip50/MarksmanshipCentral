@@ -9,6 +9,7 @@
     <UnitTestPattern>test*.py</UnitTestPattern>
     <UnitTestRootDirectory>./app</UnitTestRootDirectory>
     <SuppressPackageInstallationPrompt>True</SuppressPackageInstallationPrompt>
+    <WebBrowserPort>5008</WebBrowserPort>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
