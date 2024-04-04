@@ -52,23 +52,23 @@ def get_earned_awards_bydate(startdate:datetime,enddate:datetime):
 
     return results
 
-def get_earned_awards_bydate_andchapter(startdate:datetime,enddate:datetime,chapter:Chapter):
+def get_earned_awards_bydate_andchapter(startdate:datetime,enddate:datetime,chapter:int):
     
     allawards = get_earned_awards_bydate(startdate,enddate)
     results = list()
     for award in allawards:
-        if award.chapter == chapter.name:
+        if award.chapter_id == chapter:
             results.append(award)
       
     return results
 
 
-def get_earned_awards_bydate_andfleet(startdate:datetime,enddate:datetime,fleet:Fleet):
+def get_earned_awards_bydate_andfleet(startdate:datetime,enddate:datetime,fleet:int):
     
     allawards = get_earned_awards_bydate(startdate,enddate)
     results = list()
     for award in allawards:
-        if award.chapter == fleet.name:
+        if award.fleet_id == fleet:
             results.append(award)
       
     return results

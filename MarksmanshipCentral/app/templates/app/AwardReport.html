@@ -13,45 +13,138 @@
     <center>
         <div class="border border-white container-fluid">
 
-            <form>
+            <form method=POST>
                 {% csrf_token %}
                 <table>
                     <thead>
                         <tr>
-                            <th>Chapter</th>
                             <th>Fleet</th>
+                            <th>Chapter</th>
                             <th>Start Date/Time</th>
                             <th>Ending Date/Time</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <th>{{ form.chapter }}</th>
-                            <th>{{ form.fleet }}</th>
+                            {% if person.role_id < 3  %}
+                            <td>{{ person.chapter.fleet }}</td>
+                            <td>{{ person.chapter }}</td>
+                            {% endif %}
+                            {% if person.role_id == 3  %}
+                            <td>{{ person.chapter.fleet }}</td>
+                            <td>{{ form.chapter }}</td>
+                            {% endif %}
+                            {% if person.role_id > 3  %}
+                            <td>{{ form.fleet }}</td>
+                            <td>{{ form.chapter }}</td>
+                            {% endif %}
                             <th>{{ form.startdate }}</th>
                             <th>{{ form.enddate }}</th>
+
                         </tr>
                     </tbody>
                 </table>
+                <input type="hidden" id="p_fleetid" value="{% if person.role_id == 3 %} {{person.chapter.fleet.id}} {% endif %}" />
                 <br />
                 <input class="btn btn-secondary" type="submit" value="Submit">
             </form>
         </div>
     </center>
     <br>
-    <input class="btn btn-secondary" type="submit" value="Print">
+    <!--<input class="btn btn-secondary" type="submit" value="Print">-->
+    {% if awards %}
     <div class="container-fluid">
-        <center>
-            <h3>Marksmenship Awards <br> for <br> {{firstdate}} to {{enddate}}</h3>
-        </center>
-        <br>
-        <a>{{searchfleet}}</a><br>
-        <a>&nbsp&nbsp&nbsp&nbsp{{y.award}}</a><br>
-        {% for x in y %}
-        <a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{y.name}}</a>
-        <a>&nbsp&nbsp&nbsp&nbsp{{y.chapter}}</a><br>
-        {% endfor %}
+        <h3>Marksmanship Earned Awards <br> for <br> {{startdate | date:"m/d/y"}} to {{enddate  | date:"m/d/y"}}</h3>
+        <table class="table table-striped table-dark table-sm">
+            <thead>
+                <tr>
+                    {% if person.role_id > 3 %}
+                    <th>Fleet</th>
+                    {% endif %}
+                    {% if person.role_id > 2 %}
+                    <th>Chapter</th>
+                    {% endif %}
+                    <th>Name</th>
+                    <th>Weapon</th>
+                    <th>Marksman</th>
+                    <th>Sharpshooter</th>
+                    <th>Expert</th>
+                    <th>High Expert</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for Result in awards %}
+                <tr>
+                    {% if person.role_id > 3 %}
+                    <td>{{Result.fleet}}</td>
+                    {% endif %}
+                    {% if person.role_id > 2 %}
+                    <td>{{Result.chapter}}</td>
+                    {% endif %}
+                    <td>{{Result.firstname}}&nbsp;{{Result.lastname}}</td>
+                    <td>{{Result.weapon}}</td>
+                    <td>{{Result.marksman | date:"m/d/y"}}</td>
+                    <td>{{Result.sharpshooter | date:"m/d/y"}}</td>
+                    <td>{{Result.expert | date:"m/d/y"}}</td>
+                    <td>{{Result.high_expert | date:"m/d/y"}}</td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <!--select p.id AS person_id,p.branch_id,p.lastname,p.firstname,c.name as chapter,c.id as chapter_id, f.name as fleet,f.id as fleet_id, w.name AS weapon,
+    Case When tc.marksman between startdate and enddate Then tc.marksman Else null End as marksman,
+    Case When tc.sharpshooter between startdate and enddate Then tc.sharpshooter Else null End as sharpshooter,
+    Case When tc.expert between startdate and enddate Then tc.expert Else null End as expert,
+    Case When tc.high_expert between startdate and enddate Then tc.high_expert Else null End as high_expert-->
+
     </div><br><br><br>
+    {% endif %}
 </main>
+
+{% endblock %}
+
+{% block script %}
+
+<script>
+
+    function fleet_change()
+    {
+        var flt = $('#id_fleet').val();
+        if (flt == undefined) {
+            flt = $('#p_fleetid').val();
+        }
+        reset_chapters(flt)
+    }
+
+    function reset_chapters(fleet_id) {
+
+        $.getJSON("/fleet_chapters/", { fleet_id: fleet_id }, function (result) {
+            $('#id_chapter').empty();
+            $('#id_chapter').append($("<option></option>")
+                .attr("value", '').text('-- All --'));
+            var chaplist = JSON.parse(result);
+            $.each(chaplist, function (key, value) {
+                $('#id_chapter').append($("<option></option>")
+                    .attr("value", value.id).text(value.name));
+            });
+        });
+    }
+
+
+    $(document).ready(function () {
+
+        flt = $('#p_fleetid').val();
+        if (flt == undefined) {
+            $('#id_chapter').append($("<option></option>")
+                .attr("value", '').text('-- All --'));
+        }
+        else {
+            reset_chapters(flt);
+        }
+    });
+
+
+</script>
 
 {% endblock %}

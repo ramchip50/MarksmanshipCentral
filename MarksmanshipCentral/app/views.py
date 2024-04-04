@@ -346,21 +346,52 @@ def award_reports(request):
 	personpk = request.session["personid"]
 	person = get_object_or_404(Person,pk=personpk)
 	submitted = False
-	personal = PersonForm(request.POST or None, instance=person)
-	# if person.role == 1:
-	# 	form = ReportSearch_user()
-	# elif person.role == 2:
-	# 	form = ReportSearch_chapter()
-	# else :
-	# 	form = ReportSearch_fleet()
+	startdate = None
+	enddate = None
+	awards= None
+	if person.role_id < 3:
+		form = BaseReportSearch()
+	elif person.role_id == 3 :
+		ch = list(Chapter.active_objects.filter(fleet_id=person.chapter.fleet_id).order_by('name').values_list('id','name'))
+		ch.insert(0,('','-- All --'))
+		form = ReportSearch_fleet(chapters=ch)
+	else:
+		form = ReportSearch_staff()
 	if request.method == 'POST':
-		pass
-		 
+		if person.role_id < 3:
+			form = BaseReportSearch(request.POST or None)
+		elif person.role_id == 3 :
+			form = ReportSearch_fleet(request.POST or None,chapters=ch)
+		else:
+			form = ReportSearch_staff(request.POST or None)
+		if form.is_valid():
+			startdate = datetime.strptime(form.cleaned_data['startdate'],"%Y-%m-%d")    #2024-04-04
+			enddate = datetime.strptime(form.cleaned_data['enddate'],"%Y-%m-%d")
+			if person.role_id == 2:
+				awards = get_earned_awards_bydate_andchapter(startdate, enddate, person.chapter_id)
+			elif person.role_id == 3:
+				if form.cleaned_data["chapter"] == '':
+					awards = get_earned_awards_bydate_andfleet(startdate,enddate,person.chapter.fleet_id)
+				else:
+					awards = get_earned_awards_bydate_andchapter(startdate, enddate, int(form.cleaned_data["chapter"]))
+			else:
+				if form.cleaned_data["fleet"]=='' and form.cleaned_data["chapter"] =='':
+					awards = get_earned_awards_bydate(startdate,enddate)
+				elif form.cleaned_data["fleet"] != '' and form.cleaned_data["chapter"] == '':
+					awards = get_earned_awards_bydate_andfleet(startdate, enddate, int(form.cleaned_data["fleet"]))
+				else:
+					awards = get_earned_awards_bydate_andchapter(startdate, enddate, int(form.cleaned_data["chapter"]))
+					
+			
+
+
 	context={
-	'person': person,
-#	'form': form,
-	'personal': personal
-	}
+		'startdate':startdate,
+		'enddate':enddate,
+		'awards':awards,
+		'person': person,
+		'form': form
+		}
 
 	return render(request, 'app/AwardReport.html', context)
 
