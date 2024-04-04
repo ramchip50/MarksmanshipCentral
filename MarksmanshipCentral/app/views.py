@@ -315,15 +315,19 @@ def credit_reports(request):
 			startdate = datetime.strptime(form.cleaned_data['startdate'],"%Y-%m-%d")    #2024-04-04
 			enddate = datetime.strptime(form.cleaned_data['enddate'],"%Y-%m-%d")
 			if person.role_id == 2:
-				credits = get_allsessioncredits_bydate_andchapter(startdate, enddate, person.chapter)
+				credits = get_allsessioncredits_bydate_andchapter(startdate, enddate, person.chapter_id)
 			elif person.role_id == 3:
 				if form.cleaned_data["chapter"] == '':
-					credits = get_allsessioncredits_bydate_andfleet(startdate,enddate,person.chapter.fleet)
+					credits = get_allsessioncredits_bydate_andfleet(startdate,enddate,person.chapter.fleet_id)
 				else:
 					credits = get_allsessioncredits_bydate_andchapter(startdate, enddate, int(form.cleaned_data["chapter"]))
 			else:
-				if form.cleaned_data["fleet"]=='All':
-					credits = get_allsessioncredits_bydate_andfleet(startdate,enddate)
+				if form.cleaned_data["fleet"]=='' and form.cleaned_data["chapter"] =='':
+					credits = get_allsessioncredits_bydate(startdate,enddate)
+				elif form.cleaned_data["fleet"] != '' and form.cleaned_data["chapter"] == '':
+					credits = get_allsessioncredits_bydate_andfleet(startdate, enddate, int(form.cleaned_data["fleet"]))
+				else:
+					credits = get_allsessioncredits_bydate_andchapter(startdate, enddate, int(form.cleaned_data["chapter"]))
 					
 			
 

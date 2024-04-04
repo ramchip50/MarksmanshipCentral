@@ -47,13 +47,11 @@
                         </tr>
                     </tbody>
                 </table>
+                <input type="hidden" id="p_fleetid" 
+                       value="{% if person.role_id == 3 %} {{person.chapter.fleet.id}} {% endif %}"/>
                 <br />
                 <input class="btn btn-secondary" type="submit" value="Submit">
             </form>
-            <div id="test1">
-
-
-            </div>
         </div>
     </center>
     <br>
@@ -119,19 +117,40 @@
 
     function fleet_change()
     {
-        flt = $('#id_fleet').val();
-        $.getJSON("/fleet_chapters/", { fleet_id: flt }, function (result) {
+        var flt = $('#id_fleet').val();
+        if (flt == undefined) {
+            flt = $('#p_fleetid').val();
+        }
+        reset_chapters(flt)
+    }
+
+    function reset_chapters(fleet_id) {
+
+        $.getJSON("/fleet_chapters/", { fleet_id: fleet_id }, function (result) {
             $('#id_chapter').empty();
             $('#id_chapter').append($("<option></option>")
                 .attr("value", '').text('-- All --'));
             var chaplist = JSON.parse(result);
             $.each(chaplist, function (key, value) {
                 $('#id_chapter').append($("<option></option>")
-                .attr("value",value.id).text(value.name));
-            })
+                    .attr("value", value.id).text(value.name));
+            });
         });
     }
-            
+
+
+    $(document).ready(function () {
+
+        flt = $('#p_fleetid').val();
+        if (flt == undefined) {
+            $('#id_chapter').append($("<option></option>")
+                .attr("value", '').text('-- All --'));
+        }
+        else {
+            reset_chapters(flt);
+        }
+    });
+
 
 </script>
 

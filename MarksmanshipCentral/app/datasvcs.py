@@ -27,11 +27,11 @@ def get_allsessioncredits_bydate_andchapter(startdate:datetime,enddate:datetime,
       
     return result
 
-def get_allsessioncredits_bydate_andfleet(startdate:datetime,enddate:datetime,fleet:Fleet):
+def get_allsessioncredits_bydate_andfleet(startdate:datetime,enddate:datetime,fleet:int):
     allsessions = get_allsessioncredits_bydate(startdate,enddate)
     result = list()
     for sess in allsessions:
-        if sess.fleet == fleet.name:
+        if sess.fleet_id == fleet:
             result.append(sess)
 
     return result
