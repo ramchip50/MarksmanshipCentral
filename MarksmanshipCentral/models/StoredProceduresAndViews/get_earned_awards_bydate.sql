@@ -1,7 +1,7 @@
 CREATE DEFINER=`MCUser`@`localhost` PROCEDURE `get_earned_awards_bydate`(IN startdate datetime, IN enddate datetime)
 BEGIN
 
-select p.id AS person_id, p.lastname,p.firstname,c.name as chapter, f.name as fleet, w.name AS weapon,
+select p.id AS person_id,p.branch_id,p.lastname,p.firstname,c.name as chapter,c.id as chapter_id, f.name as fleet,f.id as fleet_id, w.name AS weapon,
 Case When tc.marksman between startdate and enddate Then tc.marksman Else null End as marksman,
 Case When tc.sharpshooter between startdate and enddate Then tc.sharpshooter Else null End as sharpshooter, 
 Case When tc.expert between startdate and enddate Then tc.expert Else null End as expert,

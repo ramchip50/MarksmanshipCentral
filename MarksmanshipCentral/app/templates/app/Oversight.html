@@ -33,8 +33,8 @@
                 {% for game in games %}
                 <tr id="g_row{{game.game_id}}">
                     <td>
-                        <button type="button" onclick="game_approve('{{game.game.id}}')"  title='Add game to library as-is' name="pushme">Approve</button>
-                        <button type="button" onclick="game_choose_replace('{{game.game_id}}','{{game.name}}','{{game.has_session}}')"   title='Replace submitted game with game from library' name="pushme2">Replace</button>
+                        <button type="button" onclick="game_approve('{{game.game.id}}')"  title='Add game to library as-is' name="pushme">Approve</button>&nbsp;
+                        <button type="button" onclick="game_choose_replace('{{game.game_id}}','{{game.name}}','{{game.has_session}}')"   title='Replace submitted game with game from library' name="pushme2">Replace</button>&nbsp;
                         <button type="button" onclick="game_edit('{{game.game_id}}','{{game.name}}','{{game.alias}}','{{game.weapon.id}}')" title='Edit submitted game and add to library'name="pushme3">Edit</button>
                     </td>
                     <td> {{game.name}}</td>
@@ -53,8 +53,10 @@
 
         Choose Library Game:<input class="form-control basicAutoComplete" style="width:600px;" type="text" data-url="/game_autocomplete/full/" autocomplete="off" id="g_newname" placeholder="Type name to search" /><br /><br />
 
-        <button type="button" onclick="game_replace()" name="replace" title="Replace submitted game">Replace</button><button type="button" onclick="game_addalias()" name="replace">Add Alias</button>
-        <button type="button" onclick="game_delete()" name="delete" id="delete_g" title="Add sumitted game to library game alias">Delete</button> <button type="button" onclick="reset_g()" name="cancel">Cancel</button>
+        <button type="button" onclick="game_replace()" name="replace" title="Replace submitted game">Replace</button>&nbsp;
+        <button type="button" onclick="game_addalias()" name="addalias" title="Add sumitted game to library game alias">Add Alias</button>&nbsp;
+        <button type="button" onclick="game_delete()" name="delete" id="delete_g" title="Delete submitted game">Delete</button>&nbsp;
+        <button type="button" onclick="reset_g()" name="cancel">Cancel</button>
 
     </div>
 
@@ -73,7 +75,7 @@
             <option value="8">Grenade Launcher</option>
             <option value="9">Plasma Rifle</option>
         </select>
-        <button type="button" onclick="game_save()" name="save">Save &amp; Approve</button><button type="button" onclick="reset_g()" name="cancel">Cancel</button>
+        <button type="button" onclick="game_save()" name="save">Save &amp; Approve</button>&nbsp;<button type="button" onclick="reset_g()" name="cancel">Cancel</button>
 
     </div>
 
@@ -100,8 +102,9 @@
             <tr id="s_row{{session.id}}" class="submitted">
                 <td id="rvw{{session.id}}"><button type="button" id="s_btn{{session.id}}" onclick="session_review('{{session.id}}','{{session.dupsessid}}')" title="Compare to saved session">Review</button></td>
                 <td id="appr{{session.id}}" style="display:none">
-                    <button type="button" onclick="session_resolve('{{session.id}}',true)">Approve</button><button type="button" onclick="session_resolve('{{session.id}}',false)" title="Reject submitted session completely">Reject</button>
-                    <button type="button" onclick="document.location.reload(true)">Cancel</button>
+                    <button type="button" onclick="session_resolve('{{session.id}}',true)" title="Allow submitted session" >Approve</button>&nbsp;
+                    <button type="button" onclick="session_resolve('{{session.id}}',false)" title="Reject submitted session completely">Reject</button>&nbsp;
+                    <button type="button" onclick="document.location.reload(true)" title="Cancel this operation and return">Cancel</button>
                 </td>
                 <td> {{session.startdate | date:"m/d/Y H:i"}}</td>
                 <td> {{session.enddate | date:"m/d/Y H:i"}}</td>
@@ -124,7 +127,7 @@
             {% endfor %}
             {% for c in conflictsessions %}
             <tr id="c_row{{c.id}}" style="display:none" class="conflict">
-                <td>Resolve Conflict</td>
+                <td>Resolve conflict with:</td>
                 <td> {{c.startdate | date:"m/d/Y H:i"}}</td>
                 <td> {{c.enddate | date:"m/d/Y H:i"}}</td>
                 <td> {{c.game}}</td>
@@ -241,7 +244,8 @@
         g_id = $('#g_editorigid').val();
         g_alias = $('#g_editalias').val();
         g_weapon = $('#g_weapon').val();
-        $.get("/game_save/", { game_id: g_id, alias: g_alias, weapon_id: g_weapon });
+        g_name = $('#g_editname').val()
+        $.get("/game_save/", { game_id: g_id, game_name: g_name, alias: g_alias, weapon_id: g_weapon });
         rw = '#g_row' + g_id;
         $(rw).hide();
         reset_g();
