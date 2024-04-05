@@ -148,7 +148,10 @@ def newgame(request):
 		if form.is_valid():
 			g = Game()
 			g.name=form.cleaned_data["name"]
-			g.alias=form.cleaned_data["alias"]
+			if form.cleaned_data["alias"] == '':
+				g.alias = g.name
+			else:
+				g.alias=form.cleaned_data["alias"]
 			g.weapon = Weapon.objects.get(pk=form.cleaned_data["weapon"])
 			g.save()
 			submitted = True     

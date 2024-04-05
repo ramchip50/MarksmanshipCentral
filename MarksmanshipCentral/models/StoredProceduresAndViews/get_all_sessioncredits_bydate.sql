@@ -1,7 +1,8 @@
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_sessioncredits_bydate`(IN startdate datetime, IN enddate datetime)
 BEGIN
 
-select p.person_id as person_id, g.weapon_id as weapon_id, sum(p.credits) as weaponcredits, m.firstname, m.lastname,c.name as chapter, f.name as fleet, w.name as weapon from models_sessionparticipants p
+select p.person_id as person_id, b.id as branch_id, g.weapon_id as weapon_id, sum(p.credits) as weaponcredits, m.firstname, m.lastname,c.name as chapter, c.id as chapter_id,
+ f.name as fleet, f.id as fleet_id, w.name as weapon from models_sessionparticipants p
 join models_person m on ((p.person_id = m.id) and m.active=1)
 join models_branch b on ((m.branch_id = b.id) and b.active=1)
 join models_chapter c on ((m.chapter_id = c.id) and c.active=1)

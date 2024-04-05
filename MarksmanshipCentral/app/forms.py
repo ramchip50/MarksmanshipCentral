@@ -99,11 +99,13 @@ class PersonForm(ModelForm):
 
 class GameForm(forms.Form):
     name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','style':'width:350px'}))    
-    alias = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','style':'width:350px'}))
+    alias = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','style':'width:350px'}),required=False)
     l = Weapon.objects.all().values_list("id","name")
     weapon = forms.ChoiceField(choices=l,widget=forms.Select(attrs={'class':'form-control','style':'width:350px'}))
-    
+
     def clean(self):
+        if self.cleaned_data["weapon"] == '0':
+            raise ValidationError(_('You must select a weapon')) 
         if Game.active_objects.filter(name__iexact=self.cleaned_data["name"]):
             raise ValidationError(_('That title is already in the library')) 
         
@@ -124,9 +126,6 @@ class ReportSearch_fleet(BaseReportSearch):
         choices = kwargs.pop('chapters')
         super(ReportSearch_fleet,self).__init__(*args, **kwargs)
         self.fields["chapter"] = forms.ChoiceField(choices = choices, widget=forms.Select(attrs={'class':'form-control'}), required=False)
-#    CH1 = list(Chapter.objects.all().values_list('id','name'))
-#    CH1.insert(0,('','ALL'))
-#    chapter = forms.ChoiceField(choices = CH1, widget=forms.Select(attrs={'class':'form-control'}), required=False)
                             
 class ReportSearch_staff(BaseReportSearch):
 	ch = list(Chapter.active_objects.all().order_by('name').values_list('id','name'))
