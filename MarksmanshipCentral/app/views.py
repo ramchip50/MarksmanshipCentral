@@ -9,6 +9,7 @@ from json import JSONEncoder
 import json
 from pickle import NONE
 from tabnanny import check
+from types import NoneType
 from django.core.checks import messages
 from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
@@ -74,7 +75,7 @@ def test(request):
 	# flt = Fleet.active_objects.get(id=2)
 	# sessions=get_allsessioncredits_bydate_andchapter(st,et,chap)
 	# #sessions=get_allsessioncredits_bydate_andfleet(st,et,flt)
-	history= get_session_history_bydate(st,et,7012)
+	#history= get_session_history_bydate(st,et,7012)
 	
 	#plyrs = history[4].players
 	#plyrs.append(history[4].players.split(','))
@@ -84,8 +85,11 @@ def test(request):
 	#uj = json.loads(u)
 #	p = history[4].players.split(,[')
 #	for o in u:
-		
-	context = {"coffee":no_coffee(),"history":history}
+	if request.method == "POST":
+		whutnot = request.POST.__getitem__('chapter')
+	else:
+		whutnot = None
+	context = {"coffee":no_coffee(), "whut":whutnot}
 	return render(request,'app/TestPage.html',context)
 #endregion
 

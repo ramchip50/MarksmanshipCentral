@@ -1,4 +1,5 @@
 import json
+from http import HTTPStatus
 from datetime import datetime
 from django.core.checks import messages
 from django.shortcuts import redirect, render, get_object_or_404
@@ -14,6 +15,12 @@ from django.core import serializers
 from django.db.models import Q
 from django.contrib import messages
 
+class HttpResponseAccepted(HttpResponse):
+	status_code=HTTPStatus.ACCEPTED
+
+class HttpReponseNoCoffee(HttpResponse):
+	status_code=HTTPStatus.IM_A_TEAPOT
+	
 
 def game_autocomplete(request):
 	if request.GET.get('q'):
@@ -43,6 +50,7 @@ def update_scoring(session_id:int,game_id:int):
 	pl = SessionParticipants.active_objects.filter(session_id=session_id)
 	for p in pl:
 		update_total_credits(p.person_id,p.credits,g)
+	return HttpResponseAccepted()
 
 def game_approve(request):
 		g_id = request.GET['game_id']
@@ -52,15 +60,14 @@ def game_approve(request):
 		sess=Session.active_objects.filter(game_id=g_id)
 		for s in sess:
 			update_scoring(s.id,g_id)
-		return None
+		return HttpResponseAccepted()
 
 def game_delete(request):    #Don't call this if there are sessions referencing
 		g_id = request.GET['game_id']
 		game = Game.active_objects.get(pk=g_id)
 		game.active=False
 		game.save()
-		return None
-	
+		return HttpResponseAccepted()
 
 def game_replace(request):
 	g_new_libraryname = request.GET['new_name']
@@ -81,7 +88,8 @@ def game_replace(request):
 		update_scoring(s.id,new_g.pk)
 	g_old=Game.active_objects.get(pk=g_old_id)
 	g_old.delete()
-	return None
+	return HttpResponseAccepted()
+
 
 def game_save(request):
 	g_id = request.GET['game_id']
@@ -98,7 +106,8 @@ def game_save(request):
 	sess=Session.active_objects.filter(game_id=g_id)
 	for s in sess:
 		update_scoring(s.id,g_id)
-	return None
+	return HttpResponseAccepted()
+
 
 def session_resolve(request):
 	session_id = request.GET['session_id']
@@ -115,6 +124,8 @@ def session_resolve(request):
 			p.save()
 		sess.active=False
 	sess.save()
+	return HttpResponseAccepted()
+
 		
 def fleet_chapters(request):
 	fleet_id = request.GET['fleet_id']
