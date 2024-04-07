@@ -1,18 +1,18 @@
 from django.contrib import admin
-
+from django.contrib.admin import site
+site.disable_action('delete_selected')
 # Register your models here.
 
 
 
-#Put in delete action for soft delete
 from django.forms import modelformset_factory
 from .models import *
 
 @admin.register(Game)
 class GameAdmin(admin.ModelAdmin):
-    list_display=("name","alias","weapon","verified")
-    list_filter=("verified",)
-    search_fields=("name__startswith","alias__startswith")
+    list_display=("name","alias","weapon","createdon","verified")
+    list_filter=("verified","weapon")
+    search_fields=("name__icontains","alias__icontains")
     ordering = ("name",)
     
     pass
@@ -48,7 +48,7 @@ class PersonAdmin(admin.ModelAdmin):
     list_display=("lastname","firstname","branch","chapter")
     list_select_related=("branch","chapter")
     list_filter=("branch","chapter")
-    search_fields=("lastname__startswith",)
+    search_fields=("lastname__istartswith",)
     ordering=("lastname","firstname")
     pass
 
@@ -56,9 +56,9 @@ class PersonAdmin(admin.ModelAdmin):
 class TotalCreditsAdmin(admin.ModelAdmin):
     list_display=("person","person_branch","weapon","weapontotal","marksman","sharpshooter","expert","high_expert")
     list_select_related=True
-    search_fields=["person__lastname"]
+    search_fields=["person__lastname__icontains"]
     ordering=("person__lastname","person__firstname")
-    list_filter=("person__lastname",)
+    list_filter=("person__branch","person__chapter__fleet")
     
     def person_branch(self,obj):
         return f"{obj.person.branch}"

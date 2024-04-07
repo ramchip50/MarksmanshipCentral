@@ -80,11 +80,22 @@ class SessionForm(forms.Form):
     turnsplayed = forms.IntegerField(widget=forms.NumberInput(attrs={'class':'form-control'}),required=False)
     
     def clean(self):
-        sd = self.cleaned_data["startdate"]
-        ed = self.cleaned_data["enddate"]
-        if ed <= sd:
+        sd = datetime.strptime(self.cleaned_data["startdate"],"%Y-%m-%dT%H:%M")    #2024-04-05T10:56
+        ed = datetime.strptime(self.cleaned_data["enddate"],"%Y-%m-%dT%H:%M")
+        
+        td = ed-sd
+        if td.total_seconds() <= 0:
             raise ValidationError(_('End date must be after start date')) 
-   
+
+        if self.cleaned_data["playmode"] == 'Time':
+            if td.total_seconds()/3600 >= 24:
+                raise ValidationError(_('Time based session cannot be more than 24 hours'))
+        else:
+            if self.cleaned_data['turnsplayed'] == None:
+                raise ValidationError(_('Enter the number of turns'))
+            
+
+
 
 class TRMNpartForm(forms.Form):
         person = PlayerField(label='Member Name')

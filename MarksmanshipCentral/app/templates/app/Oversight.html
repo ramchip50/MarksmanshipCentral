@@ -33,7 +33,7 @@
                 {% for game in games %}
                 <tr id="g_row{{game.game_id}}">
                     <td>
-                        <button type="button" onclick="game_approve('{{game.game.id}}')"  title='Add game to library as-is' name="pushme">Approve</button>&nbsp;
+                        <button type="button" onclick="game_approve('{{game.game_id}}')"  title='Add game to library as-is' name="pushme">Approve</button>&nbsp;
                         <button type="button" onclick="game_choose_replace('{{game.game_id}}','{{game.name}}','{{game.has_session}}')"   title='Replace submitted game with game from library' name="pushme2">Replace</button>&nbsp;
                         <button type="button" onclick="game_edit('{{game.game_id}}','{{game.name}}','{{game.alias}}','{{game.weapon.id}}')" title='Edit submitted game and add to library'name="pushme3">Edit</button>
                     </td>
@@ -206,8 +206,8 @@
         $('#g_origid').val(gameId);
         $('#g_list').hide();
         $('#s_list').hide();
-        if (has_session == 'True') { $('#delete_g').prop('disabled', true); }
-        else { $('#delete_g').prop('disabled', false); }
+        if (has_session == 'True') { $('#delete_g').hide() }
+        else { $('#delete_g').show()}
         $('#g_replace').show();
 
     }
