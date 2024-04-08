@@ -1,5 +1,8 @@
 CREATE DEFINER=`MCUser`@`localhost` PROCEDURE `get_session_history`(startdate datetime, enddate datetime, person_id int)
 BEGIN
+
+SET @nextenddate = DATE_ADD(enddate,INTERVAL 1 Day);
+
 select s.id as session_id,s.startdate,s.enddate,s.playmode,g.name as game,w.name as weapon,s.turnsplayed,p.credits,
 (SELECT GROUP_CONCAT(
           concat(firstname,' ',lastname) SEPARATOR ', '
@@ -19,6 +22,6 @@ join models_game g on (s.game_id = g.id) and g.active = 1
 join models_weapon w on g.weapon_id = w.id
 join models_sessionparticipants p on (p.session_id = s.id) and p.active=1
 where s.dupsessid is null and g.verified=1
-and s.startdate between startdate and enddate
+and s.enddate between startdate and @nextenddate
 and p.person_id=person_Id and p.active=1;
 END
