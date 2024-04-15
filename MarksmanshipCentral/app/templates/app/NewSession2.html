@@ -10,67 +10,66 @@
 {% endblock name%}
 {% block content %}
 
-{% if submitted %}
-<br />
-<br />
-<h2>Your session was submitted successfully!</h2>
-  {% else %}
-{{ message }}
-<form action='' method=POST>
-    {% csrf_token %}
-    <div class="row">
-        <div class="col">
-            <h2>Game Information</h2>
-            <label for="StartDate"> Starting Date and Time:</label>
-            {{ form.startdate }}
-            <br>
-            <label for="EndDate"> Ending Date and Time:</label>
-            {{ form.enddate }}
-            <br />
-            <label for="GameName"> Name of the Game Played:</label>
-            {{ form.game }}
-            <br />
-            <ledgend>Select the mode of game play:</ledgend><br>
-            {{ form.playmode }}
-
-            <div id="hide" style="display:none">
-                <label for="TurnsPlayed">Enter the number of turns played:</label>
-                {{ form.turnsplayed }}
-                <br><br>
+    {% if submitted %}
+        <br />
+        <br />
+        <h1>Your session was submitted successfully!</h1>
+    {% else %}
+        {{ message }}
+        <p class="text-center fs-2 fw-bold">Game Information</p>
+        <form action='' method=POST>
+            {% csrf_token %}
+            
+            <div class="row">
+                <div class="col">
+                    <label for="StartDate"> Starting Date and Time:</label>
+                    {{ form.startdate }}
+                    <label for="EndDate"> Ending Date and Time:</label>
+                    {{ form.enddate }}
+                    <label for="GameName"> Name of the Game Played:</label>
+                    {{ form.game }}
+        
+                    <ledgend>Select the mode of game play:</ledgend><br>
+                    {{ form.playmode }}
+                
+                    <div id="hide" style="display:none">
+                        <label for="TurnsPlayed">Enter the number of turns played:</label>
+                        {{ form.turnsplayed }}
+                        <br><br>
+                    </div>
+                    <script type="text/javascript">
+                        function yesnoCheck() {
+                            if (document.getElementById('id_playmode_1').checked) {
+                                document.getElementById('hide').style.display = 'block';
+                            } else {
+                                document.getElementById('hide').style.display = 'none';;
+                            }
+                        }
+                    </script>
+                    {% if form.errors %}
+                    {% for error in form.errors.as_data.values %}
+                    {% for data in error.0 %}
+                    {{ data }}
+                    {% endfor %}
+                    {% endfor %}
+                    {% endif %}
+                    {%comment%}
+                    <button type="reset" name="Cancel" value="Cancel" class="btn btn-danger btn-lg btn-block" href="{% url 'landing' %" }>Cancel</button><br>
+                    {%endcomment%}
+                    <button type="submit" name="save" value="save" class="btn btn-primary btn-lg btn-block">Save</button><br><br>
+                </div>
+                <div class="col">
+                    <h3>TRMN Participants</h3><br />
+                    <p>(you are already included)</p>
+                    {{ formset1.as_p }}
+                </div>
+                <div class="col">
+                    <h3>Non-TRMN Participants</h3>
+                    {{ formset2.as_p }}
+                </div>
             </div>
-            <script type="text/javascript">
-                function yesnoCheck() {
-                    if (document.getElementById('id_playmode_1').checked) {
-                        document.getElementById('hide').style.display = 'block';
-                    } else {
-                        document.getElementById('hide').style.display = 'none';;
-                    }
-                }
-            </script>
-            {% if form.errors %}
-            {% for error in form.errors.as_data.values %}
-            {% for data in error.0 %}
-            {{ data }}
-            {% endfor %}
-            {% endfor %}
-            {% endif %}
-            {%comment%}
-            <button type="reset" name="Cancel" value="Cancel" class="btn btn-danger btn-lg btn-block" href="{% url 'landing' %" }>Cancel</button><br>
-            {%endcomment%}
-            <button type="submit" name="save" value="save" class="btn btn-primary btn-lg btn-block">Save</button><br><br>
-        </div>
-        <div class="col">
-            <h3>TRMN Participants</h3><br />
-            <p>(you are already included)</p>
-            {{ formset1.as_p }}
-        </div>
-        <div class="col">
-            <h3>Non-TRMN Participants</h3>
-            {{ formset2.as_p }}
-        </div>
-    </div>
-</form>
-  {% endif %}
+        </form>
+    {% endif %}
 
 
 {% endblock %}

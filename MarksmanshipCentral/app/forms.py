@@ -2,6 +2,7 @@
 Definition of forms.
 """
 
+import email
 from os import name
 from random import choice
 from typing import Any
@@ -107,6 +108,15 @@ class PersonForm(ModelForm):
     class Meta:
         model = Person
         fields = ('memberid', 'firstname', 'lastname', 'emailaddress', 'chapter', 'branch')
+        widgets = {
+            'memberid': forms.TextInput(attrs={'class':'form-control form-control-lg mb-3'}),
+            'firstname': forms.TextInput(attrs={'class':'form-control form-control-lg mb-3'}),
+            'lastname': forms.TextInput(attrs={'class':'form-control form-control-lg mb-3'}),
+            'emailaddress': forms.EmailInput(attrs={'class':'form-control form-control-lg mb-3'}),
+            'chapter': forms.Select(attrs={'class':'form-control form-control-lg mb-3'}),
+            'branch': forms.Select(attrs={'class':'form-control form-control-lg mb-3'}),
+            }
+            
 
 class GameForm(forms.Form):
     name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','style':'width:350px'}))    

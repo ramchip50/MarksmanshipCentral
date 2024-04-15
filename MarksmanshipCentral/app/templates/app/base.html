@@ -10,9 +10,10 @@
 
         .main {
             display: block;
-            padding: 0px 10px;
-            font-size: 18px;
+            padding: 10px 75px 10px 75px;
+            font-size: 24px;
             min-height: 63vh;
+            color: #000000;
         }
 
         .hero-foot {
@@ -27,20 +28,12 @@
             justify-content: center;
         }
 
-        .foot-text {
-        }
-
         .cropped1 {
-            width: 80px; /* width of container */
-            height: 80px; /* height of container */
+            width: 80px; 
+            height: 80px; 
             object-fit: cover;
             object-position: 20% 10%;
             border: 5px solid black;
-        }
-
-        section.nav {
-            border-bottom: 1px solid #363636;
-            border-top: 1px solid #363636
         }
 
         .navbar.is-dark[data-v-4fe12f68] {
@@ -53,11 +46,11 @@
             font-family: Incised,Prociono,serif
         }
 
-        .hero-body, section.nav {
+        .hero-head, section.nav {
             background-color: #272727
         }
 
-        .hero-body {
+        .hero-head {
             padding-top: 12px;
             padding-bottom: 6px
         }
@@ -85,15 +78,15 @@
 </head>
 <body>
     <section class="hero is-dark">
-        <div class="hero-body">
+        <div class="hero-head">
             <div class="container">
                 <div class="columns">
                     <div class="column is-narrow">
                         <img src="https://www.trmn.org/user/themes/trmn/images/trmn-2023.png" alt="TRMN Seal" width="160px">
                     </div>
                     <div class="column bring-down">
-                        <p class="title">Marksmanship Central</p>
-                        <p class="subtitle">{% block name %}{% endblock name %}</p><br>
+                        <p class="title fs-1">Marksmanship Central</p>
+                        <p class="subtitle fs-3">{% block name %}{% endblock name %}</p><br>
                     </div>
                 </div>
             </div>

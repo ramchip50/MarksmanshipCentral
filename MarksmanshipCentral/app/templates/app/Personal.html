@@ -9,18 +9,22 @@
     Member Information
 {% endblock name%}
 {% block content %}
-<center>
-    <h1>Personal Information</h1>
-    <br><br>
-    {% if submitted %}
-    Information was updated successfully!
-    {% endif %}
-    <form action="" method=POST>
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Submit" class="btn btn-secondary">
-    </form>
-</center>
+    <div class="container text-center">
+        <p class="fs-2 fw-bold">Personal Information</p>
+        <br>
+        {% if submitted %}
+            Information was updated successfully!
+        {% endif %}
+        <div class="container" style="width: 400px;" >
+            <form action="" method=POST >
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="container">
+                    <input type="submit" value="Submit" class="btn btn-secondary my-4" />
+                </div>
+            </form>
+        </div>
+    </div>
 
 
 

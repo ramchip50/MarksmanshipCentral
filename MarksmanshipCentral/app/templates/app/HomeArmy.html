@@ -10,10 +10,9 @@
 {% endblock name%}
 {% block content %}
 <br />
-<h2 style="text-align: center;">Current Marksmanship Status</h2>
+<p class="text-center fs-2 fw-bold" >Current Marksmanship Status</p>
 <br />
-<br />
-<form method="post" class="from-group">
+<form method="post" class="from-group text-center">
     <div class="container">
         <div class="row">
             <div class="col-sm">
@@ -35,50 +34,49 @@
         </div>
     </div>
 </form>
-<br />
-<br />
-
-<table class="table table-bordered, text-white">
-    <tr>
-        <th>Category</th>
-        <th>Total Points</th>
-        <th>   </th>
-        <th>Marksman</th>
-        <th>Sharpshooter</th>
-        <th>Expert</th>
-        <th>High Expert</th>
-    </tr>
-    {% for tc in credits  %}
-    <tr>
-        <td>{{ tc.weapon_name }}</td>
-        <td>{{ tc.weapon_total }}</td>
-        <td></td>
-        {% if tc.marksman != None %}
-        <td>{{ tc.marksman | date:"F d, Y" }}</td>
-        {% else %}
-        <td></td>
-        {% endif %}
-        {% if tc.sharpshooter != None %}
-        <td>{{ tc.sharpshooter | date:"F d, Y" }}</td>
-        {% else %}
-        <td></td>
-        {% endif %}
-        {% if tc.expert != None %}
-        <td>{{ tc.expert | date:"F d, Y" }}</td>
-        {% else %}
-        <td></td>
-        {% endif %}
-        {% if tc.high_expert != None %}
-        <td>{{ tc.high_expert | date:"F d, Y" }}</td>
-        {% else %}
-        <td></td>
-        {% endif %}
-    </tr>
-    {% endfor %}
-</table>
-
-<br />
-<br />
+<br /><br />
+<div class="d-flex justify-content-center text-center">
+    <table class="table text-dark" style="max-width: 60%;">
+        <tr>
+            <th>Category</th>
+            <th>Total Points</th>
+            <th></th>
+            <th>Marksman</th>
+            <th>Sharpshooter</th>
+            <th>Expert</th>
+            <th>High Expert</th>
+        </tr>
+        {% for tc in credits  %}
+        <tr>
+            <td>{{ tc.weapon_name }}</td>
+            <td>{{ tc.weapon_total }}</td>
+            <td></td>
+            {% if tc.marksman != None %}
+            <td>{{ tc.marksman | date:"F d, Y" }}</td>
+            {% else %}
+            <td></td>
+            {% endif %}
+            {% if tc.sharpshooter != None %}
+            <td>{{ tc.sharpshooter | date:"F d, Y" }}</td>
+            {% else %}
+            <td></td>
+            {% endif %}
+            {% if tc.expert != None %}
+            <td>{{ tc.expert | date:"F d, Y" }}</td>
+            {% else %}
+            <td></td>
+            {% endif %}
+            {% if tc.high_expert != None %}
+            <td>{{ tc.high_expert | date:"F d, Y" }}</td>
+            {% else %}
+            <td></td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+    <br />
+    <br />
 
     {% endblock %}
 
