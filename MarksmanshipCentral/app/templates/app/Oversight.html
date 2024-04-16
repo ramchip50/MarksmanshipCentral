@@ -11,170 +11,151 @@
 {% block content %}
 
 
-<h2 style="text-align: center;">Marksmanship Central Management</h2>
+<p class="fs-2 fw-bold text-center">Marksmanship Central Management</p>
 <br>
 {% if games %}
 <div class="container-fluid">
 
-    <h3 style="text-align: center;">New Game Review</h3>
+    <h3 class="fs-3 fw-bold text-center">New Game Review</h3>
     <div id="g_list" style="display:block">
+        <div class="d-grid gap-2  mx-auto justify-content-center">
+            <table class="table table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">&nbsp;&nbsp;</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Alias</th>
+                        <th scope="col">Weapon</th>
+                        <th scope="col">Creation Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for game in games %}
+                    <tr id="g_row{{game.game_id}}">
+                        <td>
+                            <button type="button" class="btn btn-primary" onclick="game_approve('{{game.game_id}}')" title='Add game to library as-is' name="pushme">Approve</button>&nbsp;
+                            <button type="button" class="btn btn-success" onclick="game_choose_replace('{{game.game_id}}','{{game.name}}','{{game.has_session}}')" title='Replace submitted game with game from library' name="pushme2">Replace</button>&nbsp;
+                            <button type="button" class="btn btn-warning" onclick="game_edit('{{game.game_id}}','{{game.name}}','{{game.alias}}','{{game.weapon.id}}')" title='Edit submitted game and add to library' name="pushme3">Edit</button>
+                        </td>
+                        <td></td>
+                        <td> {{game.name}}</td>
+                        <td> {{game.alias}}</td>
+                        <td> {{game.weapon}}</td>
+                        <td> {{game.createdon | date:"m/d/Y"}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-        <table class="table table-dark">
+        <div id="g_replace" style="display:none">
+
+            <span id="g_origname">This name</span><input type="hidden" id="g_origid" /><br /><br />
+
+            Choose Library Game:<input class="form-control basicAutoComplete" style="width:600px;" type="text" data-url="/game_autocomplete/full/" autocomplete="off" id="g_newname" placeholder="Type name to search" /><br /><br />
+
+            <button type="button" class="btn btn-success" onclick="game_replace()" name="replace" title="Replace submitted game">Replace</button>&nbsp;
+            <button type="button" class="btn btn-info" onclick="game_addalias()" name="addalias" title="Add sumitted game to library game alias">Add Alias</button>&nbsp;
+            <button type="button" class="btn btn-danger" onclick="game_delete()" name="delete" id="delete_g" title="Delete submitted game">Delete</button>&nbsp;
+            <button type="button" class="btn btn-warning" onclick="reset_g()" name="cancel">Cancel</button>
+
+        </div>
+
+        <div id="g_edit" style="display:none">
+
+            Name: <input type="text" id="g_editname" /><input type="hidden" id="g_editorigid" /><br /><br />
+            Alias: <input id="g_editalias" type="text" />
+            Weapon:&nbsp;<select id="g_weapon">
+                <option value="1">Pistol</option>
+                <option value="2">Grenade</option>
+                <option value="3">Flechette Gun</option>
+                <option value="4">Plasma Carbine</option>
+                <option value="5">Tribarrel</option>
+                <option value="6">Rifle</option>
+                <option value="7">Disruptor</option>
+                <option value="8">Grenade Launcher</option>
+                <option value="9">Plasma Rifle</option>
+            </select>
+            <button type="button" onclick="game_save()" name="save">Save &amp; Approve</button>&nbsp;<button type="button" onclick="reset_g()" name="cancel">Cancel</button>
+
+        </div>
+
+    </div>
+{% endif %}
+
+{% if submittedsessions %}
+<div class="container-fluid" id="s_list">
+    <h3 class="fs-3 fw-bold text-center">Potential Duplicate Entry Review</h3>
+    <div class="d-grid gap-2  mx-auto justify-content-center">
+        <table class="table table-dark" >
             <thead>
                 <tr>
-                    <th scope="col"></th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Alias</th>
-                    <th scope="col">Weapon</th>
-                    <th scope="col">Creation Date</th>
+                    <th />
+                    <th scope="col">Start Date</th>
+                    <th scope="col">End Date</th>
+                    <th scope="col">Game</th>
+                    <th scope="col">Play Mode</th>
+                    <th scope="col">TurnDays</th>
+                    <th scope="col">Players</th>
                 </tr>
             </thead>
             <tbody>
-                {% for game in games %}
-                <tr id="g_row{{game.game_id}}">
-                    <td>
-                        <button type="button" onclick="game_approve('{{game.game_id}}')"  title='Add game to library as-is' name="pushme">Approve</button>&nbsp;
-                        <button type="button" onclick="game_choose_replace('{{game.game_id}}','{{game.name}}','{{game.has_session}}')"   title='Replace submitted game with game from library' name="pushme2">Replace</button>&nbsp;
-                        <button type="button" onclick="game_edit('{{game.game_id}}','{{game.name}}','{{game.alias}}','{{game.weapon.id}}')" title='Edit submitted game and add to library'name="pushme3">Edit</button>
+                {% for session in submittedsessions %}
+                <tr id="s_row{{session.id}}" class="submitted">
+                    <td id="rvw{{session.id}}"><button type="button" class="btn btn-secondary" id="s_btn{{session.id}}" onclick="session_review('{{session.id}}','{{session.dupsessid}}')" title="Compare to saved session">Review</button></td>
+                    <td id="appr{{session.id}}" style="display:none">
+                        <button type="button" class="btn btn-primary" onclick="session_resolve('{{session.id}}',true)" title="Allow submitted session" >Approve</button>&nbsp;
+                        <button type="button" class="btn btn-danger" onclick="session_resolve('{{session.id}}',false)" title="Reject submitted session completely">Reject</button>&nbsp;
+                        <button type="button" class="btn btn-warning" onclick="document.location.reload(true)" title="Cancel this operation and return">Cancel</button>
                     </td>
-                    <td> {{game.name}}</td>
-                    <td> {{game.alias}}</td>
-                    <td> {{game.weapon}}</td>
-                    <td> {{game.createdon | date:"m/d/Y"}}</td>
+                    <td> {{session.startdate | date:"m/d/Y H:i"}}</td>
+                    <td> {{session.enddate | date:"m/d/Y H:i"}}</td>
+                    <td> {{session.game}}</td>
+                    <td> {{session.playmode}}</td>
+                    <td> {{session.turnsplayed}}</td>
+                    <td>
+                        {% for sp in participants %}
+                        {% if sp.session_id == session.id %}
+                        {{sp.name}} <br />
+                        {% endif %}
+                        {% endfor %}
+                        {% for non in nonTRMN%}
+                        {% if non.session_id == session.id %}
+                        {{non.name}} <br />
+                        {% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+                {% for c in conflictsessions %}
+                <tr id="c_row{{c.id}}" style="display:none" class="conflict">
+                    <td>Resolve conflict with:</td>
+                    <td> {{c.startdate | date:"m/d/Y H:i"}}</td>
+                    <td> {{c.enddate | date:"m/d/Y H:i"}}</td>
+                    <td> {{c.game}}</td>
+                    <td> {{c.playmode}}</td>
+                    <td> {{c.turnsplayed}}</td>
+                    <td>
+                        {% for sp in participants %}
+                        {% if sp.session_id == c.id %}
+                        {{sp.name}} <br />
+                        {% endif %}
+                        {% endfor %}
+                        {% for non in nonTRMN%}
+                        {% if non.session_id == c.id %}
+                        {{non.name}} <br />
+                        {% endif %}
+                        {% endfor %}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-
-    <div id="g_replace" style="display:none">
-
-        <span id="g_origname">This name</span><input type="hidden" id="g_origid" /><br /><br />
-
-        Choose Library Game:<input class="form-control basicAutoComplete" style="width:600px;" type="text" data-url="/game_autocomplete/full/" autocomplete="off" id="g_newname" placeholder="Type name to search" /><br /><br />
-
-        <button type="button" onclick="game_replace()" name="replace" title="Replace submitted game">Replace</button>&nbsp;
-        <button type="button" onclick="game_addalias()" name="addalias" title="Add sumitted game to library game alias">Add Alias</button>&nbsp;
-        <button type="button" onclick="game_delete()" name="delete" id="delete_g" title="Delete submitted game">Delete</button>&nbsp;
-        <button type="button" onclick="reset_g()" name="cancel">Cancel</button>
-
-    </div>
-
-    <div id="g_edit" style="display:none">
-
-        Name: <input type="text" id="g_editname" /><input type="hidden" id="g_editorigid" /><br /><br />
-        Alias: <input id="g_editalias" type="text" />
-        Weapon:&nbsp;<select id="g_weapon">
-            <option value="1">Pistol</option>
-            <option value="2">Grenade</option>
-            <option value="3">Flechette Gun</option>
-            <option value="4">Plasma Carbine</option>
-            <option value="5">Tribarrel</option>
-            <option value="6">Rifle</option>
-            <option value="7">Disruptor</option>
-            <option value="8">Grenade Launcher</option>
-            <option value="9">Plasma Rifle</option>
-        </select>
-        <button type="button" onclick="game_save()" name="save">Save &amp; Approve</button>&nbsp;<button type="button" onclick="reset_g()" name="cancel">Cancel</button>
-
-    </div>
-
 </div>
 {% endif %}
 
-{% if submittedsessions %}
-<div class="container-fluid" id="s_list">
-    <h3 style="text-align: center;">Potential Duplicate Entry Review</h3>
-    <table class="table table-dark">
-        <thead>
-            <tr>
-                <th />
-                <th scope="col">Start Date</th>
-                <th scope="col">End Date</th>
-                <th scope="col">Game</th>
-                <th scope="col">Play Mode</th>
-                <th scope="col">TurnDays</th>
-                <th scope="col">Players</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for session in submittedsessions %}
-            <tr id="s_row{{session.id}}" class="submitted">
-                <td id="rvw{{session.id}}"><button type="button" id="s_btn{{session.id}}" onclick="session_review('{{session.id}}','{{session.dupsessid}}')" title="Compare to saved session">Review</button></td>
-                <td id="appr{{session.id}}" style="display:none">
-                    <button type="button" onclick="session_resolve('{{session.id}}',true)" title="Allow submitted session" >Approve</button>&nbsp;
-                    <button type="button" onclick="session_resolve('{{session.id}}',false)" title="Reject submitted session completely">Reject</button>&nbsp;
-                    <button type="button" onclick="document.location.reload(true)" title="Cancel this operation and return">Cancel</button>
-                </td>
-                <td> {{session.startdate | date:"m/d/Y H:i"}}</td>
-                <td> {{session.enddate | date:"m/d/Y H:i"}}</td>
-                <td> {{session.game}}</td>
-                <td> {{session.playmode}}</td>
-                <td> {{session.turnsplayed}}</td>
-                <td>
-                    {% for sp in participants %}
-                    {% if sp.session_id == session.id %}
-                    {{sp.name}} <br />
-                    {% endif %}
-                    {% endfor %}
-                    {% for non in nonTRMN%}
-                    {% if non.session_id == session.id %}
-                    {{non.name}} <br />
-                    {% endif %}
-                    {% endfor %}
-                </td>
-            </tr>
-            {% endfor %}
-            {% for c in conflictsessions %}
-            <tr id="c_row{{c.id}}" style="display:none" class="conflict">
-                <td>Resolve conflict with:</td>
-                <td> {{c.startdate | date:"m/d/Y H:i"}}</td>
-                <td> {{c.enddate | date:"m/d/Y H:i"}}</td>
-                <td> {{c.game}}</td>
-                <td> {{c.playmode}}</td>
-                <td> {{c.turnsplayed}}</td>
-                <td>
-                    {% for sp in participants %}
-                    {% if sp.session_id == c.id %}
-                    {{sp.name}} <br />
-                    {% endif %}
-                    {% endfor %}
-                    {% for non in nonTRMN%}
-                    {% if non.session_id == c.id %}
-                    {{non.name}} <br />
-                    {% endif %}
-                    {% endfor %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-</div>
-{% endif %}
-<!--<div class="container-fluid ">
-
-    <h3 style="text-align: center;">Other Odds and Ends</h3>
-    <table class="table table-dark">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-            </tr>
-        </tbody>
-    </table>
-    <button class=’btn btn-secondary’ name=”three”>Submit</button>
-</div>-->
         {% endblock %}
 
         {% block script %}

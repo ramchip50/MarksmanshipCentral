@@ -9,71 +9,73 @@
     Member's Complete Gaming Report'
 {% endblock name%}
 {% block content %}
-<main>
-    <center>
-        <div class="border border-white container-fluid">
-            <form action='' method=POST>
-                {% csrf_token %}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Fleet</th>
-                            <th>Chapter</th>
-                            <th>Start Date/Time</th>
-                            <th>Ending Date/Time</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>{{person.chapter.fleet}}</td>
-                            <td>{{person.chapter}}</td>
-                            <td>{{ form.startdate }}</td>
-                            <td>{{ form.enddate }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <br />
-                <input class="btn btn-secondary" type="submit" value="Submit">
-            </form>
-        </div>
-    </center>
-    <!--<input class="btn btn-secondary" type="submit" value="Print">-->
-    <center>
-        <div class="container-fluid">
-            {% if history %}
-            <h3>Marksmanship Session Record for {{person.firstname}}&nbsp;{{person.lastname}} <br> from <br> {{startdate | date:"m/d/y"}} to {{enddate  | date:"m/d/y"}}</h3>
-            <br>
-            <table class="table table-striped table-dark table-sm">
-                <thead>
-                    <tr>
-                        <th>Start Date/Time</th>
-                        <th>End Date/Time</th>
-                        <th>Game</th>
-                        <th>Weapon</th>
-                        <th>Mode</th>
-                        <th>Turns</th>
-                        <th>Credits</th>
-                        <th>Players</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for Result in history %}
-                    <tr>
-                        <td>{{ Result.startdate | date:"m/d/Y H:i" }}</td>
-                        <td>{{ Result.enddate | date:"m/d/Y H:i"}}</td>
-                        <td>{{ Result.game }}</td>
-                        <td>{{ Result.weapon }}</td>
-                        <td>{{ Result.playmode }}</td>
-                        <td>{% if Result.turnsplayed %} {{ Result.turnsplayed }}  {% endif %}</td>
-                        <td>{{ Result.credits }}</td>
-                        <td>{{ Result.players }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            {% endif %}
-        </div>
-    </center>
-    <br>
-</main>
+	<main>
+	
+		<div class="border border-white container-fluid">
+			<form action='' method=POST>
+				{% csrf_token %}
+				<div class="d-grid gap-2 mx-auto justify-content-center">
+					<table>
+						<thead>
+							<tr>
+								<th class="px-5">Fleet</th>
+								<th class="px-5">Chapter</th>
+								<th class="px-5">Start Date/Time</th>
+								<th class="px-5">Ending Date/Time</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td class="px-5">{{person.chapter.fleet}}</td>
+								<td class="px-5">{{person.chapter}}</td>
+								<td class="px-5">{{ form.startdate }}</td>
+								<td class="px-5">{{ form.enddate }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<br />
+				<div class="d-grid gap-2  mx-auto justify-content-center">
+					<input class="btn btn-secondary " type="submit" value="Submit">
+				</div>
+			</form>
+		</div>
+	
+		<!--<input class="btn btn-secondary" type="submit" value="Print">-->
+
+		<div class="container-fluid">
+			{% if history %}
+				<h3>Marksmanship Session Record for {{person.firstname}}&nbsp;{{person.lastname}} <br> from <br> {{startdate | date:"m/d/y"}} to {{enddate  | date:"m/d/y"}}</h3>
+				<br>
+				<div class="d-grid gap-2 mx-auto justify-content-center">
+					<table class="table table-striped ">
+						<thead>
+							<tr>
+								<th class="px-3">Start Date/Time</th>
+								<th class="px-3">End Date/Time</th>
+								<th class="px-3">Game</th>
+								<th class="px-3">Weapon</th>
+								<th class="px-3">Mode</th>
+								<th class="px-3">Turns</th>
+								<th class="px-3">Credits</th>
+								<th class="px-3">Players</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for Result in history %}
+								<tr>
+									<td class="px-3">{{ Result.startdate | date:"m/d/Y H:i" }}</td>
+									<td class="px-3">{{ Result.enddate | date:"m/d/Y H:i"}}</td>
+									<td class="px-3">{% if Result.turnsplayed %} {{ Result.turnsplayed }}  {% endif %}</td>
+									<td class="px-3">{{ Result.credits }}</td>
+									<td class="px-3">{{ Result.players }}</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			{% endif %}
+		</div>
+		<br>
+	</main>
 {% endblock %}
