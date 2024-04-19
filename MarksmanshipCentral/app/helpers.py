@@ -69,6 +69,7 @@ def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:Ba
     #find a session with the same game and date
     saved = Session.active_objects.filter(game = newsession.game,startdate__startswith = session_startdate.date()).first()
     if saved != None:
+        #saved_enddate = datetime.strptime(saved.enddate,date_format)
         csum = personpk
         for t in trmn_participants:
             if t.has_changed() :
@@ -80,7 +81,7 @@ def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:Ba
         csum1=0
         for s in saved_trmnpart:
             csum1 += s.person_id
-        if csum == csum1:
+        if csum == csum1 and session_startdate < saved.enddate:
             return 'DUP_SESSION'
         else:
             newsession.dupsessid=saved.pk
