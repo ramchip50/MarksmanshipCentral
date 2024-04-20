@@ -108,6 +108,7 @@
     <Content Include="app\templates\app\TestPage.html" />
     <Content Include="app\templates\app\TRMNlogin.html" />
     <Content Include="app\templates\app\TRMNlogout.html" />
+    <Content Include="app\templates\app\TRMNregistration.html" />
     <Content Include="models\templates\models\index.html" />
     <Content Include="requirements.txt" />
     <Content Include="db.sqlite3" />

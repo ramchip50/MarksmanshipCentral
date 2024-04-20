@@ -55,47 +55,56 @@
     <br>
     <!--<input class="btn btn-secondary" type="submit" value="Print">-->
     {% if awards %}
-        <div class="container-fluid">
-            <h3>Marksmanship Earned Awards <br> for <br> {{startdate | date:"m/d/y"}} to {{enddate  | date:"m/d/y"}}</h3>
-            <div class="d-grid gap-2 mx-auto justify-content-center">
-                <table class="table table-striped table-dark table-sm">
-                    <thead>
-                        <tr>
-                            {% if person.role_id > 3 %}
-                            <th class="px-3">Fleet</th>
-                            {% endif %}
-                            {% if person.role_id > 2 %}
-                            <th class="px-3">Chapter</th>
-                            {% endif %}
-                            <th class="px-3">Name</th>
-                            <th class="px-3">Weapon</th>
-                            <th class="px-3">Marksman</th>
-                            <th class="px-3">Sharpshooter</th>
-                            <th class="px-3">Expert</th>
-                            <th class="px-3">High Expert</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for Result in awards %}
-                        <tr>
-                            {% if person.role_id > 3 %}
-                            <td class="px-3">{{Result.fleet}}</td>
-                            {% endif %}
-                            {% if person.role_id > 2 %}
-                            <td class="px-3">{{Result.chapter}}</td>
-                            {% endif %}
-                            <td class="px-3">{{Result.firstname}}&nbsp;{{Result.lastname}}</td>
-                            <td class="px-3">{{Result.weapon}}</td>
-                            <td class="px-3">{{Result.marksman | date:"m/d/y"}}</td>
-                            <td class="px-3">{{Result.sharpshooter | date:"m/d/y"}}</td>
-                            <td class="px-3">{{Result.expert | date:"m/d/y"}}</td>
-                            <td class="px-3">{{Result.high_expert | date:"m/d/y"}}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div><br><br>
+    <div class="container-fluid">
+        <div class="d-grid gap-2 mx-auto justify-content-center">
+            <b>Marksmanship Session Record for {{person.firstname}}&nbsp;{{person.lastname}} </b>
         </div>
+        <div class="d-grid gap-2 mx-auto justify-content-center">
+            from
+        </div>
+        <div class="d-grid gap-2 mx-auto justify-content-center">
+            {{startdate | date:"m/d/y"}} to {{enddate  | date:"m/d/y"}}
+        </div>
+        <br>
+        <div class="d-grid gap-2 mx-auto justify-content-center">
+            <table class="table table-striped table-dark table-sm">
+                <thead>
+                    <tr>
+                        {% if person.role_id > 3 %}
+                        <th class="px-3">Fleet</th>
+                        {% endif %}
+                        {% if person.role_id > 2 %}
+                        <th class="px-3">Chapter</th>
+                        {% endif %}
+                        <th class="px-3">Name</th>
+                        <th class="px-3">Weapon</th>
+                        <th class="px-3">Marksman</th>
+                        <th class="px-3">Sharpshooter</th>
+                        <th class="px-3">Expert</th>
+                        <th class="px-3">High Expert</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for Result in awards %}
+                    <tr>
+                        {% if person.role_id > 3 %}
+                        <td class="px-3">{{Result.fleet}}</td>
+                        {% endif %}
+                        {% if person.role_id > 2 %}
+                        <td class="px-3">{{Result.chapter}}</td>
+                        {% endif %}
+                        <td class="px-3">{{Result.firstname}}&nbsp;{{Result.lastname}}</td>
+                        <td class="px-3">{{Result.weapon}}</td>
+                        <td class="px-3">{{Result.marksman | date:"m/d/y"}}</td>
+                        <td class="px-3">{{Result.sharpshooter | date:"m/d/y"}}</td>
+                        <td class="px-3">{{Result.expert | date:"m/d/y"}}</td>
+                        <td class="px-3">{{Result.high_expert | date:"m/d/y"}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div><br><br>
+    </div>
     {% endif %}
 </main>
 

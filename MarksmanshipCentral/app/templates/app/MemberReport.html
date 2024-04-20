@@ -40,12 +40,20 @@
 				</div>
 			</form>
 		</div>
-	
+		<br>
 		<!--<input class="btn btn-secondary" type="submit" value="Print">-->
 
 		<div class="container-fluid">
 			{% if history %}
-				<h3>Marksmanship Session Record for {{person.firstname}}&nbsp;{{person.lastname}} <br> from <br> {{startdate | date:"m/d/y"}} to {{enddate  | date:"m/d/y"}}</h3>
+				<div class="d-grid gap-2 mx-auto justify-content-center">
+					<b>Marksmanship Session Record for {{person.firstname}}&nbsp;{{person.lastname}} </b>
+				</div>
+				<div class="d-grid gap-2 mx-auto justify-content-center">
+					from
+				</div>
+				<div class="d-grid gap-2 mx-auto justify-content-center">
+					{{startdate | date:"m/d/y"}} to {{enddate  | date:"m/d/y"}}
+				</div>
 				<br>
 				<div class="d-grid gap-2 mx-auto justify-content-center">
 					<table class="table table-striped ">
@@ -63,19 +71,22 @@
 						</thead>
 						<tbody>
 							{% for Result in history %}
-								<tr>
-									<td class="px-3">{{ Result.startdate | date:"m/d/Y H:i" }}</td>
-									<td class="px-3">{{ Result.enddate | date:"m/d/Y H:i"}}</td>
-									<td class="px-3">{% if Result.turnsplayed %} {{ Result.turnsplayed }}  {% endif %}</td>
-									<td class="px-3">{{ Result.credits }}</td>
-									<td class="px-3">{{ Result.players }}</td>
-								</tr>
+							<tr>
+								<td class="px-3">{{ Result.startdate | date:"m/d/Y H:i" }}</td>
+								<td class="px-3">{{ Result.enddate | date:"m/d/Y H:i"}}</td>
+								<td class="px-3">{{ Result.game }}</td>
+								<td class="px-3">{{ Result.weapon }}</td>
+								<td class="px-3">{{ Result.mode }}</td>
+								<td class="px-3">{% if Result.turnsplayed %} {{ Result.turnsplayed }}  {% endif %}</td>
+								<td class="px-3">{{ Result.credits }}</td>
+								<td class="px-3">{{ Result.players }}</td>
+							</tr>
 							{% endfor %}
 						</tbody>
 					</table>
 				</div>
-			{% endif %}
-		</div>
+				{% endif %}
+			</div>
 		<br>
 	</main>
 {% endblock %}

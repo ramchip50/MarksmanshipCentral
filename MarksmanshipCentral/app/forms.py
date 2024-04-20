@@ -49,8 +49,19 @@ class PlayerField(forms.CharField):
 #Forms
 #region Forms
 
-
-
+class RegistrationForm(ModelForm):
+    class Meta:
+        model = Person
+        fields = ('memberid', 'firstname', 'lastname', 'emailaddress', 'chapter', 'branch')
+        widgets = {
+            'memberid': forms.TextInput(attrs={'class':'form-control form-control-lg mb-3 text-dark'}),
+            'firstname': forms.TextInput(attrs={'class':'form-control form-control-lg mb-3 text-dark'}),
+            'lastname': forms.TextInput(attrs={'class':'form-control form-control-lg mb-3 text-dark'}),
+            'emailaddress': forms.EmailInput(attrs={'class':'form-control form-control-lg mb-3 text-dark'}),
+            'chapter': forms.Select(attrs={'class':'form-control form-control-lg mb-3 text-dark'}),
+            'branch': forms.Select(attrs={'class':'form-control form-control-lg mb-3 text-dark'}),
+            'passwrd': forms.TextInput(attrs={'class':'form-control form-control-lg mb-3 text-dark'}),
+         }
 
 class signinform(forms.Form):
     email_address = forms.EmailField(max_length=255,required=True,label='Email Address',
