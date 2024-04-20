@@ -24,6 +24,15 @@ from django.db.models import Q
 from django.contrib import messages
 #Site
 #region Site
+
+def registration(request):
+	form = RegistrationForm(request.POST or None)
+	if form.is_valid():
+		form.save()
+		return redirect('login/')
+	return render(request, 'app/TRMNregistration.html', {'form':form})
+
+
 def home(request):
 	"""Renders the home page."""
 	assert isinstance(request, HttpRequest)
@@ -388,9 +397,6 @@ def award_reports(request):
 					awards = get_earned_awards_bydate_andfleet(startdate, enddate, int(form.cleaned_data["fleet"]))
 				else:
 					awards = get_earned_awards_bydate_andchapter(startdate, enddate, int(form.cleaned_data["chapter"]))
-					
-			
-
 
 	context={
 		'startdate':startdate,

@@ -35,7 +35,7 @@
                         <td>
                             <button type="button" class="btn btn-primary" onclick="game_approve('{{game.game_id}}')" title='Add game to library as-is' name="pushme">Approve</button>&nbsp;
                             <button type="button" class="btn btn-success" onclick="game_choose_replace('{{game.game_id}}','{{game.name}}','{{game.has_session}}')" title='Replace submitted game with game from library' name="pushme2">Replace</button>&nbsp;
-                            <button type="button" class="btn btn-warning" onclick="game_edit('{{game.game_id}}','{{game.name}}','{{game.alias}}','{{game.weapon.id}}')" title='Edit submitted game and add to library' name="pushme3">Edit</button>
+                            <button type="button" class="btn btn-info" onclick="game_edit('{{game.game_id}}','{{game.name}}','{{game.alias}}','{{game.weapon.id}}')" title='Edit submitted game and add to library' name="pushme3">Edit</button>
                         </td>
                         <td></td>
                         <td> {{game.name}}</td>
@@ -51,32 +51,37 @@
     <div id="g_replace" style="display:none">
         <div class="d-grid gap-2  mx-auto justify-content-center">
             <span id="g_origname">This name</span><input type="hidden" id="g_origid" /><br /><br />
-            Choose Library Game:<input class="form-control basicAutoComplete" style="width:600px;" type="text" data-url="/game_autocomplete/full/" autocomplete="off" id="g_newname" placeholder="Type name to search" /><br /><br />
-            <button type="button" class="btn btn-success" onclick="game_replace()" name="replace" title="Replace submitted game">Replace</button>&nbsp;
-            <button type="button" class="btn btn-info" onclick="game_addalias()" name="addalias" title="Add sumitted game to library game alias">Add Alias</button>&nbsp;
-            <button type="button" class="btn btn-danger" onclick="game_delete()" name="delete" id="delete_g" title="Delete submitted game">Delete</button>&nbsp;
-            <button type="button" class="btn btn-warning" onclick="reset_g()" name="cancel">Cancel</button>
+            <b>Choose Library Game:</b><input class="form-control basicAutoComplete" style="width:600px;" type="text" data-url="/game_autocomplete/full/" autocomplete="off" id="g_newname" placeholder="Type name to search" /><br /><br />
+            <div class="gap-2 mx-auto justify-content-center">
+                <button type="button" class="btn btn-success" onclick="game_replace()" name="replace" title="Replace submitted game">Replace</button>
+                <button type="button" class="btn btn-info" onclick="game_addalias()" name="addalias" title="Add sumitted game to library game alias">Add Alias</button>
+                <button type="button" class="btn btn-danger" onclick="game_delete()" name="delete" id="delete_g" title="Delete submitted game">Delete</button>
+                <button type="button" class="btn btn-warning" onclick="reset_g()" name="cancel">Cancel</button>
+            </div>
         </div>
     </div>
     <div id="g_edit" style="display:none">
         <div class="d-grid gap-2  mx-auto justify-content-center">
-          Name: <input type="text" id="g_editname" /><input type="hidden" id="g_editorigid" /><br /><br />
-          Alias: <input id="g_editalias" type="text" />
-          Weapon:&nbsp;<select id="g_weapon">
-              <option value="1">Pistol</option>
-              <option value="2">Grenade</option>
-              <option value="3">Flechette Gun</option>
-              <option value="4">Plasma Carbine</option>
-              <option value="5">Tribarrel</option>
-              <option value="6">Rifle</option>
-              <option value="7">Disruptor</option>
-              <option value="8">Grenade Launcher</option>
-              <option value="9">Plasma Rifle</option>
+            <b>Name:</b> <input type="text" id="g_editname" /><input type="hidden" id="g_editorigid" />
+            <b>Alias:</b> <input id="g_editalias" type="text" />
+            <b>Weapon:</b><select id="g_weapon">
+                <option value="1">Pistol</option>
+                <option value="2">Grenade</option>
+                <option value="3">Flechette Gun</option>
+                <option value="4">Plasma Carbine</option>
+                <option value="5">Tribarrel</option>
+                <option value="6">Rifle</option>
+                <option value="7">Disruptor</option>
+                <option value="8">Grenade Launcher</option>
+                <option value="9">Plasma Rifle</option>
           </select>
-          <button type="button" onclick="game_save()" name="save">Save &amp; Approve</button>&nbsp;<button type="button" onclick="reset_g()" name="cancel">Cancel</button>
+        <br />
+          <button type="button" class="btn btn-success" onclick="game_save()" name="save">Save &amp; Approve</button>
+          <button type="button" class="btn btn-warning" onclick="reset_g()" name="cancel">Cancel</button>
         </div>
     </div>
 </div>
+<br />
 {% endif %}
 
 {% if submittedsessions %}
@@ -177,7 +182,7 @@
     }
 
     function game_choose_replace(gameId, gameName, has_session) {
-        t = "Submitted Game: " + gameName;
+        t = "<br><b>Submitted Game:</b>  " + gameName;
         $('#g_origname').html(t);
         $('#g_origid').val(gameId);
         $('#g_list').hide();
