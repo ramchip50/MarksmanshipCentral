@@ -64,10 +64,8 @@ class RegistrationForm(ModelForm):
          }
 
 class signinform(forms.Form):
-    email_address = forms.EmailField(max_length=255,required=True,label='Email Address',
-                                     widget=forms.EmailInput)
-    passwrd = forms.CharField(max_length=50, required=True,label='Password',
-                               widget=forms.PasswordInput)    
+    email_address = forms.EmailField(max_length=255,required=True,label='Email Address',widget=forms.EmailInput(attrs={'class':'form-control form-control-lg mb-3 text-dark'}))
+    passwrd = forms.CharField(max_length=50, required=True,label='Password', widget=forms.PasswordInput(attrs={'class':'form-control form-control-lg mb-3 text-dark'}))    
 
     def clean(self):
         try:
