@@ -192,12 +192,12 @@ def newsession(request):
 		form = SessionForm(request.POST or None)
 		TRMNSessionformset = formset_factory(TRMNpartForm, extra = 6, max_num=6)
 		NonSessionformset = formset_factory(NonpartForm, extra = 2, max_num=2)
-		formset1 = TRMNSessionformset(request.POST or None) 
-		formset2 = NonSessionformset(request.POST or None) 
+		formset1 = TRMNSessionformset(request.POST or None,prefix='players') 
+		formset2 = NonSessionformset(request.POST or None,prefix='nonplayers') 
 		if all([form.is_valid(), formset1.is_valid(), formset2.is_valid()]):
 			result=check_session_and_save(personpk,form,formset1,formset2)
-			formset1 = TRMNSessionformset()        
-			formset2 = NonSessionformset()
+			formset1 = TRMNSessionformset(prefix='players')        
+			formset2 = NonSessionformset(prefix='nonplayers')
 			form = SessionForm()
 			if result =="NOT_ELIGIBLE":  
 				message = "Must have one other TRMN player or two non-TRMN players"
@@ -216,8 +216,8 @@ def newsession(request):
 		form = SessionForm()
 		TRMNSessionformset = formset_factory(TRMNpartForm, extra = 6, max_num=6)
 		NonSessionformset = formset_factory(NonpartForm, extra = 2, max_num=2)
-		formset1 = TRMNSessionformset() 
-		formset2 = NonSessionformset() 
+		formset1 = TRMNSessionformset(prefix='players') 
+		formset2 = NonSessionformset(prefix='nonplayers') 
 		if "submitted" in request.GET:
 			Submitted = True
 	
