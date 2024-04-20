@@ -87,7 +87,7 @@ class SessionForm(forms.Form):
     playmode = forms.ChoiceField(widget=forms.RadioSelect(attrs={'onclick':"javascript:yesnoCheck();"}), choices=CHOICES, initial='Time')
     startdate = forms.CharField(widget=forms.TextInput(attrs={'style':'width:350px', 'type': 'datetime-local', 'class':'form-control'}))
     enddate = forms.CharField(widget=forms.TextInput(attrs={'style':'width:350px', 'type': 'datetime-local', 'class':'form-control'}))
-    turnsplayed = forms.IntegerField(widget=forms.NumberInput(attrs={'class':'form-control'}),required=False)
+    turnsplayed = forms.IntegerField(widget=forms.NumberInput(attrs={'style':'width:350px','class':'form-control'}),required=False)
     
     def clean(self):
         sd = datetime.strptime(self.cleaned_data["startdate"],"%Y-%m-%dT%H:%M")    #2024-04-05T10:56
