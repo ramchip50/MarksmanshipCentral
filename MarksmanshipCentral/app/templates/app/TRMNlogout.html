@@ -1,67 +1,29 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>TRMN Marksmenship Central</title>
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'app/content/bootstrap.min.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'app/content/site.css' %}" />
-    <script src="{% static 'app/scripts/modernizr-2.6.2.js' %}"></script>
+{% extends 'app/base.html' %}
+{% block nav %}
   
-    <style>
-        .main {
-            display: block;
-            padding: 0px 10px;
-            background-color: #272727;
-            color: #fff;
-            font-size: 22px;
-            min-height: 100vh;
-            text-align: center;
-        }
-        .footer {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            background-color: #272727;
-            font-size: 16px;
-            color: #fff;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-		        
-      .cropped1 {
-        width: 80px; /* width of container */
-        height: 80px; /* height of container */
-        object-fit: cover;
-        object-position: 20% 10%;
-        border: 5px solid black;
-      }
-    </style> 
-  </head>
+{% endblock %}
+{% block title %}
+    MC Member Signout
+{% endblock title %}
+{% block name %}
+    Signout
+{% endblock name%}
+{% block content %}
 <div class="main">
-
-    <br><br><br>
-    <h2>Welcome to the TRMN's Marksmanship Central</h2>
-    <a href="https://www.trmn.org"><img src="https://www.trmn.org/user/themes/trmn/images/trmn-2023.png" alt="TRMN Seal" width="150px" height="150px" data-src="https://www.trmn.org/user/themes/trmn/images/trmn-2023.png"></a><br><br>
-    <h3>Thank you for your participation in the <br> TRMN Marksmanship Program.</h3><br /><br /><br />
-    <a type="button" href="{% url 'login'%}" class="btn btn-light"><h4>Return to Login</h4></a>
-
+    <div class="d-grid gap-2 mx-auto justify-content-center">
+        <br><br><br>
+        <p class="text-center fs-2 fw-bold">
+            Welcome to the TRMN's Marksmanship Central
+        </p>
+        <br />
+        <p class="text-center fs-3">
+            Thank you for your participation in the <br> TRMN Marksmanship Program.
+        </p>
+        <br /><br />
+        <a type="button" href="/login/" class="text-primary text-center"><h4>Return to Login</h4></a>
+    </div>
 </div>
 
- <div class="footer"  >
-    <p>Copyright &copy; 2024 The Royal Manticoran Navy: The Official Honor Harrington Fan
-        Association, Inc. <br>
-        Some Rights Reserved.<br>
-        Honor Harrington and all related materials are &copy; David Weber.</p>
-    <span class="text-center">
-        <img class="cropped1" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Djehutymooncrown.jpg/800px-Djehutymooncrown.jpg" width="50px" height="75px"
-                                   data-src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Djehutymooncrown.jpg/800px-Djehutymooncrown.jpg"></span>
-    <p>Ibis Group (v0.1.0)</p>
-        <span id="siteseal"><script type="text/javascript"
-                                src="https://seal.starfieldtech.com/getSeal?sealID=v0CA19iS5KO2zCDMQWVQcf848PG2A4U0OWBVbTgzfEuk6Lrf8ASy84CTVQ5M"></script></span>
-	</div>
-	
-</html>
+{% endblock %}
+{% block script %}
+{% endblock %}

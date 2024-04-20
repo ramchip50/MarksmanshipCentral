@@ -19,7 +19,9 @@
         <div class="container" style="width: 400px;">
             <form action="" method=POST>
                 {% csrf_token %}
-                {{ form.as_p }}
+                <div class="fw-bold"
+                    {{ form.as_p }}
+                </div>
                 <div class="container">
                     <input type="submit" value="Submit" class="btn btn-secondary my-4" />
                 </div>

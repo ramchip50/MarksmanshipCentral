@@ -16,26 +16,36 @@
         <h1>Your session was submitted successfully!</h1>
     {% else %}
         {{ message }}
-        <p class="text-center fs-2 fw-bold">Game Information</p>
+        <p class="d-grid gap-2 mx-auto justify-content-center fs-2 fw-bold">
+            Game Information
+        </p>
+        <br />
         <form action='' method=POST>
             {% csrf_token %}
             
             <div class="row">
                 <div class="col">
-                    <label for="StartDate"> Starting Date and Time:</label>
-                    {{ form.startdate }}
-                    <label for="EndDate"> Ending Date and Time:</label>
-                    {{ form.enddate }}
-                    <label for="GameName"> Name of the Game Played:</label>
-                    {{ form.game }}
-        
-                    <p>Select the mode of game play:</p><br>
-                    {{ form.playmode }}
-                
-                    <div id="hide" style="display:none">
-                        <label for="TurnsPlayed">Enter the number of turns played:</label>
-                        {{ form.turnsplayed }}
-                        <br><br>
+                    <div class="d-grid gap-2 mx-auto justify-content-center">
+                        <div class="mb-2 fw-bold"">
+                            <label for="StartDate"> Starting Date and Time:</label>
+                            {{ form.startdate }}
+                        </div>
+                        <div class="mb-2 fw-bold">
+                            <label for="EndDate"> Ending Date and Time:</label>
+                            {{ form.enddate }}
+                        </div>
+                        <div class="mb-2 fw-bold">
+                            <label for="GameName"> Name of the Game Played:</label><br />
+                            {{ form.game }}
+                        </div>
+                        <div class="mb-2 fw-bold">
+                            <label>Select the mode of game play:</label><br>
+                            {{ form.playmode }}
+                        </div>
+                        <div class="mb-2 fw-bold" id="hide" style="display:none">
+                            <label for="TurnsPlayed">Enter the number of turns played:</label>
+                            {{ form.turnsplayed }}
+                        </div>
                     </div>
                     <script type="text/javascript">
                         function yesnoCheck() {
@@ -56,16 +66,23 @@
                     {%comment%}
                     <button type="reset" name="Cancel" value="Cancel" class="btn btn-danger btn-lg btn-block" href="{% url 'landing' %" }>Cancel</button><br>
                     {%endcomment%}
-                    <button type="submit" name="save" value="save" class="btn btn-primary btn-lg btn-block">Save</button><br><br>
+                    <div class="d-grid gap-2 mx-auto justify-content-center">
+                        <br />
+                        <button type="submit" name="save" value="save" class="btn btn-primary btn-lg btn-block">Save</button><br><br>
+                    </div>
                 </div>
                 <div class="col">
-                    <h3>TRMN Participants</h3><br />
-                    <p>(you are already included)</p>
-                    {{ formset1.as_p }}
+                    <div class="d-grid gap-2 mx-auto justify-content-center">
+                        <h3><b>TRMN Participants:</b></h3>
+                        <p class="text-center fw-bold">(you are already included)</p>
+                        {{ formset1.as_p }}
+                    </div>
                 </div>
                 <div class="col">
-                    <h3>Non-TRMN Participants</h3>
-                    {{ formset2.as_p }}
+                    <div class="d-grid gap-2 mx-auto justify-content-center">
+                        <h3><b>Non-TRMN Participants:</b></h3>
+                        {{ formset2.as_p }}
+                    </div>
                 </div>
             </div>
         </form>
