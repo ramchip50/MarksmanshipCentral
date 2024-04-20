@@ -105,7 +105,8 @@
                 <tr id="s_row{{session.id}}" class="submitted">
                     <td id="rvw{{session.id}}"><button type="button" class="btn btn-secondary" id="s_btn{{session.id}}" onclick="session_review('{{session.id}}','{{session.dupsessid}}')" title="Compare to saved session">Review</button></td>
                     <td id="appr{{session.id}}" style="display:none">
-                        <button type="button" class="btn btn-primary" onclick="session_resolve('{{session.id}}',true)" title="Allow submitted session" >Approve</button>&nbsp;
+                        <button type="button" class="btn btn-primary" onclick="session_resolve('{{session.id}}',true)" title="Allow submitted session">Approve</button>&nbsp;
+                        <button type="button" class="btn btn-secondary" onclick="session_resolve('{{session.id}}',true)" title="Replace the old session with the new">Replace</button>&nbsp;
                         <button type="button" class="btn btn-danger" onclick="session_resolve('{{session.id}}',false)" title="Reject submitted session completely">Reject</button>&nbsp;
                         <button type="button" class="btn btn-warning" onclick="document.location.reload(true)" title="Cancel this operation and return">Cancel</button>
                     </td>
