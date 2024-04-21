@@ -23,5 +23,6 @@ join models_weapon w on g.weapon_id = w.id
 join models_sessionparticipants p on (p.session_id = s.id) and p.active=1
 where s.dupsessid is null and g.verified=1
 and s.enddate between startdate and @nextenddate
-and p.person_id=person_Id and p.active=1;
+and p.person_id=person_Id and p.active=1
+order by s.enddate desc;
 END

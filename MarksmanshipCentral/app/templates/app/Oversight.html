@@ -106,7 +106,7 @@
                     <td id="rvw{{session.id}}"><button type="button" class="btn btn-secondary" id="s_btn{{session.id}}" onclick="session_review('{{session.id}}','{{session.dupsessid}}')" title="Compare to saved session">Review</button></td>
                     <td id="appr{{session.id}}" style="display:none">
                         <button type="button" class="btn btn-primary" onclick="session_resolve('{{session.id}}',true)" title="Allow submitted session">Approve</button>&nbsp;
-                        <button type="button" class="btn btn-secondary" onclick="session_resolve('{{session.id}}',true)" title="Replace the old session with the new">Replace</button>&nbsp;
+                        <button type="button" class="btn btn-secondary" onclick="session_replace('{{session.id}}',true)" title="Replace the old session with the new">Replace</button>&nbsp;
                         <button type="button" class="btn btn-danger" onclick="session_resolve('{{session.id}}',false)" title="Reject submitted session completely">Reject</button>&nbsp;
                         <button type="button" class="btn btn-warning" onclick="document.location.reload(true)" title="Cancel this operation and return">Cancel</button>
                     </td>
@@ -261,6 +261,15 @@
         $('[id^=s_row]').show()
         $('[id^=c_row]').hide()
     }
+
+    function session_replace(submittedid) {
+        $.get("/session_replace/", { submitted_id: submittedid });
+        sr = '#s_row' + submittedid;
+        $(sr).remove();
+        $('[id^=s_row]').show()
+        $('[id^=c_row]').hide()
+    }
+
 
 
 </script>
