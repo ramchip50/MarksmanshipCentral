@@ -79,6 +79,7 @@
     <Folder Include="MarksmanshipCentral\" />
     <Folder Include="models\" />
     <Folder Include="models\migrations\" />
+    <Folder Include="models\StoredProceduresAndViews\" />
     <Folder Include="models\templates\" />
     <Folder Include="models\templates\models\" />
   </ItemGroup>
@@ -109,6 +110,10 @@
     <Content Include="app\templates\app\TRMNlogin.html" />
     <Content Include="app\templates\app\TRMNlogout.html" />
     <Content Include="app\templates\app\TRMNregistration.html" />
+    <Content Include="models\StoredProceduresAndViews\get_all_sessioncredits_bydate.sql" />
+    <Content Include="models\StoredProceduresAndViews\get_earned_awards_bydate.sql" />
+    <Content Include="models\StoredProceduresAndViews\get_session_history.sql" />
+    <Content Include="models\StoredProceduresAndViews\modelview_categorycredits.sql" />
     <Content Include="models\templates\models\index.html" />
     <Content Include="requirements.txt" />
     <Content Include="db.sqlite3" />

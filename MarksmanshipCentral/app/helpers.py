@@ -95,7 +95,15 @@ def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:Ba
         minutes=0
         basecredits = Decimal(newsession.turnsplayed)*Decimal(.25)
     #Multipier
-    mult = len(trmn_participants)
+    playercount = 1
+    for p in trmn_participants:
+        if p.has_changed():
+            playercount += 1
+    if playercount > 2:
+        if playercount < 5:
+            mult = playercount -1
+        else:
+            mult = 4
     earned_credits = Decimal(basecredits*mult)
     newsession.save()
        
@@ -150,6 +158,30 @@ def update_total_credits(personpk, earned_credits, game:Game):
     if (tc.weapontotal>=600) and tc.high_expert == None:
         tc.high_expert = datetime.today()
     tc.save()
+
+def unscore_total_credits(personpk, earned_credits, game:Game):
+    person = get_object_or_404(Person,pk=personpk)
+    if person.branch.name=='RMA':
+        tc, created = TotalCredits.objects.get_or_create(person_id = personpk, weapon_id = game.weapon.pk)
+    else:
+        if game.weapon.pk < 6:
+            tc, created = TotalCredits.objects.get_or_create(person_id = personpk, weapon_id = 1)
+        else:
+            tc, created = TotalCredits.objects.get_or_create(person_id = personpk, weapon_id = 6)
+    tc.weapontotal = tc.weapontotal - earned_credits
+    #roll back awards
+    #    
+    if tc.marksman != None and tc.weapontotal < 5:
+        tc.marksman = None
+    if tc.sharpshooter != None and tc.weapontotal < 100:
+        tc.sharpshooter = None
+    if tc.expert != None and tc.weapontotal < 200:
+        tc.expert = None
+    if tc.high_expert != None and tc.weapontotal < 600:
+        tc.high_expert = None
+    tc.save()
+
+
             
 # endregion    
 

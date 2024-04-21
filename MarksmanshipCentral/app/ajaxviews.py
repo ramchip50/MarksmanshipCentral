@@ -126,6 +126,31 @@ def session_resolve(request):
 	sess.save()
 	return HttpResponseAccepted()
 
+def session_replace(request):
+	submitted_id = request.GET['submitted_id']
+	#get submitted session
+	submitted = Session.active_objects.get(pk=submitted_id)
+	#get submitted players
+	submitted_players = SessionParticipants.active_objects.filter(session_id=submitted_id)
+	saved_id = submitted.dupsessid
+	#get saved session
+	saved = Session.active_objects.get(pk=saved_id)
+	#get saved players
+	saved_players = SessionParticipants.active_objects.filter(session_id=saved_id)
+	#unscore saved session
+	for sav in saved_players:
+		unscore_total_credits(sav.person_id, sav.credits,saved.game)
+	#deactivate saved session
+	saved.active = False
+	saved.save()
+	#score submitted session
+	for sub in submitted_players:
+		update_total_credits(sub.person_id,sub.credits,submitted.game)
+	#reset dupsession id
+	submitted.dupsessid = None
+	submitted.save()
+	return HttpResponseAccepted()
+
 		
 def fleet_chapters(request):
 	fleet_id = request.GET['fleet_id']
