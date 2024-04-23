@@ -7,6 +7,7 @@ from datetime import datetime
 from http.client import CONFLICT
 from json import JSONEncoder
 import json
+import csv
 from pickle import NONE
 from tabnanny import check
 from types import NoneType
@@ -408,6 +409,25 @@ def award_reports(request):
 
 	return render(request, 'app/AwardReport.html', context)
 
+def data_csv(request):
+	response = HttpResponse(content_type='text/csv')
+	response['Content-Disposition'] = 'attachment; filename=MarksmanshipCentral.csv'
+	writer = csv.writer(response)
+	data = Session.active_objects.order_by('startdate').filter(active=True)
+	for d in data:
+		participants = list()
+		for sp in SessionParticipants.active_objects.filter(session=d.id).values_list("session_id","person"):
+			p=Person.active_objects.get(pk=sp[1])
+			participants.append(p.lastname +', '+p.firstname)
+	  
+		for n in NonTRMNParticipants.active_objects.filter(session=d.id).values_list("session_id","fullname"):
+			participants.append(n[1])
+		
+	writer.writerow(['Session Number','Game Name','Start Date','End Date','Play Mode','Turns Played','Date Entered', 'Participants'])
+	for d in data:
+		writer.writerow([d.id, d.game, d.startdate, d.enddate, d.playmode, d.turnsplayed, d.createdon, participants])
+	  
+	return response
 
 #endregion
 
