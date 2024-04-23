@@ -37,5 +37,5 @@ urlpatterns = [
     path('reports/member/', views.member_reports, name='member-reports'),
     path('reports/credit/', views.credit_reports, name='credit-reports'),
     path('reports/award/', views.award_reports, name='award-reports'),
-    
+    path('data-csv', views.data_csv, name='data-csv'),
 ]
