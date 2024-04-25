@@ -32,14 +32,15 @@ def award_list(personpk):
     awardgrid = list()
     weapons = Weapon.objects.all()
     for w in weapons:
-        creds = TotalCredits.active_objects.filter(person_id = personpk, weapon_id = w.pk)
-        if creds.count() > 0:
-            for c in creds:
-                thiscred = awardentry(w.name,c.weapontotal,c.marksman,c.sharpshooter,c.expert,c.high_expert)
-                awardgrid.append(thiscred)
-        else:
-                thiscred = awardentry(w.name,0.00,None,None,None,None)
-                awardgrid.append(thiscred)
+        if w.id > 0:
+            creds = TotalCredits.active_objects.filter(person_id = personpk, weapon_id = w.pk)
+            if creds.count() > 0:
+                for c in creds:
+                    thiscred = awardentry(w.name,c.weapontotal,c.marksman,c.sharpshooter,c.expert,c.high_expert)
+                    awardgrid.append(thiscred)
+            else:
+                    thiscred = awardentry(w.name,0.00,None,None,None,None)
+                    awardgrid.append(thiscred)
 
     return awardgrid
 

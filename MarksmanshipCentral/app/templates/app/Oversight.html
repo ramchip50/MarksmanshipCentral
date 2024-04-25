@@ -179,7 +179,7 @@
         $.get("/game_delete/", { game_id: gameId });
         rw = '#g_row' + gameId;
         $(rw).hide();
-        $reset_g();
+        reset_g();
     }
 
     function game_choose_replace(gameId, gameName, has_session) {
