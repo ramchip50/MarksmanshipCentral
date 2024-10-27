@@ -100,7 +100,7 @@ def check_session_and_save(personpk,sessionform:SessionForm,trmn_participants:Ba
     for p in trmn_participants:
         if p.has_changed():
             playercount += 1
-    if playercount > 2:
+    if playercount >= 2:
         if playercount < 5:
             mult = playercount -1
         else:
