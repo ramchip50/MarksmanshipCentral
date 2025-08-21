@@ -5,6 +5,8 @@ Definition of urls for MarksmanshipCentral.
 from datetime import datetime
 from django.urls import path
 from django.contrib import admin
+from django.conf.urls.static import static
+from django.conf import settings
 from django.contrib.auth.views import LoginView, LogoutView
 from app import views, ajaxviews
 
@@ -40,3 +42,5 @@ urlpatterns = [
     path('reports/award/', views.award_reports, name='award-reports'),
     path('data-csv', views.data_csv, name='data-csv'),
 ]
+
+urlpatterns += static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
